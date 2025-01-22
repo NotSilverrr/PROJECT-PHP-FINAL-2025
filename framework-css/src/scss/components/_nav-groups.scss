@@ -9,7 +9,7 @@
         border: thin solid var(--neutral-50);
         border-radius: 1rem;
         @include m.boxShadow;
-        @include m.flexbox($direction: column, $gap: 2rem);
+        @include m.flexbox($direction: column, $gap: 1.5rem);
 
 
         &__search {
