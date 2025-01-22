@@ -1,0 +1,97 @@
+@use "../partials/mixins" as m;
+@use "../partials/functions" as f;
+
+@layer components {
+    .nav-groups {
+        width: f.rem(350);
+        padding: 2rem;
+        margin: 1rem;
+        border: thin solid var(--neutral-50);
+        border-radius: 1rem;
+        @include m.boxShadow;
+        @include m.flexbox($direction: column, $gap: 2rem);
+
+
+        &__search {
+            height: 3rem;
+            border: thin solid var(--neutral-50);
+            border-radius: 0.75rem;
+            @include m.flexbox();
+
+            & input {
+                background-color: transparent;
+                border: none;
+                width: 100%;
+                padding: f.rem(10);
+                padding-left: f.rem(5);
+
+                &:focus {
+                    outline: none
+                }
+            }
+
+            & button {
+                @include m.resetButton;
+                color: var(--white);
+                width: 3rem;
+                padding: 0.5rem;
+                border-radius: 0.75rem;
+                transition: background-color 200ms;
+
+                & svg {
+                    color: var(--neutral-200);
+                }
+            }
+        }
+        
+
+        &__list {
+            @include m.resetList;
+            @include m.flexbox($direction: column);
+            flex-grow: 1;
+            overflow: scroll;
+            position: relative;
+            height: 100%;
+
+            li {
+                @include m.flexbox($align: center, $gap: 1rem);
+                padding: f.rem(10);
+                border-radius: 1.5rem;
+                transition: all 200ms;
+                &:hover {
+                    background-color: var(--neutral-50);
+
+                    & .nav-groups__img-profile {
+                        border-radius: 2rem;
+                    }
+                }
+            }
+
+            &::after {
+                display: block;
+                content: '';
+                position: sticky;
+                bottom: 0;
+                padding: 2rem;
+                background: linear-gradient(
+                    to bottom,
+                    transparent,
+                    var(--white)
+                );
+            }
+            
+        }
+
+
+        &__img-profile {
+            display: block;
+            width: 3rem;
+            aspect-ratio: 1;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-radius: 1rem;
+            transition: all 300ms;
+        }        
+    }
+}

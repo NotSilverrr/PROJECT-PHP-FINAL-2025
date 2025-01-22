@@ -19,21 +19,21 @@
 		}
 		// classes modificatrices de couleur
 		&--primary {
-			background-color: var(--blue-500);
+			background-color: var(--primary-500);
 			&:hover {
-				background-color: var(--blue-400);
+				background-color: var(--primary-400);
 			}
 		}
 		&--secondary {
-			background-color: var(--grey-500);
+			background-color: var(--secondary-500);
 			&:hover {
-				background-color: var(--grey-400);
+				background-color: var(--secondary-400);
 			}
 		}
 		&--danger {
-			background-color: var(--red-500);
+			background-color: var(--danger-500);
 			&:hover {
-				background-color: var(--red-400);
+				background-color: var(--danger-400);
 			}
 		}
 		// classes modificatrices de taille
