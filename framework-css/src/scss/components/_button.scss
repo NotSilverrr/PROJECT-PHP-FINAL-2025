@@ -11,8 +11,21 @@
 		font-size: f.rem(16);
 		line-height: f.rem(18);
 		font-weight: 600;
-		border-radius: f.rem(6);
+		border-radius: f.rem(10);
 		transition: all 0.3s;
+
+		&--icon {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			gap: 1rem;
+
+			svg {
+				height: 1.5rem;
+				fill: white;
+			}
+		}
 
 		&:hover {
 			background-color: var(--black-hover);
@@ -45,5 +58,7 @@
 			font-size: f.rem(14);
 			line-height: f.rem(16);
 		}
+
+		
 	}
 }
