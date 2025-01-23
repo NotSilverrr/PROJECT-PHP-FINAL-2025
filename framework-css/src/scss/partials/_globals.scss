@@ -1,16 +1,13 @@
 @use "fonts";
 @use "variables" as v;
 @use "sass:color";
+@use "sass:map";
 @use "functions" as f;
 @layer base {
 	:root {
-		@each $name, $value in v.$colors {
-			// --#{$name}: #{$value};
-			// @if ($name != "text-color" and $name != "shadow-color") {
-			// 	--#{$name}-hover: #{color.scale($value, $lightness: 10%)};
-			// 	--#{$name}-transparent: #{color.scale($value, $alpha: -40%)};
-			// }
-		}
+
+
+		
 
 		@each $name, $color in v.$colors {
 			@if ($name == "black" or $name == "white") {
@@ -32,6 +29,22 @@
 				}
 			}
 		}
+
+		$shadow-color: color.adjust(map.get(v.$colors, "black"), $alpha: -0.95);
+
+		--border-color: var(--neutral-50);
+		--background-color: var(--white);
+		--shadow-color: #{$shadow-color};
+
+		
+		@media (prefers-color-scheme: dark) {
+			$shadow-color: color.adjust(map.get(v.$colors, "white"), $alpha: -0.95);
+			--border-color: var(--neutral-900);
+			--background-color: var(--neutral-950);
+			--shadow-color: #{$shadow-color};
+		}
+
+
 	}
 
 	body {
@@ -39,12 +52,18 @@
 		background-color: var(--white);
 		color: var(--black);
 		height: 100vh;
+
+		@media (prefers-color-scheme: dark) {
+			background-color: var(--background-color);
+			color: var(--neutral-100);
+		}
 	}
 
 	input {
 		border-radius: f.rem(6);
 		padding: f.rem(10) f.rem(16);
 		border: solid thin currentColor;
+		color: inherit;
 		//background-color: var(--input-bg-color);
 	}
 }
