@@ -2,14 +2,18 @@
 
 class User
 {
+  public int $id;
+  public string $created_at;
+  public string $updated_at;
+
   private function __construct(
-    public int $id,
-    public int $isadmin,
+    public bool $isadmin,
     public int $profile_picture,
     public string $email,
     public string $password,
-    public string $created_at,
-    public string $updated_at
+    int $id = null,
+    string $created_at = null,
+    string $updated_at = null
   ) {}
 
   public static function findOneByEmail(string $email): User|null
@@ -35,4 +39,5 @@ class User
   {
     return password_verify($password, $this->password);
   }
+
 }
