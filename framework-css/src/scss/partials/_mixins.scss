@@ -68,3 +68,20 @@
 		flex-wrap: $wrap;
 	}
 }
+
+@mixin absolute($top: 0, $bottom: 0, $right: 0, $left: 0) {
+	position: absolute;
+	@if ($top != null) {
+		top: $top;
+	}
+	@if ($bottom != null) {
+		bottom: $bottom;
+	}
+	@if ($right != null) {
+		right: $right;
+	}
+	@if ($left != null) {
+		left: $left;
+	}
+
+};
