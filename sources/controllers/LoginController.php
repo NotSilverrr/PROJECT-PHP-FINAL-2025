@@ -2,7 +2,7 @@
 namespace App\Controllers;
 
 use App\Models\User;
-use App\Request\LoginRequest;
+use App\Requests\LoginRequest;
 
 
 class LoginController
