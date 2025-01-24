@@ -1,13 +1,3 @@
-CREATE TABLE Groups (
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL,
-    profile_picture VARCHAR(100),
-    owner INTEGER NOT NULL,
-    created_at DATE,
-    updated_at DATE,
-    FOREIGN KEY (owner) REFERENCES User(id) ON DELETE CASCADE
-);
-
 CREATE TABLE User (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     is_admin BOOLEAN DEFAULT FALSE,
@@ -16,6 +6,16 @@ CREATE TABLE User (
     password VARCHAR(64) NOT NULL,
     created_at DATE,
     updated_at DATE
+);
+
+CREATE TABLE Groups (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    profile_picture VARCHAR(100),
+    owner INTEGER NOT NULL,
+    created_at DATE,
+    updated_at DATE,
+    FOREIGN KEY (owner) REFERENCES User(id) ON DELETE CASCADE
 );
 
 CREATE TABLE UserGroup (
