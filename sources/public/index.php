@@ -1,5 +1,8 @@
 <?php
 
+require_once __DIR__ . '/../Helpers/helpers.php';
+
+
 spl_autoload_register("myAutoloader");
 function myAutoloader(string $class):void
 {
