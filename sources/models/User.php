@@ -35,6 +35,24 @@ class User
     return new User($user["id"], $user["id_email"], $user["profile_picture"], $user["email"], $user["password"], $user["created_at"], $user["updated_at"]);
   }
 
+  public static function createUser()
+  {
+    $databaseConnection = new PDO(
+      "mysql:host=mariadb;dbname=database",
+      "user",
+      "password"
+    );
+
+    $getUserQuery = $databaseConnection->prepare("INSERT INTO users (profile_picture, email, password, isadmin, created_at) VALUES :profile_picture, :email, :password, :isadmin, :created_at");
+
+    $getUserQuery->execute([
+      "email" => $email,
+      "isadmin" => $isadmin,
+      "profile_picture" => $profile_picture,
+      "password" => $password,
+      "created_at" => $created_at
+    ]);
+  }
   public function isValidPassword(string $password): bool
   {
     return password_verify($password, $this->password);
