@@ -11,10 +11,12 @@ class User
     public int $profile_picture,
     public string $email,
     public string $password,
-    int $id = null,
-    string $created_at = null,
-    string $updated_at = null
-  ) {}
+    
+  ) {
+    $this->id = null;
+    $this->created_at = null;
+    $this->updated_at = null;
+  }
 
   public static function findOneByEmail(string $email): User|null
   {
@@ -35,7 +37,7 @@ class User
     return new User($user["id"], $user["id_email"], $user["profile_picture"], $user["email"], $user["password"], $user["created_at"], $user["updated_at"]);
   }
 
-  public static function createUser()
+  public function createUser()
   {
     $databaseConnection = new PDO(
       "mysql:host=mariadb;dbname=database",
@@ -46,11 +48,11 @@ class User
     $getUserQuery = $databaseConnection->prepare("INSERT INTO users (profile_picture, email, password, isadmin, created_at) VALUES :profile_picture, :email, :password, :isadmin, :created_at");
 
     $getUserQuery->execute([
-      "email" => $email,
-      "isadmin" => $isadmin,
-      "profile_picture" => $profile_picture,
-      "password" => $password,
-      "created_at" => $created_at
+      "email" => $this->email,
+      "isadmin" => $this->isadmin,
+      "profile_picture" => $this->profile_picture,
+      "password" => $this->password,
+      "created_at" => $this->created_at
     ]);
   }
   public function isValidPassword(string $password): bool
