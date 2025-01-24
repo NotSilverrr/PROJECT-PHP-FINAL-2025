@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Models;
+
+use PDO;
+
 class User
 {
   private function __construct(

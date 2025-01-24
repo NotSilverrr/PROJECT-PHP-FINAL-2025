@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Core;
+
+use PDO;
+
 // TODO: utiliser prepare au lieu de query !!!
 
 class QueryBuilder

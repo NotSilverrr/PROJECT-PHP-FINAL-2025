@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Request;
+
 class LoginRequest
 {
   public string $email;
