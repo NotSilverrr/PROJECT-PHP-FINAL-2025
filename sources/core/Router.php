@@ -38,11 +38,24 @@ class Router
 
     foreach ($this->routes as $route) {
       if ($method === $route["method"] && $path === $route["path"]) {
-        $methodName = $route["methodName"];
-        $controllerName = $route["controllerName"];
+          $methodName = $route["methodName"];
+          $controllerName = $route["controllerName"];
 
-        $controllerName::$methodName();
+          $response = $controllerName::$methodName();
+
+          // Gestion flexible des réponses
+          if ($response instanceof View) {
+              echo $response;
+          } elseif (is_string($response)) {
+              echo $response;
+          } elseif (is_array($response)) {
+              header('Content-Type: application/json');
+              echo json_encode($response);
+          }
+          exit;
       }
     }
+    http_response_code(404);
+    echo "Page non trouvée";
   }
 }

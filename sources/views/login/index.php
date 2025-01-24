@@ -1,3 +1,7 @@
+<?php 
+$title = "Login"
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

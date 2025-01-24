@@ -7,9 +7,9 @@ use App\Requests\LoginRequest;
 
 class LoginController
 {
-  public static function index(): void
+  public static function index()
   {
-    require_once __DIR__ . "/../views/login/index.php";
+    return view('login.index')->layout('auth');
   }
 
   public static function post(): void

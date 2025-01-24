@@ -1,15 +1,6 @@
 <?php
-if (!function_exists('view')) {
-    function view(string $viewPath, array $data = []): void
-    {
-        $viewFile = __DIR__ . '/../views/' . str_replace('.', '/', $viewPath) . '.php';
+use App\Core\View;
 
-        if (!file_exists($viewFile)) {
-            throw new Exception("La vue [$viewPath] n'existe pas : $viewFile");
-        }
-
-        extract($data);
-
-        include $viewFile;
-    }
+function view($view, $data = []) {
+    return View::make($view, $data);
 }
