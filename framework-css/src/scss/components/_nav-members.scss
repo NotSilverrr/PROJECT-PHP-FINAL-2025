@@ -131,6 +131,11 @@
             transition: all 300ms;
         }
 
+        @media (width >= f.screen(sm)) {
+            left: auto;
+            width: f.rem(300);
+        }
+
         @media (width <= f.screen(md)){
             &--collapsed {
                 z-index: 3;
