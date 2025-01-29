@@ -1,11 +1,12 @@
 @use "../partials/functions" as f;
 @use "../partials/mixins" as m;
+@use "../partials/variables" as v;
 @layer components {
 	body .button {
 		@include m.resetA;
 		@include m.resetButton;
+		@include m.flexbox($justify: center, $gap: 1rem, $align: center);
 		padding: f.rem(10) f.rem(16);
-		display: inline-block;
 		background-color: var(--black);
 		color: var(--white);
 		font-size: f.rem(16);
@@ -13,18 +14,22 @@
 		font-weight: 600;
 		border-radius: f.rem(10);
 		transition: all 0.3s;
+		white-space: nowrap;
 
-		&--icon {
-			display: flex;
-			flex-direction: row;
-			justify-content: center;
-			align-items: center;
-			gap: 1rem;
+		// &--icon {
+		// 	display: flex;
+		// 	flex-direction: row;
+		// 	justify-content: center;
+		// 	align-items: center;
+		// 	gap: 1rem;
 
-			svg {
-				height: 1.5rem;
-				fill: white;
-			}
+			
+		// }
+
+		svg {
+			height: 1.5rem;
+			width: 1.5rem;
+			fill: var(--white);
 		}
 
 		&:hover {
@@ -52,6 +57,11 @@
 		// classes modificatrices de taille
 		&--lg {
 			padding: f.rem(16) f.rem(24);
+
+			svg {
+				height: 2rem;
+				width: 2rem;
+			}
 		}
 		&--sm {
 			padding: f.rem(8) f.rem(12);

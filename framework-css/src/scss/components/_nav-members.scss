@@ -2,7 +2,7 @@
 @use "../partials/functions" as f;
 
 @layer components {
-    .nav-groups {
+    .nav-members {
         @include m.absolute();
         z-index: 5;
         flex-shrink: 0;
@@ -15,7 +15,7 @@
         @include m.flexbox($direction: column, $gap: 1.5rem);
 
         &__header {
-            @include m.flexbox($align: center, $gap: 1rem);
+            @include m.flexbox($align: center, $gap: 1rem, $direction: row-reverse);
             & h2 {
                 font-size: f.rem(25);
                 margin: 0;
@@ -90,14 +90,10 @@
                 @include m.resetA();
                 @include m.flexbox($align: center, $gap: 1rem);
                 padding: f.rem(10);
-                border-radius: 1.5rem;
+                border-radius: 10000px;
                 transition: all 200ms;
                 &:hover {
                     background-color: var(--border-color);
-
-                    & .nav-groups__img-profile {
-                        border-radius: 2rem;
-                    }
                 }
             }
 
@@ -131,31 +127,31 @@
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
-            border-radius: 1rem;
+            border-radius: 1000px;
             transition: all 300ms;
         }
 
         @media (width >= f.screen(sm)) {
-            right: auto;
+            left: auto;
             width: f.rem(300);
         }
 
-        @media (width <= f.screen(lg)){
+        @media (width <= f.screen(md)){
             &--collapsed {
                 z-index: 3;
-                position: absolute;
+                @include m.absolute($top: 0, $bottom: auto, $left: auto, $right: 0);
                 height: fit-content;
                 width: fit-content;
                 display: block;
                 padding: 1rem;
 
     
-                .nav-groups__header {
+                .nav-members__header {
                     & h2 {
                         display: none;
                     }
                 }
-                .nav-groups__content {
+                .nav-members__content {
                     display: none;
 
                 }
@@ -165,6 +161,11 @@
 
         
 
+        @media (width >= f.screen(md)) {
+            position: static;
+            max-width: f.rem(280);
+
+        }
 
         @media (width >= f.screen(lg)) {
             position: static;

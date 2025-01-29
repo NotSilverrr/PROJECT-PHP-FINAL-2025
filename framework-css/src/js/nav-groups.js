@@ -5,4 +5,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
             nav.classList.toggle('nav-groups--collapsed');
         });
 	});
+
+    document.querySelectorAll(".nav-members__toggle").forEach(function (elem) {
+		elem.addEventListener("click", (evt) => {
+            const nav = elem.closest('.nav-members');
+            nav.classList.toggle('nav-members--collapsed');
+        });
+	});
 });
