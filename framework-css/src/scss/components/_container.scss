@@ -1,15 +1,23 @@
 @use "../partials/variables" as v;
+@use "../partials/functions" as f;
 @layer components {
 	.container {
+		max-width: 1600px;
 		margin: 0 2rem;
 
-		@each $name, $value in v.$breakpoints {
-			@media screen and (min-width: $value) {
-				@if ($name == "sm") {
-					margin: auto;
-				}
-				max-width: calc($value - 4rem);
-			}
-		}
+		@media (width > f.screen(md)){
+			margin: auto;
+
+        }
+
+
+		// @each $name, $value in v.$breakpoints {
+		// 	@media screen and (min-width: $value) {
+		// 		@if ($name == "sm") {
+		// 			margin: auto;
+		// 		}
+		// 		max-width: calc($value - 4rem);
+		// 	}
+		// }
 	}
 }

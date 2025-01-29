@@ -35,6 +35,7 @@
 		--border-color: var(--neutral-50);
 		--background-color: var(--white);
 		--shadow-color: #{$shadow-color};
+		--text-color: var(--neutral-800);
 
 		
 		@media (prefers-color-scheme: dark) {
@@ -42,6 +43,7 @@
 			--border-color: var(--neutral-900);
 			--background-color: var(--neutral-950);
 			--shadow-color: #{$shadow-color};
+			--text-color: var(--neutral-100);
 		}
 
 
@@ -50,12 +52,15 @@
 	body {
 		font-family: fonts.$font1;
 		background-color: var(--white);
-		color: var(--black);
+		color: var(--text-color);
 		height: 100vh;
+
+		.container {
+			height: 100%;
+		}
 
 		@media (prefers-color-scheme: dark) {
 			background-color: var(--background-color);
-			color: var(--neutral-100);
 		}
 	}
 
