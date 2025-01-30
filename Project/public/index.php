@@ -1,26 +1,30 @@
 <?php
 
+use Core\Database;
+
 require_once __DIR__ . '/../Helpers/helpers.php';
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+define('ROOT_PATH', dirname(__DIR__));
+
 
 spl_autoload_register("myAutoloader");
 function myAutoloader(string $class):void
 {
-    //    App\Core\User
-    $class = str_ireplace('App', '..',$class);
-    //    ..\Core\User
+    // $class = str_ireplace('App', '..',$class);
     $class =str_ireplace('\\', '/',$class).".php";
-    //    Core/User.php
-    if(file_exists($class)){
-        //si le fichier existe : require "../Core/User.php";
-        include $class;
+
+    $file = ROOT_PATH . '/' . $class;
+    if(file_exists($file)){
+        require_once $file;
     }
 }
 
-use App\Core\Router;
+Database::getConnection();
+
+use Core\Router;
 
 // Initialiser le Router
 $router = new Router();

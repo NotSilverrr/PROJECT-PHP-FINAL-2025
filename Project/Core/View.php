@@ -1,5 +1,5 @@
 <?php 
-namespace App\Core;
+namespace Core;
 
 class View {
     protected $data = [];
@@ -46,11 +46,11 @@ class View {
 
     protected function parseViewPath($view) {
         $path = str_replace('.', '/', $view);
-        return "/../views/{$path}.php";
+        return "/../App/views/{$path}.php";
     }
 
     protected function parseLayoutPath($layout) {
-        return "/../views/layouts/{$layout}.php";
+        return "/../App/views/layouts/{$layout}.php";
     }
 
     public function __toString() {
