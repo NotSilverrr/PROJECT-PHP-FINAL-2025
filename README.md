@@ -70,3 +70,56 @@ docker compose exec mariadb mariadb --version
 ```
 
 > *Note: replace `--version` with the MariaDB argument of your choice.*
+
+
+# Framework MVC
+
+## Migrations
+
+Il faut se  connecter au container pour gérer les migration :
+```bash
+docker exec -it php bash
+```
+
+### Lancer les migrations
+
+Exécuter la commande :
+```bash
+php migrate.php migrate
+```
+
+### Rollback les migrations
+
+Exécuter la commande :
+```bash
+php migrate.php rollback
+```
+
+### Afficher la liste des migrations exécutés
+
+Exécuter la commande :
+```bash
+php migrate.php status
+```
+
+### Créer une nouvelle migration
+
+La création de migrations se fait manuellement.
+1. Il faut créer un fichier dans Project/Database/Migrations réspectant ce nommage : 
+```bash
+xxxx_type-de-migration_nom-de-la-table.php
+```
+2. Le fichier dois ressembler a ca :
+```php
+<?php
+namespace Database\Migrations;
+
+class NomDeLaMigration {
+  public function up() {
+
+  }
+  public function down() {
+    
+  }
+}
+```
