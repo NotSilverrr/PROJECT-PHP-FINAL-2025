@@ -4,8 +4,6 @@ namespace Core;
 
 use PDO;
 
-// TODO: utiliser prepare au lieu de query !!!
-
 class QueryBuilder
 {
   private string $sql;
@@ -44,24 +42,37 @@ class QueryBuilder
       "password"
     );
 
-    $query = $databaseConnection->query($this->sql);
-
-    $result = $query->fetch(PDO::FETCH_ASSOC);
-
-    return $result;
+    $statement = $databaseConnection->prepare($this->sql);
+    $statement->execute();
+    
+    return $statement->fetch(PDO::FETCH_ASSOC);
   }
 
-  public function fetchAll() {}
+  public function fetchAll()
+  {
+    $databaseConnection = new PDO(
+      "mysql:host=mariadb;dbname=database",
+      "user",
+      "password"
+    );
 
-  public function execute() {}
+    $statement = $databaseConnection->prepare($this->sql);
+    $statement->execute();
+    
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function execute()
+  {
+    $databaseConnection = new PDO(
+      "mysql:host=mariadb;dbname=database",
+      "user",
+      "password"
+    );
+
+    $statement = $databaseConnection->prepare($this->sql);
+    
+    return $statement->execute();
+  }
+
 }
-
-$queryBuilder = new QueryBuilder();
-
-$email = "anairi@esgi.fr";
-
-$queryBuilder
-  ->select(["id", "password", "email"])
-  ->from("users")
-  ->where("email", $email)
-  ->fetch();
