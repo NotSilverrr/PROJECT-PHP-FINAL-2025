@@ -17,7 +17,7 @@
             border-radius: 1000px;
             transition: all 200ms;
             &:hover {
-                background-color: var(--border-color);
+                background-color: var(--hover-color);
 
                 & .scrollable-list__img {
                     border-radius: 2rem;
