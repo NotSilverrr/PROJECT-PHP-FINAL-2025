@@ -1,0 +1,22 @@
+@use "../partials/functions" as f;
+@use "../partials/mixins" as m;
+
+@layer components {
+    .image-grid {
+        @include m.resetList;
+        column-count: 1;
+        column-gap: 1rem;
+
+
+        @media (width > f.screen(xl)){
+            column-count: 2;
+        }
+
+        @media (width > f.screen(xxl)){
+            column-count: 3;
+        }
+    }
+
+
+    
+}

@@ -3,4 +3,4 @@ import "../scss/main.scss";
 
 // transpilation / import des comportements js de nos composants
 import "./navbar.js";
-import "./nav-groups.js";
+import "./side-bar.js";

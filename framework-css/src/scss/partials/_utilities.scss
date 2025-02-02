@@ -1,4 +1,6 @@
 @use "variables" as v;
+@use "functions" as f;
+@use "mixins" as m;
 @layer utilities {
 	$increment: 0.25rem;
 
@@ -13,8 +15,13 @@
 		display: flex;
 	}
 
+	.overflow-y-scroll {
+		overflow-y: scroll;
+		@include m.scrollbar;
+	}
+
 	// spacing
-	@for $i from 1 through 8 {
+	@for $i from 1 through 30 {
 		.h-#{$i} {
 			height: $i * $increment;
 		}
@@ -33,6 +40,9 @@
 		.grow-#{$i} {
 			flex-grow: $i;
 		}
+		.text-#{$i} {
+			font-size: $i * $increment;
+		}
 		@each $name, $value in $directions {
 			.m#{$name}-#{$i} {
 				margin-#{$value}: $i * $increment;
@@ -40,6 +50,30 @@
 			.p#{$name}-#{$i} {
 				padding-#{$value}: $i * $increment;
 			}
+		}
+
+		
+	}
+
+	@for $i from 1 through 30 {
+		@each $bName, $bValue in v.$breakpoints {
+			@debug $bValue;
+			@media (width > #{$bValue}){
+				.#{$bName}-text-#{$i} {
+					font-size: $i * $increment;
+				}
+				@each $name, $value in $directions {
+					.#{$bName}-m#{$name}-#{$i} {
+						margin-#{$value}: $i * $increment;
+					}
+					.#{$bName}-p#{$name}-#{$i} {
+						padding-#{$value}: $i * $increment;
+					}
+					
+				}
+			}
+
+			
 		}
 	}
 

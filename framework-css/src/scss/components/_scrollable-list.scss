@@ -1,0 +1,75 @@
+@use "../partials/mixins" as m;
+@use "../partials/functions" as f;
+
+@layer components {
+    .scrollable-list {
+        @include m.resetList;
+        @include m.flexbox($direction: column);
+        @include m.scrollbar();
+        flex-grow: 1;
+        overflow-y: scroll;
+        position: relative;
+
+        a {
+            @include m.resetA();
+            @include m.flexbox($align: center, $gap: 1rem);
+            padding: f.rem(10);
+            border-radius: 1000px;
+            transition: all 200ms;
+            &:hover {
+                background-color: var(--border-color);
+
+                & .scrollable-list__img {
+                    border-radius: 2rem;
+                }
+            }
+        }
+
+        &::after {
+            display: block;
+            content: '';
+            position: sticky;
+            bottom: 0;
+            padding: 2rem;
+            background: linear-gradient(
+                to bottom,
+                transparent,
+                var(--background-color)
+            );
+        }
+
+
+        &__selected {
+            border: thin solid var(--border-color);
+        }
+
+
+        &__img {
+            display: block;
+            width: 3rem;
+            aspect-ratio: 1;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-radius: 1000px;
+            transition: all 300ms;
+        }
+
+        &__svg {
+            fill: var(--text-color);
+            height: 2rem;
+            width: 2rem;
+        }
+
+        &--square {
+            .scrollable-list__img {
+                border-radius: 1rem;
+            }
+
+            a {
+                border-radius: 1.5rem;
+            }
+
+        }
+    }
+}
