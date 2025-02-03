@@ -1,5 +1,102 @@
+@use "../partials/mixins" as m;
+
 @layer components {
     .table {
-        width: 100%;
+        border: thin solid var(--border-color);
+        border-radius: 1rem;
+        overflow: hidden;
+
+        
+        &__wrapper {
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td, th {
+            padding: 1rem;
+            text-align: start;
+            max-width: 10rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        th {
+            border-bottom: thin solid var(--border-color);;
+        }
+
+        tbody {
+
+            tr {
+                transition: all 200ms;
+                &:nth-child(even) {
+                    background-color: var(--border-color);
+                    
+                }
+
+                &:hover {
+                    background-color: var(--hover-color);
+                    cursor: pointer;
+                }
+
+                
+            }
+
+        }
+
+        &__nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+
+            &__buttons {
+                @include m.flexbox($align: center);
+            }
+
+            &__button {
+                @include m.resetA;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 2rem;
+                width: 2rem;
+                border-radius: 1000px;
+                transition: all 200ms;
+                
+
+                &.active {
+                    background-color: var(--border-color);
+                }
+                &:hover {
+                    background-color: var(--hover-color);
+                }
+
+                &:disabled {
+                    background-color: transparent;
+                    color: var(--black-transparent);
+                }
+
+                svg {
+                    fill: var(--text-color);
+
+                }
+            }
+
+            &__select {
+                @include m.resetSelect;
+                border-radius: 1000px;
+                padding: 0.2rem;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: var(--hover-color);
+                }
+            }
+        }
     }
 }
