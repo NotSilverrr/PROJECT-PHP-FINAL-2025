@@ -36,22 +36,20 @@
                 transition: all 200ms;
                 &:nth-child(even) {
                     background-color: var(--border-color);
-                    
                 }
-
                 &:hover {
                     background-color: var(--hover-color);
-                    cursor: pointer;
                 }
-
-                
             }
 
         }
 
+        &__action {
+            @include m.flexbox($align: center, $gap: 0.5rem);
+        }
+
         &__nav {
-            display: flex;
-            justify-content: space-between;
+            @include m.flexbox($justify: space-between);
             padding: 1rem;
 
             &__buttons {
@@ -60,9 +58,7 @@
 
             &__button {
                 @include m.resetA;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                @include m.flexbox($justify: center, $align: center);
                 height: 2rem;
                 width: 2rem;
                 border-radius: 1000px;
