@@ -67,6 +67,11 @@
 			padding: f.rem(8) f.rem(12);
 			font-size: f.rem(14);
 			line-height: f.rem(16);
+
+			svg {
+				height: 1rem;
+				width: 1rem;
+			}
 		}
 
 		

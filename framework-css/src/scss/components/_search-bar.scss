@@ -1,0 +1,36 @@
+@use "../partials/mixins" as m;
+@use "../partials/functions" as f;
+
+@layer components {
+    .search-bar {
+        height: 3rem;
+        border: thin solid var(--border-color);
+        border-radius: 0.75rem;
+        @include m.flexbox();
+
+        & input {
+            background-color: transparent;
+            border: none;
+            width: 100%;
+            padding: f.rem(10);
+            padding-left: f.rem(5);
+
+            &:focus {
+                outline: none
+            }
+        }
+
+        & button {
+            @include m.resetButton;
+            color: var(--white);
+            width: 3rem;
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            transition: background-color 200ms;
+
+            & svg {
+                fill: var(--neutral-200);
+            }
+        }
+    }
+}

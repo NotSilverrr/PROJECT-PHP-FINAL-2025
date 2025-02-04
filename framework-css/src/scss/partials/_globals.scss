@@ -36,6 +36,8 @@
 		--background-color: var(--white);
 		--shadow-color: #{$shadow-color};
 		--text-color: var(--neutral-800);
+		--hover-color: var(--neutral-75);
+
 
 		
 		@media (prefers-color-scheme: dark) {
@@ -44,6 +46,7 @@
 			--background-color: var(--neutral-950);
 			--shadow-color: #{$shadow-color};
 			--text-color: var(--neutral-100);
+			--hover-color: var(--neutral-800);
 		}
 
 
