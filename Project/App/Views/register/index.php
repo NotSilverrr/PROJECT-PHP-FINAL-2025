@@ -7,7 +7,7 @@
 </head>
 
 <body>
-<form method="POST" action="/register" enctype="multipart/form-data">
+<form method="POST" action="" enctype="multipart/form-data">
   <input type="email" name="email" id="email" required>
   <input type="text" name="profile_picture" id="profile_picture" required>
   <input type="password" name="password" id="password" required>

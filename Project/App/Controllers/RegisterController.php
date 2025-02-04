@@ -2,34 +2,37 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\Requests\RegisterRequest;
+
 class RegisterController
 {
-  public static function index(): void
+  public static function index()
   {
     require_once __DIR__ . "/../views/register/index.php";
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $email = $_POST['email'] ?? '';
-      $profile_picture = $_POST['profile_picture'] ?? '';
-      $password = $_POST['password'] ?? '';
-      $password_check = $_POST['password'] ?? '';
+  }
 
-      if($password !== $password_check){
-        $view->addData('error', "Les mots de passe ne sont pas identiques");
-      }
+  public static function post(): void
+  {
+    $request = new RegisterRequest();
 
-        try {
-            $user = new User(false, $profile_picture, $email, $password);
-            if ($user->findOneByEmail($email)) {
-                $view->addData('error', "Cet utilisateur existe deja");
-                exit;
-            }
-            //ajouter l'user
-            
-            header('Location: /login');
+    if($request->password !== $request->password_check){
+      echo "Les mots de passe ne sont pas identiques";
+      exit;
+    }
+
+    try {
+        $user = new User(false, $request->profile_picture, $request->email, $request->password);
+        if ($user->findOneByEmail($request->email)) {
+            echo "Cet utilisateur existe deja";
             exit;
-        } catch (\Exception $e) {
-            $view->addData('error', $e->getMessage());
         }
+        $user->createUser();
+        header('Location: /register');
+        echo "Utilisateur crée avec succès !";
+        exit;
+    } catch (\Exception $e) {
+        echo $e->getMessage();
+        exit;
     }
   }
 }

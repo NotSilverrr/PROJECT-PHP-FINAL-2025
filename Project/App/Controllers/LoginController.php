@@ -27,6 +27,15 @@ class LoginController
       die();
     }
 
-    echo "Envoyer une session";
+    session_start();
+    $_SESSION['login'] = 1;
+  }
+
+  public static function delete(): void
+  {
+    session_start();
+    session_destroy();
+    header('Location: /test');
+    exit;
   }
 }
