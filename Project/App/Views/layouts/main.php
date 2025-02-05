@@ -102,5 +102,6 @@
       </nav>
     </div>
     <?= $script ?? '' ?>
+    <script src="/dist/framework-esgi.js"></script>
   </body>
 </html>
