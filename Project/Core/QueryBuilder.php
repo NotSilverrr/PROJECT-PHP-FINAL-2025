@@ -20,6 +20,13 @@ class QueryBuilder
     return $this;
   }
 
+  public function delete()
+  {
+    $this->sql = $this->sql . "DELETE ";
+
+    return $this;
+  }
+
   public function from(string $tableName)
   {
     $this->sql = $this->sql . " FROM " . $tableName;
