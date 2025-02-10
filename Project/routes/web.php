@@ -1,4 +1,7 @@
 <?php
+
+use App\Controllers\Admin\AdminController;
+use App\Controllers\GroupController;
 use App\Core\Router;
 use App\Controllers\ImageController;
 use App\Controllers\LoginController;
@@ -24,3 +27,5 @@ $router->get("/admin/user", AdminUserController::class, "index");
 $router->post("/admin/user/delete", AdminUserController::class, "delete");
 $router->get("/admin/group", AdminGroupController::class, "index");
 $router->get("/admin/photo", AdminPhotoController::class, "index");
+
+$router->get("/group/{id}", GroupController::class, "show");

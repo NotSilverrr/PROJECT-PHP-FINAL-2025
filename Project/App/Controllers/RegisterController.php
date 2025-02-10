@@ -21,7 +21,12 @@ class RegisterController
     }
 
     try {
-        $user = new User(false, $request->profile_picture, $request->email, $request->password);
+      $user = new User(
+        isadmin: false, 
+        profile_picture: $request->profile_picture, 
+        email: $request->email, 
+        password: $request->password
+      );
         if ($user->findOneByEmail($request->email)) {
             echo "Cet utilisateur existe deja";
             exit;

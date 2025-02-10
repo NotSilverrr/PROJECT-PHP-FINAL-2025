@@ -1,117 +1,39 @@
 <?php
-
 namespace App\Models;
 
-use PDO;
+use Core\Database;
+use Core\QueryBuilder;
+use DateTime;
 
-class Group
-{
-  public int $id;
-  public string $created_at;
-  public string $updated_at;
+class Group {
 
-  public function __construct(
-    public string $name,
-    public string $profile_picture,
-    public int $owner
-  ) {
-    $this->id = 0;
-    $this->created_at = date('Y-m-d H:i:s');
-    $this->updated_at = date('Y-m-d H:i:s');
-  }
+    private int $id;
+    private string $name;
+    private string $profile_picture;
+    private int $ownerId;
+    private DateTime $created_at;
+    private DateTime $updated_at;
 
-  public static function findOneById(int $id): Group|null
-  {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
 
-    $getGroupQuery = $databaseConnection->prepare("SELECT id, name, profile_picture, owner, created_at, updated_at FROM groups WHERE id = :id");
-
-    $getGroupQuery->execute([
-      "id" => $id
-    ]);
-
-    $group = $getGroupQuery->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$group) {
-        return null;
+    public function __construct()
+    {
+        
     }
-    
-    $groupObj = new Group(
-        $group["name"],
-        $group["profile_picture"],
-        $group["owner"]
-    );
-    $groupObj->id = $group["id"];
-    $groupObj->created_at = $group["created_at"];
-    $groupObj->updated_at = $group["updated_at"];
-    return $groupObj;
-  }
 
-  public function createGroup()
-  {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
+    public static function getOneById(int $id)
+    {
+        $query = new QueryBuilder;
+        $response = $query->select()->from("groups")->where("id", "=", $id)->fetch();
+        
+        return $response;
 
-    $createGroupQuery = $databaseConnection->prepare(
-        "INSERT INTO groups (name, profile_picture, owner, created_at, updated_at) 
-         VALUES (:name, :profile_picture, :owner, :created_at, :updated_at)"
-    );
+    }
 
-    $createGroupQuery->execute([
-      "name" => $this->name,
-      "profile_picture" => $this->profile_picture,
-      "owner" => $this->owner,
-      "created_at" => $this->created_at,
-      "updated_at" => $this->updated_at
-    ]);
+    public static function getGroupsByUser()
+    {
+        $query = new QueryBuilder;
+        $response = $query->select(["name", "profile_picture", "owner"])->from("groups")->join("user_group", "groups.id", "=", "user_group.group_id")->where("user_group.user_id","=", "1")->fetchAll();
+        return $response;
+    }
 
-    $this->id = (int)$databaseConnection->lastInsertId();
-  }
-
-  public function updateGroup()
-  {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
-
-    $updateGroupQuery = $databaseConnection->prepare(
-        "UPDATE groups 
-         SET name = :name, 
-             profile_picture = :profile_picture,
-             updated_at = :updated_at
-         WHERE id = :id"
-    );
-
-    $this->updated_at = date('Y-m-d H:i:s');
-
-    $updateGroupQuery->execute([
-      "id" => $this->id,
-      "name" => $this->name,
-      "profile_picture" => $this->profile_picture,
-      "updated_at" => $this->updated_at
-    ]);
-  }
-
-  public function deleteGroup()
-  {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
-
-    $deleteGroupQuery = $databaseConnection->prepare("DELETE FROM groups WHERE id = :id");
-    $deleteGroupQuery->execute([
-      "id" => $this->id
-    ]);
-  }
 }
