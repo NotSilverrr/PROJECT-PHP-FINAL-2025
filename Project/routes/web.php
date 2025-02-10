@@ -1,4 +1,7 @@
 <?php
+
+use App\Controllers\Admin\AdminController;
+use App\Controllers\GroupController;
 use App\Core\Router;
 use App\Controllers\ImageController;
 use App\Controllers\LoginController;
@@ -15,3 +18,7 @@ $router->get("/register", RegisterController::class, "index");
 $router->post("/register", RegisterController::class, "post");
 
 $router->get("/test", TestController::class, "test");
+
+$router->get("/admin", AdminController::class, "test");
+
+$router->get("/group/{id}", GroupController::class, "show");
