@@ -127,6 +127,12 @@ class QueryBuilder
     return $this;
   }
 
+  public function groupBy(string $column)
+  {
+    $this->sql .= " GROUP BY " . $column;
+    return $this;
+  }
+
   private function executeStatement()
   {
 

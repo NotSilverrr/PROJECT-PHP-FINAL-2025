@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Core\QueryBuilder;
 use PDO;
 
 class Photo
@@ -53,19 +54,10 @@ class Photo
 
   public static function findByGroupId(int $groupId): array
   {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
 
-    $getPhotosQuery = $databaseConnection->prepare("SELECT id, file, group_id, user_id, created_at, updated_at FROM photos WHERE group_id = :group_id");
+    $query = new QueryBuilder;
+    $photos = $query->select()->from("photos")->where("group_id", "=", $groupId)->fetchAll();
 
-    $getPhotosQuery->execute([
-      "group_id" => $groupId
-    ]);
-
-    $photos = $getPhotosQuery->fetchAll(PDO::FETCH_ASSOC);
     $photoObjects = [];
     
     foreach ($photos as $photo) {

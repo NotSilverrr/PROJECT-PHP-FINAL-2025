@@ -23,7 +23,7 @@ class Group {
     public static function getOneById(int $id)
     {
         $query = new QueryBuilder;
-        $response = $query->select()->from("groups")->where("id", "=", $id)->fetch();
+        $response = $query->select()->from("groups")->where("groups.id", "=", $id)->fetch();
         
         return $response;
 
