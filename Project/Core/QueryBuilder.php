@@ -32,6 +32,24 @@ class QueryBuilder
     return $this;
   }
 
+  public function update()
+  {
+    $this->sql = $this->sql . "UPDATE ";
+
+    return $this;
+  }
+
+  public function set(array $columnValues)
+  {
+    $sets = [];
+    foreach ($columnValues as $column => $value) {
+      $sets[] = "$column = '$value'";
+    }
+    $this->sql = $this->sql . " SET " . implode(", ", $sets);
+
+    return $this;
+  }
+
   public function from(string $tableName)
   {
     $this->sql = $this->sql . " FROM " . $tableName;
@@ -75,6 +93,31 @@ class QueryBuilder
     $paramName = ":where_" . count($this->parameters);
     $this->sql = $this->sql . " OR " . $columnName . " = " . $paramName;
     $this->parameters[$paramName] = $value;
+    return $this;
+  }
+
+  public function insert()
+  {
+    $this->sql = $this->sql . "INSERT ";
+    return $this;
+  }
+
+  public function into(string $tableName, array $columns)
+  {
+    $this->sql = $this->sql . "INTO " . $tableName;
+    $this->sql .= " (" . implode(", ", $columns) . ")";
+    return $this;
+  }
+
+  public function values(array $values)
+  {
+    $placeholders = [];
+    foreach ($values as $key => $value) {
+      $paramName = ":value_" . count($this->parameters);
+      $placeholders[] = $paramName;
+      $this->parameters[$paramName] = $value;
+    }
+    $this->sql .= " VALUES (" . implode(", ", $placeholders) . ")";
     return $this;
   }
 
