@@ -19,7 +19,7 @@ class AdminUserController
   {
     $id = $_POST['id'];
     $queryBuilder = new QueryBuilder();
-    $query = $queryBuilder->delete()->from('users')->where('id', $id)->execute();
+    $query = $queryBuilder->delete()->from('users')->where('id','=', $id)->execute();
     
     return redirect('/admin/user');
   }
