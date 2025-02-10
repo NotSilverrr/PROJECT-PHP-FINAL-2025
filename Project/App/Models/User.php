@@ -2,47 +2,56 @@
 
 namespace App\Models;
 
+use Core\QueryBuilder;
 use PDO;
 
 class User
 {
-  public int $id;
-  public string $created_at;
-  public string $updated_at;
-
   public function __construct(
+    public ?int $id = null,
     public bool $isadmin,
-    public string $profile_picture,
+    public ?string $profile_picture,
     public string $email,
     public string $password,
-    
-  ) {
-    $this->id = 0;
-    $this->created_at = date('Y-m-d H:i:s');
-    $this->updated_at = date('Y-m-d H:i:s');
-  }
+    public ?string $created_at = null,
+    public ?string $updated_at = null
+  ) {}
 
   public static function findOneByEmail(string $email): User|null
   {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
 
-    $getUserQuery = $databaseConnection->prepare("SELECT id, is_admin, profile_picture, email, password , created_at, updated_at FROM users WHERE email = :email");
 
-    $getUserQuery->execute([
-      "email" => $email
-    ]);
-
-    $user = $getUserQuery->fetch(PDO::FETCH_ASSOC);
+    $query = new QueryBuilder;
+    $user = $query->select()->from("users")->where("email", "=", $email)->fetch();
     
     if (!$user) {
         return null;
     }
     
-    return new User($user["is_admin"], $user["profile_picture"], $user["email"], $user["password"], $user["created_at"], $user["updated_at"]);
+    return new User(
+      $user["id"],
+      (bool)$user["is_admin"],
+      $user["profile_picture"] ?? null,
+      $user["email"],
+      $user["password"],
+      $user["created_at"],
+      $user["updated_at"]
+  );
+  }
+
+  public static function findOneById(int $id)
+  {
+    $query = new QueryBuilder;
+    $user = $query->select()->from("users")->where("id", "=", $id)->fetch();
+    return new User(
+      $user["id"],
+      (bool)$user["is_admin"],
+      $user["profile_picture"] ?? null,
+      $user["email"],
+      $user["password"],
+      $user["created_at"],
+      $user["updated_at"]
+  );
   }
 
   public function createUser()
@@ -62,6 +71,8 @@ class User
       "password" => password_hash($this->password, PASSWORD_DEFAULT),
       "created_at" => $this->created_at
     ]);
+
+    $this->id = (int) $databaseConnection->lastInsertId();
   }
   public function isValidPassword(string $password): bool
   {

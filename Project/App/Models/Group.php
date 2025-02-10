@@ -23,9 +23,17 @@ class Group {
     public static function getOneById(int $id)
     {
         $query = new QueryBuilder;
-        $response = $query->select(["name", "profile_picture", "owner"])->from("groups")->where("id", $id)->fetch();
+        $response = $query->select()->from("groups")->where("id", "=", $id)->fetch();
+        
         return $response;
 
+    }
+
+    public static function getGroupsByUser()
+    {
+        $query = new QueryBuilder;
+        $response = $query->select(["name", "profile_picture", "owner"])->from("groups")->join("user_group", "groups.id", "=", "user_group.group_id")->where("user_group.user_id","=", "1")->fetchAll();
+        return $response;
     }
 
 }
