@@ -1,3 +1,13 @@
+<?php
+
+use App\Services\Auth;
+
+  if (!Auth::check()) {
+    header('Location: /login');
+    exit;
+  }
+  ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

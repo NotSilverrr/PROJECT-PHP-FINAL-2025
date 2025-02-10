@@ -8,7 +8,7 @@ class RegisterController
 {
   public static function index()
   {
-    require_once __DIR__ . "/../views/register/index.php";
+    return view('register.index')->layout('guest');
   }
 
   public static function post(): void

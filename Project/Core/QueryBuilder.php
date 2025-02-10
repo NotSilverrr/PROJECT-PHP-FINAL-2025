@@ -3,6 +3,7 @@
 namespace Core;
 
 use PDO;
+use Core\Database;
 
 class QueryBuilder
 {
@@ -128,12 +129,8 @@ class QueryBuilder
 
   private function executeStatement()
   {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
 
+    $databaseConnection = Database::getConnection();
     $statement = $databaseConnection->prepare($this->sql);
     
     foreach ($this->parameters as $param => $value) {
