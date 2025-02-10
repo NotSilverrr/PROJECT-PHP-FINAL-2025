@@ -9,7 +9,7 @@ class LoginController
 {
   public static function index()
   {
-    return view('login.index')->layout('auth');
+    return view('login.index')->layout('guest');
   }
 
   public static function post(): void
