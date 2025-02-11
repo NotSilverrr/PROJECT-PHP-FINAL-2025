@@ -32,6 +32,16 @@
 			fill: var(--white);
 		}
 
+		&--admin{
+			display: inline-flex;
+			vertical-align: middle;
+			margin-left: f.rem(16);
+			width: f.rem(40);
+			height: f.rem(40);
+			border-radius: 50%;
+			padding: 0;
+		}
+
 		&:hover {
 			background-color: var(--black-hover);
 		}
