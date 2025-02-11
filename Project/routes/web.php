@@ -25,6 +25,8 @@ $router->get("/test", TestController::class, "test");
 
 $router->get("/admin/user", AdminUserController::class, "index");
 $router->post("/admin/user/delete", AdminUserController::class, "delete");
+$router->get("/admin/user/update/{id}", AdminUserController::class, "updateIndex");
+$router->post("/admin/user/update", AdminUserController::class, "update");
 $router->get("/admin/group", AdminGroupController::class, "index");
 $router->get("/admin/photo", AdminPhotoController::class, "index");
 

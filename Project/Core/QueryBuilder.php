@@ -43,16 +43,21 @@ class QueryBuilder
   {
     $sets = [];
     foreach ($columnValues as $column => $value) {
-      $sets[] = "$column = '$value'";
+      $paramName = ":set_" . count($this->parameters);
+      $sets[] = "$column = $paramName";
+      $this->parameters[$paramName] = $value;
     }
     $this->sql = $this->sql . " SET " . implode(", ", $sets);
-
     return $this;
   }
 
   public function from(string $tableName)
   {
-    $this->sql = $this->sql . " FROM " . $tableName;
+    if (strpos($this->sql, "UPDATE") === 0) {
+      $this->sql = "UPDATE " . $tableName . substr($this->sql, 6);
+    } else {
+      $this->sql = $this->sql . " FROM " . $tableName;
+    }
     return $this;
   }
 
@@ -154,6 +159,12 @@ class QueryBuilder
   public function execute()
   {
     return $this->executeStatement();
+  }
+
+  public function executeUpdate(): bool
+  {
+    $statement = $this->executeStatement();
+    return $statement->rowCount() > 0;
   }
 
   // Méthode utile pour le debug

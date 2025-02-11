@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dist/framework-esgi.css">
     <title><?= $title ?? "Default title" ?></title>
 </head>
 <body>
-    <main>
     <div class="container flex">
         <nav class="side-bar side-bar--collapsed">
         <div class="side-bar__header">
@@ -48,6 +48,6 @@
         </nav>
         <?= $content ?>
     </div>
-    </main>
+    <script src="/dist/framework-esgi.js"></script>
 </body>
 </html>

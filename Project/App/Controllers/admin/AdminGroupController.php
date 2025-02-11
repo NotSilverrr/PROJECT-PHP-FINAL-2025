@@ -21,7 +21,7 @@ class AdminGroupController
   {
     $id = $_POST['id'];
     $queryBuilder = new QueryBuilder();
-    $query = $queryBuilder->delete()->from('groups')->where('id', $id)->execute();
+    $query = $queryBuilder->delete()->from('groups')->where('id',"=", $id)->execute();
     
     return redirect('/admin/group');
   }
