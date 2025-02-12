@@ -29,7 +29,7 @@ use App\Services\Auth;
           <h2>Groups</h2>
         </div>
         <div class="side-bar__content">
-          <form class="search-bar">
+          <form class="search-bar" id="search-groups-form">
             <button class="">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -43,10 +43,9 @@ use App\Services\Auth;
                 />
               </svg>
             </button>
-            <input type="text" placeholder="Search" />
+            <input type="text" placeholder="Search" id="search-groups"/>
           </form>
-          <ul class="scrollable-list scrollable-list--square">
-            
+          <ul class="scrollable-list scrollable-list--square" id="groups-list">
           </ul>
           <button class="button button--primary">
             <svg
@@ -99,8 +98,22 @@ use App\Services\Auth;
             </button>
             <input type="text" placeholder="Search" />
           </form>
-          <ul class="scrollable-list">
-            
+          <ul class="scrollable-list" id="members-list">
+            <?php
+            foreach ($members as $member) {
+              ?>
+              <li>
+                <a href="" class="<?= $member["id"] == Auth::id() ? "scrollable-list__selected" : "" ?>">
+                  <span
+                    class="scrollable-list__img"
+                    style="background-image: url('<?= $member["profile_picture"] ?>')"
+                  ></span>
+                  <span><?= $member["first_name"] ?></span>
+                </a>
+              </li>
+              <?php
+            }
+             ?>
           </ul>
           <button class="button button--primary">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
@@ -113,5 +126,7 @@ use App\Services\Auth;
     </div>
     <?= $script ?? '' ?>
     <script src="/dist/framework-esgi.js"></script>
+    <script src="/js/layout_main.js"></script>
+
   </body>
 </html>

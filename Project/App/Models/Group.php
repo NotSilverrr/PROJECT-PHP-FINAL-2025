@@ -29,10 +29,17 @@ class Group {
 
     }
 
-    public static function getGroupsByUser()
+    public static function getGroupsByUser(int $userId)
     {
         $query = new QueryBuilder;
-        $response = $query->select(["name", "profile_picture", "owner"])->from("groups")->join("user_group", "groups.id", "=", "user_group.group_id")->where("user_group.user_id","=", "1")->fetchAll();
+        $response = $query->select(["id","name", "profile_picture", "owner"])->from("groups")->join("user_group", "groups.id", "=", "user_group.group_id")->where("user_group.user_id","=", $userId)->fetchAll();
+        return $response;
+    }
+
+    public static function getMembers(int $groupId)
+    {
+        $query = new QueryBuilder;
+        $response = $query->select(["users.id", "users.first_name", "users.last_name", "users.profile_picture"])->from("users")->join("user_group", "users.id", "=", "user_group.user_id")->where("user_group.group_id", "=", $groupId)->fetchAll();
         return $response;
     }
 

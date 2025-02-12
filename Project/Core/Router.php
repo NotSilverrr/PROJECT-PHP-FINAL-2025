@@ -63,6 +63,10 @@ class Router
         $method = $_SERVER["REQUEST_METHOD"];
         $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
+        if (preg_match('/\.(?:js|css|png|jpg|jpeg|gif|ico|svg|woff2?|ttf|eot)$/', $path)) {
+            return; // Laisser le serveur web gérer la requête
+        }
+
         foreach ($this->routes as $route) {
             if ($method === $route["method"] && preg_match($route["pattern"], $path, $matches)) {
                 $params = $this->extractParameters($route["pattern"], $path);
