@@ -2,7 +2,6 @@
 namespace App\Controllers\admin;
 
 use App\Models\User;
-use App\Requests\LoginRequest;
 use Core\QueryBuilder;
 
 class AdminUserController
@@ -27,7 +26,7 @@ class AdminUserController
   public static function updateIndex(int $id)
   {
     $queryBuilder = new QueryBuilder();
-    $user = $queryBuilder->select(['id', 'email', 'is_admin', 'profile_picture', 'created_at'])->from('users')->where('id', '=', $id)->fetch();
+    $user = $queryBuilder->select(['id', 'email', 'is_admin', 'profile_picture'])->from('users')->where('id', '=', $id)->fetch();
     
     if (!$user) {
       return redirect('/admin/user');

@@ -29,7 +29,14 @@ $router->get("/admin/user/update/{id}", AdminUserController::class, "updateIndex
 $router->post("/admin/user/update", AdminUserController::class, "update");
 $router->get("/admin/user/add", AdminUserController::class, "addIndex");
 $router->post("/admin/user/add", AdminUserController::class, "add");
+
 $router->get("/admin/group", AdminGroupController::class, "index");
+$router->post("/admin/group/delete", AdminGroupController::class, "delete");
+$router->get("/admin/group/update/{id}", AdminGroupController::class, "updateIndex");
+$router->post("/admin/group/update", AdminGroupController::class, "update");
+$router->get("/admin/group/add", AdminGroupController::class, "addIndex");
+$router->post("/admin/group/add", AdminGroupController::class, "add");
+
 $router->get("/admin/photo", AdminPhotoController::class, "index");
 
 $router->get("/group/{id}", GroupController::class, "show");

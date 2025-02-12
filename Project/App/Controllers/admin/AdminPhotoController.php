@@ -1,8 +1,7 @@
 <?php
 namespace App\Controllers\admin;
 
-use App\Models\User;
-use App\Requests\LoginRequest;
+use App\Models\Photo;
 use Core\QueryBuilder;
 
 class AdminPhotoController
@@ -24,5 +23,7 @@ class AdminPhotoController
     
     return redirect('/admin/photo');
   }
+
+
 
 }
