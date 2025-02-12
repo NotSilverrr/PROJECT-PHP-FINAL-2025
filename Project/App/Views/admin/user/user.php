@@ -1,7 +1,9 @@
 <section class="grow-1 m-4 overflow-y-scroll">
 <div class="flex justify-between items-center">
   <h1 class="mt-24 text-8 lg-mt-4">Users</h1>
-  <button class="button button--primary button--admin">+</button>
+  <a href="/admin/user/add">
+    <button class="button button--primary button--admin">+</button>
+  </a>
 </div>
 <div class="table">
     <div class="table__wrapper">

@@ -48,4 +48,21 @@ class AdminUserController
     
     return redirect('/admin/user');
   }
+
+  public static function addIndex()
+  {
+    return view('admin.user.user_form')->layout('admin');
+  }
+  public static function add()
+  {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $is_admin = isset($_POST['is_admin']) ? 1 : 0;
+    $profile_picture = $_POST['profile_picture'];
+
+    $user = new User(null, $is_admin, $profile_picture, $email, $password);
+    $user->createUser();
+    
+    return redirect('/admin/user');
+  }
 }
