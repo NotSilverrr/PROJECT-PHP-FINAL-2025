@@ -31,4 +31,5 @@ $router->get("/admin/group", AdminGroupController::class, "index");
 $router->get("/admin/photo", AdminPhotoController::class, "index");
 
 $router->get("/group/{id}", GroupController::class, "show");
+$router->get("/group", GroupController::class, "show");
 $router->get("/api/group", GroupController::class, "getUsersGroups");

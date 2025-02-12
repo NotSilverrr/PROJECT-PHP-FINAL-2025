@@ -31,8 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             data.forEach(group => {
                 const groupItem = document.createElement('li');
                 const groupLink = document.createElement('a');
-                groupLink.href = '#';
-
+                groupLink.href = '/group/' + group.id;
                 const groupImg = document.createElement('span');
                 groupImg.className = 'scrollable-list__img';
                 groupImg.style.backgroundImage = `url('${group.profile_picture}')`;

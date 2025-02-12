@@ -9,8 +9,10 @@ class User
 {
   public function __construct(
     public ?int $id = null,
-    public bool $isadmin,
+    public string $first_name,
+    public string $last_name,
     public ?string $profile_picture,
+    public bool $isadmin,
     public string $email,
     public string $password,
     public ?string $created_at = null,
@@ -20,9 +22,9 @@ class User
   public static function findOneByEmail(string $email): User|null
   {
 
-
     $query = new QueryBuilder;
     $user = $query->select()->from("users")->where("email", "=", $email)->fetch();
+
     
     if (!$user) {
         return null;
@@ -30,8 +32,10 @@ class User
     
     return new User(
       $user["id"],
-      (bool)$user["is_admin"],
+      $user["first_name"],
+      $user["last_name"],
       $user["profile_picture"] ?? null,
+      (bool)$user["is_admin"],
       $user["email"],
       $user["password"],
       $user["created_at"],
@@ -45,8 +49,10 @@ class User
     $user = $query->select()->from("users")->where("id", "=", $id)->fetch();
     return new User(
       $user["id"],
-      (bool)$user["is_admin"],
+      $user["first_name"],
+      $user["last_name"],
       $user["profile_picture"] ?? null,
+      (bool)$user["is_admin"],
       $user["email"],
       $user["password"],
       $user["created_at"],
@@ -62,10 +68,12 @@ class User
       "password"
     );
 
-    $getUserQuery = $databaseConnection->prepare("INSERT INTO users (profile_picture, email, password, is_admin, created_at) VALUES (:profile_picture, :email, :password, :isadmin, :created_at)");
+    $getUserQuery = $databaseConnection->prepare("INSERT INTO users (profile_picture, email, first_name, last_name, password, is_admin, created_at) VALUES (:profile_picture, :email, :first_name, :last_name, :password, :isadmin, :created_at)");
 
     $getUserQuery->execute([
       "email" => $this->email,
+      "first_name" => $this->first_name,
+      "last_name" => $this->last_name,
       "isadmin" => (int)$this->isadmin,
       "profile_picture" => $this->profile_picture,
       "password" => password_hash($this->password, PASSWORD_DEFAULT),

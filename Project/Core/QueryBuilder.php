@@ -86,18 +86,18 @@ class QueryBuilder
     return $this->join($table, $firstKey, $operator, $secondKey, 'RIGHT');
   }
 
-  public function andWhere(string $columnName, $value)
+  public function andWhere(string $columnName, $operator, $value)
   {
     $paramName = ":where_" . count($this->parameters);
-    $this->sql = $this->sql . " AND " . $columnName . " = " . $paramName;
+    $this->sql = $this->sql . " AND " . $columnName . " " . $operator . " " . $paramName;
     $this->parameters[$paramName] = $value;
     return $this;
   }
 
-  public function orWhere(string $columnName, $value)
+  public function orWhere(string $columnName, $operator, $value)
   {
     $paramName = ":where_" . count($this->parameters);
-    $this->sql = $this->sql . " OR " . $columnName . " = " . $paramName;
+    $this->sql = $this->sql . " OR " . $columnName . " " . $operator . " " . $paramName;
     $this->parameters[$paramName] = $value;
     return $this;
   }

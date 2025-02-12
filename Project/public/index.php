@@ -1,7 +1,6 @@
 <?php
 
 use Core\Database;
-
 require_once __DIR__ . '/../Helpers/helpers.php';
 
 error_reporting(E_ALL);
