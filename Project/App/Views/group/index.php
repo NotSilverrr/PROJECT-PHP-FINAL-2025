@@ -15,7 +15,6 @@ if (isset($group) && !empty($group)) : ?>
         </button>
     </form>
     <?php endif; ?>
-
 </div>
 
 
