@@ -34,7 +34,7 @@ class RegisterController
             exit;
         }
         $user->createUser();
-        header('Location: /register');
+        header('Location: /login');
         echo "Utilisateur crée avec succès !";
         exit;
     } catch (\Exception $e) {

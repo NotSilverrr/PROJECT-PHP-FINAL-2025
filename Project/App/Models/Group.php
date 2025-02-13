@@ -9,20 +9,37 @@ use PDO;
 class Group {
 
 
-    public function __construct(
-        public ?int $id = null,
-        public string $name,
-        public ?string $profile_picture,
-        public int $ownerId,
-        public ?string $created_at = null,
-        public ?string $updated_at = null
-      ) {}
+  public function __construct(
+    public ?int $id = null,
+    public string $name,
+    public ?string $profile_picture,
+    public int $ownerId,
+    public ?string $created_at = null,
+    public ?string $updated_at = null
+  ) {}
+
+    public static function isMember(int $groupId)
+    {
+        $userId = Auth::id();
+        $query = new QueryBuilder;
+        $response = $query->select()->from("user_group")->where("user_id", "=", $userId)->andWhere("group_id", "=", $groupId)->fetch();
+        return $response;
+    }
+
+    public static function isOwner(int $groupId)
+    {
+        $userId = Auth::id();
+        $query = new QueryBuilder;
+        $response = $query->select()->from("groups")->where("owner", "=", $userId)->andWhere("id", "=", $groupId)->fetch();
+        return $response;
+    }
+
     public static function getOneById(int $id)
     {
         $query = new QueryBuilder;
         $response = $query->select()->from("groups")->where("groups.id", "=", $id)->fetch();
 
-        $group = new Group($response["id"], $response["name"], $response["profile_picture"], $response["owner"], $response["created_at"], $response["updated_at"]);
+        $group = new Group($response["id"], $response["name"], $response["profile_picture"], $response["owner"], new DateTime($response["created_at"]), new DateTime($response["updated_at"]));
         
         return $group;
 
@@ -84,6 +101,14 @@ class Group {
       ];
   
       return $queryBuilder->update()->from('groups')->set($data)->where('id', '=', $this->id)->executeUpdate();
+    }
+      public static function deleteMember(int $groupId, int $userId)
+    {
+        if(self::isOwner($groupId)) {
+            $query = new QueryBuilder;
+            $query->delete()->from("user_group")->where("group_id", "=", $groupId)->andWhere("user_id", "=", $userId)->execute();
+        }
+        
     }
 
 }

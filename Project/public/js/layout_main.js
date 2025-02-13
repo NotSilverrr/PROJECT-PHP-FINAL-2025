@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 groupImg.style.backgroundImage = `url('${group.profile_picture}')`;
 
                 const groupName = document.createElement('span');
+                groupName.classList.add('scrollable-list__text');
                 groupName.textContent = group.name;
                 const urlSegments = window.location.pathname.split('/');
                 const groupId = urlSegments[urlSegments.length - 1];

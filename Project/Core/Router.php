@@ -3,6 +3,7 @@ namespace Core;
 
 class Router {
     private array $routes;
+    private array $redirects = [];
     
     public function __construct()
     {
@@ -18,6 +19,11 @@ class Router {
     public function post(string $path, string $controllerName, string $methodName): void
     {
         $this->addRoute('POST', $path, $controllerName, $methodName);
+    }
+
+    public function redirect(string $from, string $to, int $statusCode = 302): void
+    {
+        $this->redirects[$from] = ["destination" => $to, "statusCode" => $statusCode];
     }
     
     private function addRoute(string $method, string $path, string $controllerName, string $methodName): void
@@ -56,6 +62,13 @@ class Router {
     {
         $method = $_SERVER["REQUEST_METHOD"];
         $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+
+        if (array_key_exists($path, $this->redirects)) {
+            $redirect = $this->redirects[$path];
+            http_response_code($redirect["statusCode"]);
+            header("Location: " . $redirect["destination"]);
+            exit;
+        }
 
         if (preg_match('/\.(?:js|css|png|jpg|jpeg|gif|ico|svg|woff2?|ttf|eot)$/', $path)) {
             return;
