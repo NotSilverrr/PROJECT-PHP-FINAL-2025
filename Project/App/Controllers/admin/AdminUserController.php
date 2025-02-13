@@ -39,10 +39,12 @@ class AdminUserController
     $id = $_POST['id'];
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
     $is_admin = isset($_POST['is_admin']) ? 1 : 0;
     $profile_picture = $_POST['profile_picture'];
 
-    $user = new User($id, $is_admin, $profile_picture, $email, $password);
+    $user = new User($id,$first_name, $last_name, $profile_picture, $is_admin, $email, $password);
     $user->update();
     
     return redirect('/admin/user');

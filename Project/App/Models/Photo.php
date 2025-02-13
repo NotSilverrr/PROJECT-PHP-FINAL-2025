@@ -28,10 +28,27 @@ class Photo
 
   public static function findByGroupId(int $groupId): array
   {
+
     $query = new QueryBuilder;
-    $response = $query->select()->from("photos")->where("group_id", "=", $groupId)->fetchAll();
-    return $response;
-}
+    $photos = $query->select()->from("photos")->where("group_id", "=", $groupId)->fetchAll();
+
+    $photoObjects = [];
+    
+    foreach ($photos as $photo) {
+        $photoObj = new Photo(
+            null,
+            $photo["file"],
+            $photo["group_id"],
+            $photo["user_id"]
+        );
+        $photoObj->id = $photo["id"];
+        $photoObj->created_at = $photo["created_at"];
+        $photoObj->updated_at = $photo["updated_at"];
+        $photoObjects[] = $photoObj;
+    }
+    
+    return $photoObjects;
+  }
 
   public function createPhoto()
   {

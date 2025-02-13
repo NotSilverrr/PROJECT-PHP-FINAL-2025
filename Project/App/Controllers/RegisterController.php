@@ -8,7 +8,7 @@ class RegisterController
 {
   public static function index()
   {
-    require_once __DIR__ . "/../views/register/index.php";
+    return view('register.index')->layout('guest');
   }
 
   public static function post(): void
@@ -22,7 +22,9 @@ class RegisterController
 
     try {
       $user = new User(
-        isadmin: false, 
+        isadmin: false,
+        first_name: $request->first_name,
+        last_name: $request->last_name,
         profile_picture: $request->profile_picture, 
         email: $request->email, 
         password: $request->password

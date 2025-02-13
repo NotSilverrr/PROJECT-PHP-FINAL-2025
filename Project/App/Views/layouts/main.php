@@ -1,3 +1,15 @@
+<?php
+
+use App\Models\Group;
+use App\Models\User;
+use App\Services\Auth;
+
+  if (!Auth::check()) {
+    header('Location: /login');
+    exit;
+  }
+  ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -19,7 +31,7 @@
           <h2>Groups</h2>
         </div>
         <div class="side-bar__content">
-          <form class="search-bar">
+          <form class="search-bar" id="search-groups-form">
             <button class="">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -33,10 +45,9 @@
                 />
               </svg>
             </button>
-            <input type="text" placeholder="Search" />
+            <input type="text" placeholder="Search" id="search-groups"/>
           </form>
-          <ul class="scrollable-list scrollable-list--square">
-            
+          <ul class="scrollable-list scrollable-list--square" id="groups-list">
           </ul>
           <button class="button button--primary">
             <svg
@@ -73,7 +84,7 @@
           <h2>Members</h2>
         </div>
         <div class="side-bar__content">
-          <form class="search-bar">
+          <form class="search-bar" action="" method="GET">
             <button class="">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -87,10 +98,40 @@
                 />
               </svg>
             </button>
-            <input type="text" placeholder="Search" />
+            <input name="m" type="text" placeholder="Search" value="<?= isset($_GET['m']) ? htmlspecialchars($_GET['m']) : '' ?>" />
           </form>
-          <ul class="scrollable-list">
+          <ul class="scrollable-list" id="members-list">
+            <?php
+            if (isset($members) && !empty($members)) {
+              foreach ($members as $member) {
+                ?>
+                <li>
+                  <a href="#" class="<?= $member->id == Auth::id() ? "scrollable-list__selected" : "" ?>">
+                    <span
+                      class="scrollable-list__img"
+                      style="background-image: url('<?= $member->profile_picture ?>')"
+                    ></span>
+                    <span><?= $member->first_name ?></span>
+                    <?php if (Group::isAdmin($group->ownerId)): ?>
+                    <form action="" method="post">
+                      <button type="submit" class="button button--danger button--rounded">
+                      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
+                      </button>
+                    </form>
+                    <?php endif; ?>
+                  </a>
+                </li>
+                <?php
+              }
+            } else {
+              ?>
+              <li>
+                <span>No members</span>
+              </li>
+              <?php
+            }
             
+             ?>
           </ul>
           <button class="button button--primary">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
@@ -103,5 +144,7 @@
     </div>
     <?= $script ?? '' ?>
     <script src="/dist/framework-esgi.js"></script>
+    <script src="/js/layout_main.js"></script>
+
   </body>
 </html>

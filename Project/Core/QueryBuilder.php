@@ -3,6 +3,7 @@
 namespace Core;
 
 use PDO;
+use Core\Database;
 
 class QueryBuilder
 {
@@ -85,18 +86,18 @@ class QueryBuilder
     return $this->join($table, $firstKey, $operator, $secondKey, 'RIGHT');
   }
 
-  public function andWhere(string $columnName, $value)
+  public function andWhere(string $columnName, $operator, $value)
   {
     $paramName = ":where_" . count($this->parameters);
-    $this->sql = $this->sql . " AND " . $columnName . " = " . $paramName;
+    $this->sql = $this->sql . " AND " . $columnName . " " . $operator . " " . $paramName;
     $this->parameters[$paramName] = $value;
     return $this;
   }
 
-  public function orWhere(string $columnName, $value)
+  public function orWhere(string $columnName, $operator, $value)
   {
     $paramName = ":where_" . count($this->parameters);
-    $this->sql = $this->sql . " OR " . $columnName . " = " . $paramName;
+    $this->sql = $this->sql . " OR " . $columnName . " " . $operator . " " . $paramName;
     $this->parameters[$paramName] = $value;
     return $this;
   }
@@ -126,14 +127,16 @@ class QueryBuilder
     return $this;
   }
 
+  public function groupBy(string $column)
+  {
+    $this->sql .= " GROUP BY " . $column;
+    return $this;
+  }
+
   private function executeStatement()
   {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
 
+    $databaseConnection = Database::getConnection();
     $statement = $databaseConnection->prepare($this->sql);
     
     foreach ($this->parameters as $param => $value) {

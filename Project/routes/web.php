@@ -45,3 +45,5 @@ $router->get("/admin/photo/add", AdminPhotoController::class, "addIndex");
 $router->post("/admin/photo/add", AdminPhotoController::class, "add");
 
 $router->get("/group/{id}", GroupController::class, "show");
+$router->get("/group", GroupController::class, "show");
+$router->get("/api/group", GroupController::class, "getUsersGroups");
