@@ -20,7 +20,7 @@ class AdminPhotoController
   {
     $id = $_POST['id'];
     $queryBuilder = new QueryBuilder();
-    $query = $queryBuilder->delete()->from('photos')->where('id', $id)->execute();
+    $query = $queryBuilder->delete()->from('photos')->where('id','=', $id)->execute();
     
     return redirect('/admin/photo');
   }

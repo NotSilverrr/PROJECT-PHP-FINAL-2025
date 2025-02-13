@@ -15,6 +15,8 @@ class CreateUsersTable
             CREATE TABLE users (
                 id INTEGER PRIMARY KEY AUTO_INCREMENT,
                 is_admin BOOLEAN DEFAULT FALSE,
+                first_name VARCHAR(100),
+                last_name VARCHAR(100),
                 profile_picture VARCHAR(100),
                 email VARCHAR(320) NOT NULL UNIQUE,
                 password VARCHAR(64) NOT NULL,

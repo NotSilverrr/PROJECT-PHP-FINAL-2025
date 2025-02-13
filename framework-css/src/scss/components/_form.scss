@@ -16,6 +16,9 @@
     flex-direction: column;
     align-items: center;
     padding: f.rem(16);
+    &-admin{
+      width: 100%;
+    }
   }
 
   .form-card {
@@ -27,6 +30,10 @@
     width: 100%;
     text-align: center;
     color: var(--blue-900);
+    &-admin{
+      width: 100%;
+      padding: f.rem(70);
+    }
   }
 
   .form-title {

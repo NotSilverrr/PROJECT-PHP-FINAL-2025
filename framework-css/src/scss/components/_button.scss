@@ -54,6 +54,17 @@
 				background-color: var(--danger-400);
 			}
 		}
+		&--transparent {
+			background-color: transparent;
+			color: var(--text-color);
+			padding: 0.2rem;
+			svg {
+				fill: var(--text-color)
+			}
+			&:hover {
+				background-color: var(--hover-color);
+			}
+		}
 		// classes modificatrices de taille
 		&--lg {
 			padding: f.rem(16) f.rem(24);
@@ -72,6 +83,10 @@
 				height: 1rem;
 				width: 1rem;
 			}
+		}
+
+		&--rounded {
+			border-radius: 10000px;
 		}
 
 		

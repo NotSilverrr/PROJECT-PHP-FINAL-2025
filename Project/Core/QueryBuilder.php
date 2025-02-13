@@ -44,16 +44,21 @@ class QueryBuilder
   {
     $sets = [];
     foreach ($columnValues as $column => $value) {
-      $sets[] = "$column = '$value'";
+      $paramName = ":set_" . count($this->parameters);
+      $sets[] = "$column = $paramName";
+      $this->parameters[$paramName] = $value;
     }
     $this->sql = $this->sql . " SET " . implode(", ", $sets);
-
     return $this;
   }
 
   public function from(string $tableName)
   {
-    $this->sql = $this->sql . " FROM " . $tableName;
+    if (strpos($this->sql, "UPDATE") === 0) {
+      $this->sql = "UPDATE " . $tableName . substr($this->sql, 6);
+    } else {
+      $this->sql = $this->sql . " FROM " . $tableName;
+    }
     return $this;
   }
 
@@ -81,18 +86,18 @@ class QueryBuilder
     return $this->join($table, $firstKey, $operator, $secondKey, 'RIGHT');
   }
 
-  public function andWhere(string $columnName, $value)
+  public function andWhere(string $columnName, $operator, $value)
   {
     $paramName = ":where_" . count($this->parameters);
-    $this->sql = $this->sql . " AND " . $columnName . " = " . $paramName;
+    $this->sql = $this->sql . " AND " . $columnName . " " . $operator . " " . $paramName;
     $this->parameters[$paramName] = $value;
     return $this;
   }
 
-  public function orWhere(string $columnName, $value)
+  public function orWhere(string $columnName, $operator, $value)
   {
     $paramName = ":where_" . count($this->parameters);
-    $this->sql = $this->sql . " OR " . $columnName . " = " . $paramName;
+    $this->sql = $this->sql . " OR " . $columnName . " " . $operator . " " . $paramName;
     $this->parameters[$paramName] = $value;
     return $this;
   }
@@ -157,6 +162,12 @@ class QueryBuilder
   public function execute()
   {
     return $this->executeStatement();
+  }
+
+  public function executeUpdate(): bool
+  {
+    $statement = $this->executeStatement();
+    return $statement->rowCount() > 0;
   }
 
   // Méthode utile pour le debug

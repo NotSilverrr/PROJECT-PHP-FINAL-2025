@@ -1,7 +1,6 @@
 <?php
 
 use Core\Database;
-
 require_once __DIR__ . '/../Helpers/helpers.php';
 
 error_reporting(E_ALL);
@@ -31,6 +30,7 @@ $router = new Router();
 
 // Charger les routes
 require_once __DIR__ . './../routes/web.php';
+require_once __DIR__ . './../routes/api.php';
 
 // Démarrer le routage
 $router->start();
