@@ -12,6 +12,8 @@ use App\Controllers\admin\AdminGroupController;
 use App\Controllers\admin\AdminPhotoController;
 
 
+$router->redirect("/", "/group");
+
 $router->get("/login", LoginController::class, "index");
 $router->post("/login", LoginController::class, "post");
 $router->get("/logout", LoginController::class, "delete");

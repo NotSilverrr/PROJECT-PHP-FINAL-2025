@@ -2,7 +2,7 @@
 
 <section class="grow-1 m-4 overflow-y-scroll">
     <?php if(isset($error)) : ?>
-        <h1><?= $error ?></h1>
+        <h1 class="mt-24 text-8 lg-mt-4"><?= $error ?></h1>
     <?php else: ?>
     <?php
  if (isset($group) && !empty($group)) : ?>
