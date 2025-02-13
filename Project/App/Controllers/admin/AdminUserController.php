@@ -9,7 +9,7 @@ class AdminUserController
   public static function index()
   {
     $queryBuilder = new QueryBuilder();
-    $users = $queryBuilder->select(['id', 'email', 'is_admin', 'profile_picture', 'created_at'])->from('users')->fetchAll();
+    $users = $queryBuilder->select(['id', 'email','first_name','last_name', 'is_admin', 'profile_picture', 'created_at'])->from('users')->fetchAll();
 
     return view('admin.user.user', ['users' => $users])->layout('admin');
   }
@@ -26,7 +26,7 @@ class AdminUserController
   public static function updateIndex(int $id)
   {
     $queryBuilder = new QueryBuilder();
-    $user = $queryBuilder->select(['id', 'email', 'is_admin', 'profile_picture'])->from('users')->where('id', '=', $id)->fetch();
+    $user = $queryBuilder->select(['id', 'email','first_name','last_name', 'is_admin', 'profile_picture'])->from('users')->where('id', '=', $id)->fetch();
     
     if (!$user) {
       return redirect('/admin/user');
@@ -38,13 +38,22 @@ class AdminUserController
   {
     $id = $_POST['id'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
-    $is_admin = isset($_POST['is_admin']) ? 1 : 0;
+    $password = $_POST['password'];
+    $is_admin = isset($_POST['is_admin']);
     $profile_picture = $_POST['profile_picture'];
 
-    $user = new User($id,$first_name, $last_name, $profile_picture, $is_admin, $email, $password);
+    $user = User::findOneById($id);
+    $user->email = $email;
+    $user->first_name = $first_name;
+    $user->last_name = $last_name;
+    $user->isadmin = $is_admin;
+    $user->profile_picture = $profile_picture;
+    if ($password) {
+      $user->password = $password;
+    }
+    
     $user->update();
     
     return redirect('/admin/user');
@@ -57,11 +66,21 @@ class AdminUserController
   public static function add()
   {
     $email = $_POST['email'];
+    $first_name = $_POST['first_name'];
+    $last_name = $_POST['last_name'];
     $password = $_POST['password'];
-    $is_admin = isset($_POST['is_admin']) ? 1 : 0;
+    $is_admin = isset($_POST['is_admin']);
     $profile_picture = $_POST['profile_picture'];
 
-    $user = new User(null, $is_admin, $profile_picture, $email, $password);
+    $user = new User(
+      null,
+      $first_name,
+      $last_name,
+      $profile_picture,
+      $is_admin,
+      $email,
+      $password
+    );
     $user->createUser();
     
     return redirect('/admin/user');

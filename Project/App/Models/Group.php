@@ -35,7 +35,7 @@ class Group {
         // transforme la réponse en objet group
         $groups = [];
         foreach ($response as $group) {
-            $groups[] = new Group($group["id"], $group["name"], $group["profile_picture"], $group["owner"], new DateTime(), new DateTime());
+            $groups[] = new Group($group["id"], $group["name"], $group["profile_picture"], $group["owner"]);
         }
 
         return $groups;
@@ -45,10 +45,10 @@ class Group {
     {
         $search = "%$search%";
         $query = new QueryBuilder;
-        $response = $query->select(["users.id", "users.first_name", "users.last_name", "users.profile_picture"])->from("users")->join("user_group", "users.id", "=", "user_group.user_id")->where("user_group.group_id", "=", $groupId)->andWhere("users.first_name", "LIKE", $search)->fetchAll();
+        $response = $query->select(["users.id", "users.first_name", "users.last_name", "users.profile_picture","users.is_admin"])->from("users")->join("user_group", "users.id", "=", "user_group.user_id")->where("user_group.group_id", "=", $groupId)->andWhere("users.first_name", "LIKE", $search)->fetchAll();
         $members = [];
         foreach ($response as $member) {
-            $members[] = new User($member["id"], $member["first_name"], $member["last_name"], $member["profile_picture"], "", "", "");
+            $members[] = new User($member["id"], $member["first_name"], $member["last_name"], $member["profile_picture"], $member["is_admin"], "", "");
         }
         return $members;
     }

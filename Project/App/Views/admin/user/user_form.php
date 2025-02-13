@@ -10,6 +10,14 @@
                 <input type="email" name="email" placeholder="Email" class="input-field" value="<?= isset($user) ? $user['email'] : '' ?>" required />
             </div>
             <div class="input-group">
+                <label class="form-label">First Name</label>
+                <input type="text" name="first_name" placeholder="First Name" class="input-field" value="<?= isset($user) ? $user['first_name'] : '' ?>" required />
+            </div>
+            <div class="input-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" name="last_name" placeholder="Last Name" class="input-field" value="<?= isset($user) ? $user['last_name'] : '' ?>" required />
+            </div>
+            <div class="input-group">
                 <label class="form-label"><?= isset($user) ? 'Nouveau mot de passe (laisser vide pour ne pas modifier)' : 'Mot de passe' ?></label>
                 <input type="password" name="password" placeholder="" class="input-field" <?= !isset($user) ? 'required' : '' ?> />
             </div>
