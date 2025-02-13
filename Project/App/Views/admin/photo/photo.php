@@ -20,8 +20,8 @@
             <?php foreach ($photos as $photo): ?>
               <tr>
                 <td><?= htmlspecialchars($photo['file']) ?></td>
-                <td><?= htmlspecialchars($photo['group_id']) ?></td>
-                <td><?= htmlspecialchars($photo['user_id']) ?></td>
+                <td><?= htmlspecialchars($photo['group_name']) ?></td>
+                <td><?= htmlspecialchars($photo['user_email']) ?></td>
                 <td class="table__action">
                   <a href="/admin/photo/update/<?= $photo['id'] ?>" class="button button--primary button--sm">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">

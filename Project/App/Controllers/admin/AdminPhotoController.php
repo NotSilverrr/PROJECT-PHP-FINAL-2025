@@ -10,7 +10,12 @@ class AdminPhotoController
   {
 
     $queryBuilder = new QueryBuilder();
-    $photos = $queryBuilder->select(['id', 'file', 'group_id', 'user_id'])->from('photos')->fetchAll();
+    $photos = $queryBuilder
+      ->select(['photos.id', 'photos.file', 'groups.name as group_name', 'users.email as user_email'])
+      ->from('photos')
+      ->join('groups', 'photos.group_id', '=', 'groups.id')
+      ->join('users', 'photos.user_id', '=', 'users.id')
+      ->fetchAll();
 
     return view('admin.photo.photo', data: ['photos' => $photos])->layout('admin');
   }

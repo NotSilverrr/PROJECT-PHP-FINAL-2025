@@ -10,8 +10,9 @@ class AdminGroupController
   {
     $queryBuilder = new QueryBuilder();
     $groups = $queryBuilder
-      ->select(['id', 'name', 'profile_picture', 'owner', 'created_at'])
+      ->select(['groups.id', 'groups.name', 'groups.profile_picture', 'users.email as owner', 'groups.created_at'])
       ->from('groups')
+      ->join('users', 'groups.owner', '=', 'users.id')
       ->fetchAll();
 
     return view('admin.group.group', ['groups' => $groups])->layout('admin');
