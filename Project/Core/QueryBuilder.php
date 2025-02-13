@@ -167,6 +167,16 @@ class QueryBuilder
     return $statement->rowCount() > 0;
   }
 
+  public function lastInsertId()
+  {
+    $databaseConnection = new PDO(
+      "mysql:host=mariadb;dbname=database",
+      "user",
+      "password"
+    );
+    return (int)$databaseConnection->lastInsertId();
+  }
+
   // Méthode utile pour le debug
   public function getSQL()
   {

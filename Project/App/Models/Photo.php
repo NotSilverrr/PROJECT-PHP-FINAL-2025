@@ -2,133 +2,70 @@
 
 namespace App\Models;
 
+use Core\QueryBuilder;
 use PDO;
 
 class Photo
 {
-  public int $id;
-  public string $created_at;
-  public string $updated_at;
+
 
   public function __construct(
+    public ?int $id = null,
     public string $file,
     public int $group_id,
-    public int $user_id
-  ) {
-    $this->id = 0;
-    $this->created_at = date('Y-m-d H:i:s');
-    $this->updated_at = date('Y-m-d H:i:s');
-  }
+    public int $user_id,
+    public ?string $created_at = null,
+    public ?string $updated_at = null
+  ) {}
+
 
   public static function findOneById(int $id): Photo|null
   {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
-
-    $getPhotoQuery = $databaseConnection->prepare("SELECT id, file, group_id, user_id, created_at, updated_at FROM photos WHERE id = :id");
-
-    $getPhotoQuery->execute([
-      "id" => $id
-    ]);
-
-    $photo = $getPhotoQuery->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$photo) {
-        return null;
-    }
-    
-    $photoObj = new Photo(
-        $photo["file"],
-        $photo["group_id"],
-        $photo["user_id"]
-    );
-    $photoObj->id = $photo["id"];
-    $photoObj->created_at = $photo["created_at"];
-    $photoObj->updated_at = $photo["updated_at"];
-    return $photoObj;
-  }
+    $query = new QueryBuilder;
+    $response = $query->select()->from("photos")->where("id", "=", $id)->fetch();
+    return $response;
+}
 
   public static function findByGroupId(int $groupId): array
   {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
-
-    $getPhotosQuery = $databaseConnection->prepare("SELECT id, file, group_id, user_id, created_at, updated_at FROM photos WHERE group_id = :group_id");
-
-    $getPhotosQuery->execute([
-      "group_id" => $groupId
-    ]);
-
-    $photos = $getPhotosQuery->fetchAll(PDO::FETCH_ASSOC);
-    $photoObjects = [];
-    
-    foreach ($photos as $photo) {
-        $photoObj = new Photo(
-            $photo["file"],
-            $photo["group_id"],
-            $photo["user_id"]
-        );
-        $photoObj->id = $photo["id"];
-        $photoObj->created_at = $photo["created_at"];
-        $photoObj->updated_at = $photo["updated_at"];
-        $photoObjects[] = $photoObj;
-    }
-    
-    return $photoObjects;
-  }
+    $query = new QueryBuilder;
+    $response = $query->select()->from("photos")->where("group_id", "=", $groupId)->fetchAll();
+    return $response;
+}
 
   public function createPhoto()
   {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
-
-    $createPhotoQuery = $databaseConnection->prepare(
-        "INSERT INTO photos (file, group_id, user_id, created_at, updated_at) 
-         VALUES (:file, :group_id, :user_id, :created_at, :updated_at)"
-    );
-
-    $createPhotoQuery->execute([
+    $queryBuilder = new QueryBuilder();
+    
+    $data = [
       "file" => $this->file,
       "group_id" => $this->group_id,
       "user_id" => $this->user_id,
       "created_at" => $this->created_at,
       "updated_at" => $this->updated_at
-    ]);
+    ];
 
-    $this->id = (int)$databaseConnection->lastInsertId();
+    $columns = array_keys($data);
+    
+    $statement = $queryBuilder->insert()
+      ->into('photos', $columns)
+      ->values($data)
+      ->execute();
+
+    $this->id = $queryBuilder->lastInsertId();
   }
 
-  public function updatePhoto()
+  public function update(): bool
   {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
-
-    $updatePhotoQuery = $databaseConnection->prepare(
-        "UPDATE photos 
-         SET file = :file,
-             updated_at = :updated_at
-         WHERE id = :id"
-    );
-
-    $this->updated_at = date('Y-m-d H:i:s');
-
-    $updatePhotoQuery->execute([
-      "id" => $this->id,
+    $queryBuilder = new QueryBuilder();
+    $data = [
       "file" => $this->file,
-      "updated_at" => $this->updated_at
-    ]);
+      "group_id" => $this->group_id,
+      "user_id" => $this->user_id,
+      'updated_at' => date('Y-m-d H:i:s')
+    ];
+
+    return $queryBuilder->update()->from('photos')->set($data)->where('id', '=', $this->id)->executeUpdate();
   }
 
   public function deletePhoto()

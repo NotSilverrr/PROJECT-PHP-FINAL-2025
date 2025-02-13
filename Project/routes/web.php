@@ -38,5 +38,10 @@ $router->get("/admin/group/add", AdminGroupController::class, "addIndex");
 $router->post("/admin/group/add", AdminGroupController::class, "add");
 
 $router->get("/admin/photo", AdminPhotoController::class, "index");
+$router->post("/admin/photo/delete", AdminPhotoController::class, "delete");
+$router->get("/admin/photo/update/{id}", AdminPhotoController::class, "updateIndex");
+$router->post("/admin/photo/update", AdminPhotoController::class, "update");
+$router->get("/admin/photo/add", AdminPhotoController::class, "addIndex");
+$router->post("/admin/photo/add", AdminPhotoController::class, "add");
 
 $router->get("/group/{id}", GroupController::class, "show");

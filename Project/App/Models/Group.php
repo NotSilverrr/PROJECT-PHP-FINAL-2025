@@ -21,7 +21,6 @@ class Group {
         $response = $query->select()->from("groups")->where("id", "=", $id)->fetch();
         
         return $response;
-
     }
 
     public static function getGroupsByUser()
@@ -33,21 +32,22 @@ class Group {
 
     public function createGroup()
     {
-      $databaseConnection = new PDO(
-        "mysql:host=mariadb;dbname=database",
-        "user",
-        "password"
-      );
-  
-      $addGroupQuery = $databaseConnection->prepare("INSERT INTO groups (name, profile_picture, owner) VALUES (:name, :profile_picture, :owner)");
-  
-      $addGroupQuery->execute([
+      $queryBuilder = new QueryBuilder();
+      
+      $data = [
         "name" => $this->name,
         "profile_picture" => $this->profile_picture,
-        "owner" => $this->ownerId,
-      ]);
-  
-      $this->id = (int) $databaseConnection->lastInsertId();
+        "owner" => $this->ownerId
+      ];
+
+      $columns = array_keys($data);
+      
+      $statement = $queryBuilder->insert()
+        ->into('groups', $columns)
+        ->values($data)
+        ->execute();
+
+      $this->id = $queryBuilder->lastInsertId();
     }
 
     public function update(): bool

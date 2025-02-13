@@ -56,24 +56,26 @@ class User
 
   public function createUser()
   {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
-
-    $getUserQuery = $databaseConnection->prepare("INSERT INTO users (profile_picture, email, password, is_admin, created_at) VALUES (:profile_picture, :email, :password, :isadmin, :created_at)");
-
-    $getUserQuery->execute([
+    $queryBuilder = new QueryBuilder();
+    
+    $data = [
       "email" => $this->email,
-      "isadmin" => (int)$this->isadmin,
+      "is_admin" => (int)$this->isadmin,
       "profile_picture" => $this->profile_picture,
       "password" => password_hash($this->password, PASSWORD_DEFAULT),
       "created_at" => $this->created_at
-    ]);
+    ];
 
-    $this->id = (int) $databaseConnection->lastInsertId();
+    $columns = array_keys($data);
+    
+    $statement = $queryBuilder->insert()
+      ->into('users', $columns)
+      ->values($data)
+      ->execute();
+
+    $this->id = $queryBuilder->lastInsertId();
   }
+
   public function isValidPassword(string $password): bool
   {
     return password_verify($password, $this->password);

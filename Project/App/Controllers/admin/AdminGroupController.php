@@ -31,10 +31,7 @@ class AdminGroupController
     $group = $queryBuilderGroup->select(['id', 'name', 'profile_picture', 'owner'])->from('groups')->where('id', '=', $id)->fetch();
     
     $queryBuilderUser = new QueryBuilder();
-    $users = $queryBuilderUser
-      ->select(['id', 'email'])
-      ->from('users')
-      ->fetchAll();
+    $users = $queryBuilderUser->select(['id', 'email'])->from('users')->fetchAll();
 
     if (!$group) {
       return redirect('/admin/group');
@@ -58,10 +55,7 @@ class AdminGroupController
   public static function addIndex()
   {
     $queryBuilder = new QueryBuilder();
-    $users = $queryBuilder
-      ->select(['id', 'email'])
-      ->from('users')
-      ->fetchAll();
+    $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
 
     return view('admin.group.group_form',['user_list' => $users])->layout('admin');
   }
