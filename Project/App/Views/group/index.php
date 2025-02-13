@@ -10,7 +10,6 @@
     <?php print_r(Auth::user()->email ?? 'Utilsateur non connécté') ?>
 
     <ul class="image-grid">
-
     </ul>
     <?php else: ?>
         <h1>Ce groupe n'exsite pas</h1>
