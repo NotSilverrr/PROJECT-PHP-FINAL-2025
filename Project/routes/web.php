@@ -11,6 +11,7 @@ use App\Controllers\admin\AdminUserController;
 use App\Controllers\admin\AdminGroupController;
 use App\Controllers\admin\AdminPhotoController;
 
+
 $router->get("/login", LoginController::class, "index");
 $router->post("/login", LoginController::class, "post");
 $router->get("/logout", LoginController::class, "delete");
@@ -33,3 +34,5 @@ $router->get("/admin/photo", AdminPhotoController::class, "index");
 $router->get("/group/{id}", GroupController::class, "show");
 $router->get("/group", GroupController::class, "show");
 $router->get("/api/group", GroupController::class, "getUsersGroups");
+
+$router->get("/image/{id}", ImageController::class, "show");
