@@ -34,7 +34,7 @@ class Group {
         return $response;
     }
 
-    public static function isAdmin(int $groupId)
+    public static function isOwner(int $groupId)
     {
         $userId = Auth::id();
         $query = new QueryBuilder;
@@ -76,6 +76,12 @@ class Group {
             $members[] = new User($member["id"], $member["first_name"], $member["last_name"], $member["profile_picture"], "", "", "");
         }
         return $members;
+    }
+
+    public static function deleteMember(int $groupId, int $userId)
+    {
+        $query = new QueryBuilder;
+        $query->delete()->from("user_group")->where("group_id", "=", $groupId)->andWhere("user_id", "=", $userId)->execute();
     }
 
 }

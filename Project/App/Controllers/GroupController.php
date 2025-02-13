@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Models\Group;
 use App\Models\Photo;
+use App\Models\User;
 use App\Services\Auth;
 
 class GroupController {
@@ -39,5 +40,11 @@ class GroupController {
 
         return json_encode($groups);
 
+    }
+
+    public function deleteMember($id, $userId) {
+        Group::deleteMember($id, $userId);
+        header("Location: /group/$id");
+        exit;
     }
 }

@@ -100,7 +100,7 @@ use App\Services\Auth;
             </button>
             <input name="m" type="text" placeholder="Search" value="<?= isset($_GET['m']) ? htmlspecialchars($_GET['m']) : '' ?>" />
           </form>
-          <ul class="scrollable-list" id="members-list">
+          <ul class="scrollable-list action" id="members-list">
             <?php
             if (isset($members) && !empty($members)) {
               foreach ($members as $member) {
@@ -111,10 +111,10 @@ use App\Services\Auth;
                       class="scrollable-list__img"
                       style="background-image: url('<?= $member->profile_picture ?>')"
                     ></span>
-                    <span><?= $member->first_name ?></span>
-                    <?php if (Group::isAdmin($group->ownerId)): ?>
-                    <form action="" method="post">
-                      <button type="submit" class="button button--danger button--rounded">
+                    <span class="scrollable-list__text"><?= $member->first_name ?></span>
+                    <?php if (Group::isOwner($group->ownerId) && ($member->id != $group->ownerId)): ?>
+                    <form action="/group/<?= $group->id ?>/deleteUser/<?=$member->id?>" method="post">
+                      <button type="submit" class="button button--transparent button--md button--rounded">
                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
                       </button>
                     </form>

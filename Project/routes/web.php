@@ -33,6 +33,7 @@ $router->get("/admin/photo", AdminPhotoController::class, "index");
 
 $router->get("/group/{id}", GroupController::class, "show");
 $router->get("/group", GroupController::class, "show");
+$router->post("/group/{id}/deleteUser/{userId}", GroupController::class, "deleteMember");
 $router->get("/api/group", GroupController::class, "getUsersGroups");
 
 $router->get("/image/{id}", ImageController::class, "show");
