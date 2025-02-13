@@ -80,8 +80,11 @@ class Group {
 
     public static function deleteMember(int $groupId, int $userId)
     {
-        $query = new QueryBuilder;
-        $query->delete()->from("user_group")->where("group_id", "=", $groupId)->andWhere("user_id", "=", $userId)->execute();
+        if(self::isOwner($groupId)) {
+            $query = new QueryBuilder;
+            $query->delete()->from("user_group")->where("group_id", "=", $groupId)->andWhere("user_id", "=", $userId)->execute();
+        }
+        
     }
 
 }
