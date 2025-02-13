@@ -39,7 +39,7 @@ class Group {
         $query = new QueryBuilder;
         $response = $query->select()->from("groups")->where("groups.id", "=", $id)->fetch();
 
-        $group = new Group($response["id"], $response["name"], $response["profile_picture"], $response["owner"], new DateTime($response["created_at"]), new DateTime($response["updated_at"]));
+        $group = new Group($response["id"], $response["name"], $response["profile_picture"], $response["owner"], $response["created_at"], $response["updated_at"]);
         
         return $group;
 
