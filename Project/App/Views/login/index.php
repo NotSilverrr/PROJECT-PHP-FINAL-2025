@@ -1,27 +1,35 @@
 <?php 
 $title = "Login"
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="./dist/framework-esgi.css" />
+    <script src="./dist/framework-esgi.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <link rel="stylesheet" href="/path/to/main.css">
-</head>
-
-<body class="login-page">
-  <div class="login-container">
-    <div class="login-card">
-      <h1 class="login-title">Login</h1>
-      <form method="POST" action="/login" class="login-form">
-        <div class="input-group">
-          <input type="email" name="email" placeholder="Username" class="input-field">
+  <body class="">
+    <div class="form form__page">
+      <form method="POST" action="/login" class="form form__card">
+        <h1 class="form form__title">Login</h1>
+        <div>
+          <label class="form form__label"for="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="exemple@ex.com"
+          />
         </div>
-        <div class="input-group">
-          <input type="password" name="password" placeholder="Password" class="input-field">
+        <div>
+        <label class="form form__label"for="password">Mot de passe</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="1234"
+          />
         </div>
         <div class="options">
           <label class="checkbox">

@@ -3,7 +3,11 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Document</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Créer un compte</title>
+  <link rel="stylesheet" href="./dist/framework-esgi.css" />
+  <script src="./dist/framework-esgi.js"></script>
 </head>
 
 <body>
@@ -22,6 +26,23 @@
   <button type="submit">Inscription</button>
 </form>
 
-</body>
+      <label class="form form__label"for="email">Nom</label>
+      <input type="text" name="first_name" id="first_name" required>
 
+      <label class="form form__label"for="email">Prénom</label>
+      <input type="text" name="last_name" id="last_name" required>
+
+      <label class="form form__label"for="email">Photo de profil</label>
+      <input type="text" name="profile_picture" id="profile_picture" required>
+
+      <label class="form form__label"for="email">Mot de passe</label>
+      <input type="password" name="password" id="password" required>
+
+      <label class="form form__label"for="email">Vérifier le mot de passe</label>
+      <input type="password" name="password_check" id="password_check" required>
+
+      <button type="submit" class="form form__button">S'inscrire</button>
+    </form>
+  </div>
+</body>
 </html>
