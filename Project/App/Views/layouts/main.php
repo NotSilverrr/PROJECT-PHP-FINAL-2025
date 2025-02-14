@@ -49,7 +49,7 @@ use App\Services\Auth;
           </form>
           <ul class="scrollable-list scrollable-list--square" id="groups-list">
           </ul>
-          <button class="button button--primary">
+          <a href="/group/create" class="button button--primary">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="24px"
@@ -62,7 +62,7 @@ use App\Services\Auth;
               />
             </svg>
             Create a group
-          </button>
+          </a>
         </div>
       </nav>
       <?= $content ?>

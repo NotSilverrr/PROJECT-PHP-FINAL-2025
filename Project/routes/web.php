@@ -47,9 +47,11 @@ $router->post("/admin/photo/update", AdminPhotoController::class, "update");
 $router->get("/admin/photo/add", AdminPhotoController::class, "addIndex");
 $router->post("/admin/photo/add", AdminPhotoController::class, "add");
 
-$router->get("/group/{id}", GroupController::class, "show");
 $router->get("/group", GroupController::class, "show");
-$router->post("/group/{id}/deleteUser/{userId}", GroupController::class, "deleteMember");
-$router->get("/api/group", GroupController::class, "getUsersGroups");
+$router->get("/group/create", GroupController::class, "create");
+$router->post("/group", GroupController::class, "store");
+$router->get("/group/{id}", GroupController::class, "show");
 
+
+$router->post("/group/{id}/deleteUser/{userId}", GroupController::class, "deleteMember");
 $router->get("/image/{id}", ImageController::class, "show");

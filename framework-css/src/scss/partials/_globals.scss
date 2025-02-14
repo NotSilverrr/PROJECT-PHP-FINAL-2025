@@ -70,8 +70,8 @@
 	input {
 		border-radius: f.rem(6);
 		padding: f.rem(10) f.rem(16);
-		border: solid thin currentColor;
+		border: solid thin var(--border-color);
 		color: inherit;
-		//background-color: var(--input-bg-color);
+		background-color: var(--background-color);
 	}
 }

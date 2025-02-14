@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Models\Group;
 use App\Models\Photo;
 use App\Models\User;
+use App\Requests\GroupRequest;
 use App\Services\Auth;
 
 class GroupController {
@@ -47,4 +48,27 @@ class GroupController {
         header("Location: /group/$id");
         exit;
     }
+
+    public function create() {
+        return view('group.create');
+    }
+
+    public function store() {
+        $request = new GroupRequest;
+        try {
+            $group = new Group(
+                name: $request->name,
+                profile_picture: $request->profile_picture,
+                ownerId: Auth::id()
+            );
+            $group->createGroup();
+
+            header("Location:/group/".$group->id);
+        } catch(\Exception $e) {
+            echo $e->getMessage();
+        exit;
+        }
+    }
+
+
 }

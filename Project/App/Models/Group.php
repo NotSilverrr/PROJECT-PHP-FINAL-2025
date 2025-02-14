@@ -82,12 +82,14 @@ class Group {
 
       $columns = array_keys($data);
       
-      $statement = $queryBuilder->insert()
+      $queryBuilder->insert()
         ->into('groups', $columns)
         ->values($data)
         ->execute();
 
       $this->id = $queryBuilder->lastInsertId();
+      self::addMember($this->id, $this->ownerId);
+
     }
 
     public function update(): bool
@@ -102,12 +104,21 @@ class Group {
   
       return $queryBuilder->update()->from('groups')->set($data)->where('id', '=', $this->id)->executeUpdate();
     }
-      public static function deleteMember(int $groupId, int $userId)
+
+    public static function addMember(int $groupId, int $userId)
     {
-        if(self::isOwner($groupId)) {
-            $query = new QueryBuilder;
-            $query->delete()->from("user_group")->where("group_id", "=", $groupId)->andWhere("user_id", "=", $userId)->execute();
-        }
+      if(self::isOwner($groupId)) {
+        $query = new QueryBuilder;
+        $query->insert()->into("user_group", ["group_id", "user_id"])->values([$groupId, $userId])->execute();
+      }
+    }
+
+    public static function deleteMember(int $groupId, int $userId)
+    {
+      if(self::isOwner($groupId)) {
+        $query = new QueryBuilder;
+        $query->delete()->from("user_group")->where("group_id", "=", $groupId)->andWhere("user_id", "=", $userId)->execute();
+      }
         
     }
 
