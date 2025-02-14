@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Core\QueryBuilder;
+use DateTime;
 use PDO;
 
 class User
@@ -15,6 +16,8 @@ class User
     public bool $isadmin,
     public string $email,
     public string $password,
+    public ?string $reset_token = null,
+    public ?DateTime $reset_token_expiration = null,
     public ?string $created_at = null,
     public ?string $updated_at = null
   ) {}
@@ -125,5 +128,54 @@ class User
   {
     $queryBuilder = new QueryBuilder();
     return $queryBuilder->delete()->from('users')->where('id', '=', $this->id)->execute();
+  }
+
+  public function saveResetToken(string $token, \DateTime $expiration) {
+    $query = new QueryBuilder;
+    $query->update()
+        ->from("users")
+        ->set([
+            "reset_token" => $token,
+            "reset_token_expiration" => $expiration->format('Y-m-d H:i:s')
+        ])
+        ->where("id", "=", $this->id)
+        ->execute();
+  }
+
+  public static function getByResetToken(string $token) {
+    $query = new QueryBuilder;
+    $user = $query->select()
+        ->from("users")
+        ->where("reset_token", "=", $token)
+        ->fetch();
+
+    if ($user === false) {
+      // Aucun utilisateur trouvé avec ce token, donc retourner null ou gérer l'erreur
+      return null; // Ou lancer une exception si tu préfères
+    }
+
+    // Assurer que les champs existent et ne sont pas null
+    return new User(
+        id: $user["id"] ?? null,
+        first_name: $user["first_name"] ?? '', // Utiliser une valeur par défaut si `first_name` est null
+        last_name: $user["last_name"] ?? '',   // Idem pour `last_name`
+        profile_picture: $user["profile_picture"] ?? null,
+        isadmin: (bool)($user["is_admin"] ?? false),
+        email: $user["email"] ?? '',
+        password: $user["password"] ?? '',
+        reset_token: $user["reset_token"] ?? null,
+        reset_token_expiration: $user["reset_token_expiration"] ? new DateTime($user["reset_token_expiration"]) : null, // Assurer que la date est bien formatée
+        created_at: $user["created_at"] ?? null,
+        updated_at: $user["updated_at"] ?? null
+    );
+  }
+
+  public function updatePassword(string $password) {
+    $query = new QueryBuilder;
+    $query->update()
+        ->from("users")
+        ->set(["password" => $password])
+        ->where("id", "=", $this->id)
+        ->execute();
   }
 }

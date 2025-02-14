@@ -11,6 +11,7 @@ use App\Controllers\admin\AdminUserController;
 use App\Controllers\admin\AdminGroupController;
 use App\Controllers\admin\AdminPhotoController;
 use App\Controllers\MemberController;
+use App\Controllers\PasswordResetController;
 
 $router->redirect("/", "/group");
 $router->redirect("/admin/", "/admin/user");
@@ -18,6 +19,10 @@ $router->redirect("/admin/", "/admin/user");
 $router->get("/login", LoginController::class, "index");
 $router->post("/login", LoginController::class, "post");
 $router->get("/logout", LoginController::class, "delete");
+$router->get("/password-reset", PasswordResetController::class, "showForm");
+$router->post("/password-reset", PasswordResetController::class, "sendResetLink");
+$router->get("/reset-password", PasswordResetController::class, "showResetForm");
+$router->post("/reset-password", PasswordResetController::class, "resetPassword");
 
 $router->get("/articles/{slug}", ImageController::class, "index");
 

@@ -31,13 +31,15 @@ class LoginController
     $_SESSION['user_id'] = $user->id;
     $_SESSION['login'] = 1;
     header('Location: /group');
+    exit;
   }
 
   public static function delete(): void
   {
     session_start();
     session_destroy();
-    header('Location: /test');
+    header('Location: /');
     exit;
   }
+
 }

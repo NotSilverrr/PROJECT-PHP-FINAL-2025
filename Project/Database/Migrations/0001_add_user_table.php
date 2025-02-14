@@ -20,6 +20,8 @@ class CreateUsersTable
                 profile_picture VARCHAR(100),
                 email VARCHAR(320) NOT NULL UNIQUE,
                 password VARCHAR(64) NOT NULL,
+                reset_token VARCHAR(64),
+                reset_token_expiration DATETIME,
                 created_at DATE,
                 updated_at DATE
             );
