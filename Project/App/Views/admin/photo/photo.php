@@ -17,7 +17,16 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($photos as $photo): ?>
+            <?php
+            $itemsPerPage = 5;
+            $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            $totalPhotos = count($photos);
+            $totalPages = ceil($totalPhotos / $itemsPerPage);
+            $currentPage = max(1, min($currentPage, $totalPages));
+            $offset = ($currentPage - 1) * $itemsPerPage;
+            $photosToDisplay = array_slice($photos, $offset, $itemsPerPage);
+            ?>
+            <?php foreach ($photosToDisplay as $photo): ?>
               <tr>
                 <td><?= htmlspecialchars($photo['file']) ?></td>
                 <td><?= htmlspecialchars($photo['group_name']) ?></td>
@@ -42,6 +51,35 @@
             <?php endforeach; ?>
         </tbody>
         </table>
+    </div>
+    <div class="table__nav">
+        <div class="table__nav__buttons">
+            <?php if ($currentPage > 1): ?>
+                <a href="?page=<?= $currentPage - 1 ?>" class="table__nav__button">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
+                        <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
+                    </svg>
+                </a>
+            <?php endif; ?>
+            
+            <?php
+            $startPage = max(1, min($currentPage - 2, $totalPages - 4));
+            $endPage = min($startPage + 4, $totalPages);
+            
+            for ($i = $startPage; $i <= $endPage; $i++): ?>
+                <a href="?page=<?= $i ?>" class="table__nav__button <?= $i === $currentPage ? 'active' : '' ?>">
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
+
+            <?php if ($currentPage < $totalPages): ?>
+                <a href="?page=<?= $currentPage + 1 ?>" class="table__nav__button">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
+                        <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+                    </svg>
+                </a>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 </section>

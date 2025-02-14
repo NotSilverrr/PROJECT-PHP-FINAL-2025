@@ -60,7 +60,7 @@ class AdminGroupController
       return null;
     }
 
-    $filename = sprintf('%s.%s', uniqid(rand(), true), $fileExtension);
+    $filename = sprintf('profile_picture.%s', $fileExtension);
     $targetPath = $uploadDir . $filename;
 
     if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
