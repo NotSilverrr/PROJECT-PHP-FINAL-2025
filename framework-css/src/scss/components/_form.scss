@@ -8,6 +8,16 @@
     justify-content: center;
     align-items: center;
     font-family: "Arial", sans-serif;
+    background: var(--white);
+    border-radius: f.rem(10);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: f.rem(30);
+    max-width: f.rem(600);
+    text-align: center;
+    color: var(--blue-900);
+    &-admin {
+      padding: f.rem(70);
+    }
     &--admin {
       width: 100%;
     }
@@ -18,21 +28,6 @@
         var(--purple-800)
       );
       height: 100vh;
-    }
-
-    &__card {
-      background: var(--white);
-      border-radius: f.rem(10);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      padding: f.rem(30);
-      max-width: f.rem(400);
-      width: 100%;
-      text-align: center;
-      color: var(--blue-900);
-      &-admin {
-        width: 100%;
-        padding: f.rem(70);
-      }
     }
 
     &__title {
@@ -56,7 +51,7 @@
       }
     }
 
-    &--a {
+    &__a {
       @include m.resetA;
       color: var(--purple-700);
       &:hover {

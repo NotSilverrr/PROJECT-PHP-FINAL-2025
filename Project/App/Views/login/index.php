@@ -12,11 +12,11 @@ $title = "Login"
   </head>
 
   <body class="">
-    <div class="form form__page">
-      <form method="POST" action="/login" class="form form__card">
-        <h1 class="form form__title">Login</h1>
+    <div class="form__page">
+      <form method="POST" action="/login" class="form">
+        <h1 class="form__title">Login</h1>
         <div>
-          <label class="form form__label"for="email">Email</label>
+          <label class="form__label"for="email">Email</label>
           <input
             type="email"
             name="email"
@@ -24,7 +24,7 @@ $title = "Login"
           />
         </div>
         <div>
-        <label class="form form__label"for="password">Mot de passe</label>
+        <label class="form__label"for="password">Mot de passe</label>
           <input
             type="password"
             name="password"
