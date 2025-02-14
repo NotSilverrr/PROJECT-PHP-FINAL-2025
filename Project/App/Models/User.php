@@ -60,6 +60,17 @@ class User
   );
   }
 
+  public static function getAllUsers()
+  {
+    $queryBuilder = new QueryBuilder();
+    $response = $queryBuilder->select()->from("users")->fetchAll();
+    $users = [];
+    foreach ($response as $user) {
+        $users[] = new User($user["id"], $user["first_name"], $user["last_name"], $user["profile_picture"], $user["is_admin"], "", "");
+    }
+    return $users;
+  }
+
   public function createUser()
   {
     $queryBuilder = new QueryBuilder();

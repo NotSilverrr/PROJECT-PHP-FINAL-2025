@@ -10,7 +10,7 @@ use App\Controllers\TestController;
 use App\Controllers\admin\AdminUserController;
 use App\Controllers\admin\AdminGroupController;
 use App\Controllers\admin\AdminPhotoController;
-
+use App\Controllers\MemberController;
 
 $router->redirect("/", "/group");
 
@@ -51,7 +51,8 @@ $router->get("/group", GroupController::class, "show");
 $router->get("/group/create", GroupController::class, "create");
 $router->post("/group", GroupController::class, "store");
 $router->get("/group/{id}", GroupController::class, "show");
+$router->get("/group/{id}/addMember", MemberController::class, "create");
+$router->post("/group/{id}/addMember", MemberController::class, "store");
 
-
-$router->post("/group/{id}/deleteUser/{userId}", GroupController::class, "deleteMember");
+$router->post("/group/{id}/deleteUser", MemberController::class, "delete");
 $router->get("/image/{id}", ImageController::class, "show");

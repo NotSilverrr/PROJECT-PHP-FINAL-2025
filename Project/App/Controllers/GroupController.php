@@ -5,6 +5,7 @@ use App\Models\Group;
 use App\Models\Photo;
 use App\Models\User;
 use App\Requests\GroupRequest;
+use App\Requests\MemberRequest;
 use App\Services\Auth;
 
 class GroupController {
@@ -20,13 +21,14 @@ class GroupController {
         $group = Group::getOneById($id);
         $photos = Photo::findByGroupId($id);
         $members = Group::getMembers($id, $_GET['m'] ?? "");
+        $allUsers = User::getAllUsers();
 
         // var_dump($_GET);
 
 
 
         if (Group::isMember($id)) {
-            return view('group.index', ['id' => $id, 'group' => $group, 'photos' => $photos, 'members' => $members]);
+            return view('group.index', ['id' => $id, 'group' => $group, 'photos' => $photos, 'members' => $members, 'allUsers' => $allUsers]);
         } else {
             http_response_code(403);
             return view('group.index', ['error' => 'You are not a member of this group']);
@@ -47,6 +49,10 @@ class GroupController {
         Group::deleteMember($id, $userId);
         header("Location: /group/$id");
         exit;
+    }
+
+    public function addMember() {
+        
     }
 
     public function create() {
