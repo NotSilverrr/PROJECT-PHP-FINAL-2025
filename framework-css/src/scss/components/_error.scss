@@ -14,8 +14,9 @@
 		border-radius: 1rem;
 		color: var(--error-text-color);
 		padding: f.rem(10) f.rem(16);
-		// transform: translateY(10px);
+		opacity: 0.8;
 		transition: opacity 0.5s ease, transform 0.5s ease;
+		z-index: 5;
 		&__icon {
 			fill: var(--error-text-color);
 		}
@@ -62,7 +63,7 @@
 				transform: translateY(-50px);
 			}
 			to {
-				opacity: 1;
+				opacity: 0.8;
 				transform: translateY(0);
 			}
 		}

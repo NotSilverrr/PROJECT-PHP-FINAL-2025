@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 groupLink.href = '/group/' + group.id;
                 const groupImg = document.createElement('span');
                 groupImg.className = 'scrollable-list__img';
-                groupImg.style.backgroundImage = `url('${group.profile_picture}')`;
+                groupImg.style.backgroundImage = `url('/group/${group.id}/profilePicture')`;
 
                 const groupName = document.createElement('span');
                 groupName.classList.add('scrollable-list__text');

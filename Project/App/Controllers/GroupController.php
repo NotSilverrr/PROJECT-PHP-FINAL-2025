@@ -16,6 +16,10 @@ class GroupController {
             return view('group.index', ['error' => 'Select a Group']);
         }
 
+        if (!Group::exist($id)) {
+            return view('errors.404');
+        }
+
 
 
         $group = Group::getOneById($id);
@@ -57,19 +61,65 @@ class GroupController {
 
     public function store() {
         $request = new GroupRequest;
+        
         try {
+            // Créer un groupe sans image d'abord
             $group = new Group(
                 name: $request->name,
-                profile_picture: $request->profile_picture,
+                profile_picture: null, // Temporairement null
                 ownerId: Auth::id()
             );
+    
             $group->createGroup();
-
-            header("Location:/group/".$group->id);
-        } catch(\Exception $e) {
+    
+            // Vérifier si une image est envoyée
+            if (!empty($request->profile_picture['name'])) {
+                $this->handleImageUpload($request->profile_picture, $group);
+            }
+    
+            header("Location:/group/" . $group->id);
+            exit;
+    
+        } catch (\Exception $e) {
             echo $e->getMessage();
-        exit;
+            exit;
         }
+    }
+
+    private function handleImageUpload(array $file, Group $group) {
+        // Vérifier s'il y a une erreur
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            throw new \Exception("Erreur lors de l'upload de l'image.");
+        }
+    
+        // Extensions autorisées
+        $allowedExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $fileExt = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    
+        if (!in_array($fileExt, $allowedExts)) {
+            throw new \Exception("Format non autorisé. JPG, JPEG, PNG, GIF et WEBP uniquement.");
+        }
+    
+        // Taille maximale : 5 Mo
+        if ($file['size'] > 5 * 1024 * 1024) {
+            throw new \Exception("Fichier trop volumineux. Max 5 Mo.");
+        }
+    
+        // Créer le dossier du groupe s'il n'existe pas
+        $uploadDir = __DIR__ ."/../../uploads/groups/" . $group->id . "/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+    
+        // Déplacer le fichier avec un nom standardisé
+        $filePath = $uploadDir . "profile_picture." . $fileExt;
+        if (!move_uploaded_file($file['tmp_name'], $filePath)) {
+            throw new \Exception("Impossible de sauvegarder l'image.");
+        }
+    
+        // Mettre à jour le chemin de l'image en base de données
+        $group->profile_picture = "uploads/groups/" . $group->id . "/" . "profile_picture." . $fileExt;;
+        $group->update();
     }
 
 

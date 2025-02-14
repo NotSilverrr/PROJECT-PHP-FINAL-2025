@@ -17,6 +17,11 @@ class ImageController
       header('HTTP/1.0 403 Forbidden');
       echo $e->getMessage();
     }
-}
+  }
+
+  public function showGroupProfilePicture($id) {
+    $imageService = new ImageService;
+    $imageService->serveGroupProfilePicture($id, Auth::id());
+  }
 
 }

@@ -21,6 +21,17 @@ function myAutoloader(string $class):void
     }
 }
 
+$request_uri = $_SERVER['REQUEST_URI'];
+
+// Supprime le slash final s'il est présent (mais ignore "/" seul)
+if ($request_uri !== "/" && str_ends_with($request_uri, "/")) {
+    $clean_uri = rtrim($request_uri, "/");
+    
+    // Redirige vers l'URL sans slash (301 Permanent Redirect)
+    header("Location: $clean_uri", true, 301);
+    exit;
+}
+
 Database::getConnection();
 
 use Core\Router;

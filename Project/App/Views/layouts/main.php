@@ -65,7 +65,9 @@ use App\Services\Auth;
           </a>
         </div>
       </nav>
+      <section class="grow-1 m-4 overflow-y-scroll relative">
       <?= $content ?>
+      </section>
       <nav class="side-bar side-bar--collapsed side-bar--right">
         <div class="side-bar__header">
           <button class="side-bar__toggle">

@@ -33,6 +33,17 @@ class Group {
         return $response;
     }
 
+    public static function exist(int $groupId)
+    {
+      $query = new QueryBuilder;
+      $response = $query->select()->from("groups")->where("id", "=", $groupId)->fetch();
+      if($response) {
+        return true;
+      }
+
+      return false;
+    }
+
     public static function getOneById(int $id)
     {
         $query = new QueryBuilder;
@@ -69,26 +80,24 @@ class Group {
         return $members;
     }
 
-    public function createGroup()
-    {
+    public function createGroup() {
       $queryBuilder = new QueryBuilder();
-      
+  
       $data = [
-        "name" => $this->name,
-        "profile_picture" => $this->profile_picture,
-        "owner" => $this->ownerId
+          "name" => $this->name,
+          "profile_picture" => null, // Ajouté mais temporairement NULL
+          "owner" => $this->ownerId
       ];
-
+  
       $columns = array_keys($data);
-      
+  
       $queryBuilder->insert()
         ->into('groups', $columns)
         ->values($data)
         ->execute();
-        
+
       $this->id = $queryBuilder->lastInsertId();
       self::addMember($this->id, $this->ownerId);
-
     }
 
     public function update(): bool
@@ -120,5 +129,7 @@ class Group {
       }
         
     }
+
+    
 
 }
