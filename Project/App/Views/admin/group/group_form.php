@@ -11,7 +11,10 @@
             </div>
             <div class="input-group">
                 <label class="form-label">Profile Picture</label>
-                <input type="text" name="profile_picture" placeholder="Profile Picture URL" class="input-field" value="<?= isset($group) ? $group['profile_picture'] : '' ?>" required />
+                <?php if(isset($group) && $group['profile_picture']): ?>
+                    <img src="<?= $group['profile_picture'] ?>" alt="Current profile picture" style="max-width: 100px; margin-bottom: 10px;">
+                <?php endif; ?>
+                <input type="file" name="profile_picture" accept="image/*" class="input-field" <?= !isset($group) ? 'required' : '' ?> />
             </div>
             <div class="input-group">
                 <label class="form-label">Owner</label>

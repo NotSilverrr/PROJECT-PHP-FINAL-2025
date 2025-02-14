@@ -172,11 +172,7 @@ class QueryBuilder
 
   public function lastInsertId()
   {
-    $databaseConnection = new PDO(
-      "mysql:host=mariadb;dbname=database",
-      "user",
-      "password"
-    );
+    $databaseConnection = Database::getConnection();
     return (int)$databaseConnection->lastInsertId();
   }
 
