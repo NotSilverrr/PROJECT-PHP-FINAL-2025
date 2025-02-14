@@ -18,7 +18,8 @@ class UserGroupSeeder
                 (1, 1, NOW()),
                 (2, 1, NOW()),
                 (3, 2, NOW()),
-                (1, 3, NOW())
+                (1, 3, NOW()),
+                (3, 1, NOW())
         ");
         $stmt->execute();
 
