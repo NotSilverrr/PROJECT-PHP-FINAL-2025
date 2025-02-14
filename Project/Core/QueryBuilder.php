@@ -133,6 +133,12 @@ class QueryBuilder
     return $this;
   }
 
+  public function orderBy(string $column, string $order = 'ASC')
+  {
+    $this->sql .= " ORDER BY " . $column . " " . $order;
+    return $this;
+  }
+
   private function executeStatement()
   {
 

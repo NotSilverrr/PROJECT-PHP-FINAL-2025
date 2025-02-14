@@ -29,8 +29,11 @@ class Group {
     {
         $userId = Auth::id();
         $query = new QueryBuilder;
-        $response = $query->select()->from("groups")->where("owner", "=", $userId)->andWhere("id", "=", $groupId)->fetch();
-        return $response;
+        $response = $query->select(["owner"])->from("groups")->where("id", "=", $groupId)->fetch();
+        if($response["owner"] == $userId) {
+            return true;
+        }
+        return false;
     }
 
     public static function exist(int $groupId)
@@ -58,7 +61,7 @@ class Group {
     public static function getGroupsByUser(int $userId)
     {
         $query = new QueryBuilder;
-        $response = $query->select(["id","name", "profile_picture", "owner"])->from("groups")->join("user_group", "groups.id", "=", "user_group.group_id")->where("user_group.user_id","=", $userId)->fetchAll();
+        $response = $query->select(["id","name", "profile_picture", "owner"])->from("groups")->join("user_group", "groups.id", "=", "user_group.group_id")->where("user_group.user_id","=", $userId)->orderBy('groups.created_at', 'ASC')->fetchAll();
         // transforme la réponse en objet group
         $groups = [];
         foreach ($response as $group) {
@@ -72,7 +75,7 @@ class Group {
     {
         $search = "%$search%";
         $query = new QueryBuilder;
-        $response = $query->select(["users.id", "users.first_name", "users.last_name", "users.profile_picture","users.is_admin"])->from("users")->join("user_group", "users.id", "=", "user_group.user_id")->where("user_group.group_id", "=", $groupId)->andWhere("users.first_name", "LIKE", $search)->fetchAll();
+        $response = $query->select(["users.id", "users.first_name", "users.last_name", "users.profile_picture","users.is_admin"])->from("users")->join("user_group", "users.id", "=", "user_group.user_id")->where("user_group.group_id", "=", $groupId)->andWhere("users.first_name", "LIKE", $search)->orderBy('user_group.created_at', 'ASC')->fetchAll();
         $members = [];
         foreach ($response as $member) {
             $members[] = new User($member["id"], $member["first_name"], $member["last_name"], $member["profile_picture"], $member["is_admin"], "", "");

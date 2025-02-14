@@ -40,7 +40,7 @@ $title = "Login"
           <a href="/password-reset" class="forgot-password">Forgot password</a>
         </div>
         <button type="submit" class="login-button">Login</button>
-        <a href="/create-account" class="create-account">Create Account</a>
+        <a href="/register" class="create-account">Create Account</a>
       </form>
     </div>
   </div>

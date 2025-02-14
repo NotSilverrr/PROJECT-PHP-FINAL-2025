@@ -17,8 +17,8 @@ class CreateGroupsTable
                 name VARCHAR(50) NOT NULL,
                 profile_picture VARCHAR(100),
                 owner INTEGER NOT NULL,
-                created_at DATE,
-                updated_at DATE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP,
                 FOREIGN KEY (owner) REFERENCES users(id) ON DELETE CASCADE
             );
         ");

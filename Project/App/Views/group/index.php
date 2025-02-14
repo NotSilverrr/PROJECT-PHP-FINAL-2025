@@ -9,7 +9,6 @@ if (isset($group) && !empty($group)) : ?>
 <?php print_r(Auth::user()->email ?? 'Utilsateur non connécté') ?>
 
 <ul class="image-grid">
-<img src="/image/5" alt="" height="100px" width="100px">
 
 </ul>
 <?php else: ?>

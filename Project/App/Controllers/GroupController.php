@@ -87,12 +87,10 @@ class GroupController {
     }
 
     private function handleImageUpload(array $file, Group $group) {
-        // Vérifier s'il y a une erreur
         if ($file['error'] !== UPLOAD_ERR_OK) {
             throw new \Exception("Erreur lors de l'upload de l'image.");
         }
     
-        // Extensions autorisées
         $allowedExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         $fileExt = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     
@@ -100,24 +98,20 @@ class GroupController {
             throw new \Exception("Format non autorisé. JPG, JPEG, PNG, GIF et WEBP uniquement.");
         }
     
-        // Taille maximale : 5 Mo
         if ($file['size'] > 5 * 1024 * 1024) {
             throw new \Exception("Fichier trop volumineux. Max 5 Mo.");
         }
     
-        // Créer le dossier du groupe s'il n'existe pas
         $uploadDir = __DIR__ ."/../../uploads/groups/" . $group->id . "/";
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
     
-        // Déplacer le fichier avec un nom standardisé
         $filePath = $uploadDir . "profile_picture." . $fileExt;
         if (!move_uploaded_file($file['tmp_name'], $filePath)) {
             throw new \Exception("Impossible de sauvegarder l'image.");
         }
     
-        // Mettre à jour le chemin de l'image en base de données
         $group->profile_picture = "uploads/groups/" . $group->id . "/" . "profile_picture." . $fileExt;;
         $group->update();
     }

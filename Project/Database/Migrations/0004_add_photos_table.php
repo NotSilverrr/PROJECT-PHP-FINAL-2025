@@ -17,8 +17,8 @@ class CreatePhotosTable
                 file VARCHAR(100) NOT NULL,
                 group_id INTEGER NOT NULL,
                 user_id INTEGER NOT NULL,
-                created_at DATE,
-                updated_at DATE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP,
                 FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );

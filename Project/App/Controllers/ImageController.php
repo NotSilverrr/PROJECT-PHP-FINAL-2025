@@ -24,4 +24,9 @@ class ImageController
     $imageService->serveGroupProfilePicture($id, Auth::id());
   }
 
+  public function showUserPicture($id) {
+    $imageService = new ImageService;
+    $imageService->serveUserPicture($id);
+  }
+
 }
