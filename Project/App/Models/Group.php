@@ -18,9 +18,8 @@ class Group {
     public ?string $updated_at = null
   ) {}
 
-    public static function isMember(int $groupId)
+    public static function isMember(int $groupId, int $userId)
     {
-        $userId = Auth::id();
         $query = new QueryBuilder;
         $response = $query->select()->from("user_group")->where("user_id", "=", $userId)->andWhere("group_id", "=", $groupId)->fetch();
         return $response;

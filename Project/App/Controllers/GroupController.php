@@ -27,7 +27,7 @@ class GroupController {
 
 
 
-        if (Group::isMember($id)) {
+        if (Group::isMember($id, Auth::id())) {
             return view('group.index', ['id' => $id, 'group' => $group, 'photos' => $photos, 'members' => $members, 'allUsers' => $allUsers]);
         } else {
             http_response_code(403);
@@ -49,10 +49,6 @@ class GroupController {
         Group::deleteMember($id, $userId);
         header("Location: /group/$id");
         exit;
-    }
-
-    public function addMember() {
-        
     }
 
     public function create() {

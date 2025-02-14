@@ -28,8 +28,15 @@ class MemberController {
 
         $member->addMember();
         header("Location:/group/".$id);
+        exit;
     } catch (\Exception $e) {
-      echo $e->getMessage();
+      return view("group.addMember", [
+        "error" => $e->getMessage(),
+        "groupId" => $id,
+        "allUsers" => User::getAllUsers(),
+        "members" => Group::getMembers($id),
+        "group" => Group::getOneById($id)
+    ]);
     }
   }
 
