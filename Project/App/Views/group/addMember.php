@@ -11,7 +11,7 @@ use App\Services\Auth; ?>
   </button>
 </div>
 <?php endif; ?>
-<form class="search-bar mb-5" action="" method="GET">
+<form class="search-bar mb-5 mt-24 lg-mt-4" action="" method="GET">
   <button class="">
     <svg
       xmlns="http://www.w3.org/2000/svg"
