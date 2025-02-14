@@ -6,6 +6,7 @@
 		--error-text-color: var(--danger-600);
 		--error-border-color: var(--danger-400);
 		--error-background-color: var(--danger-100);
+		@include m.absolute($right: auto, $bottom: auto);
 		@include m.flexbox($align: center, $gap: 1rem);
 		width: fit-content;
 		background-color: var(--error-background-color);
@@ -13,6 +14,8 @@
 		border-radius: 1rem;
 		color: var(--error-text-color);
 		padding: f.rem(10) f.rem(16);
+		// transform: translateY(10px);
+		transition: opacity 0.5s ease, transform 0.5s ease;
 		&__icon {
 			fill: var(--error-text-color);
 		}
@@ -35,6 +38,33 @@
 			--error-text-color: var(--primary-600);
 			--error-border-color: var(--primary-400);
 			--error-background-color: var(--primary-100);
+		}
+
+		&.hide {
+			animation: fadeOut 0.5s forwards;
+		}
+		
+
+		&.show {
+			animation: fadeIn 0.5s forwards;
+		}
+
+		@keyframes fadeOut {
+			to {
+				opacity: 0;
+				transform: translateY(-30px);
+			}
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(-50px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
 		}
 	}
 }

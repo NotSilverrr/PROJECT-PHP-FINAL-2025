@@ -12,7 +12,7 @@ class MemberController {
   public function create (int $id)
   {
 
-    $allUsers = User::getAllUsers();
+    $allUsers = User::getAllUsers($_GET['u'] ?? "");
     $members = Group::getMembers($id, $_GET['m'] ?? "");
     $group = Group::getOneById($id);
     return view("group.addMember", ["allUsers" => $allUsers, "groupId" => $id, "members" => $members, "group" => $group]);

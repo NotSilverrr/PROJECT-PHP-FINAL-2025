@@ -60,14 +60,16 @@ class User
   );
   }
 
-  public static function getAllUsers()
+  public static function getAllUsers(string $search = "")
   {
+    $search = "%$search%";
     $queryBuilder = new QueryBuilder();
-    $response = $queryBuilder->select()->from("users")->fetchAll();
+    $response = $queryBuilder->select()->from("users")->where("first_name", "LIKE", $search)->orWhere("last_name", "LIKE", $search)->fetchAll();
     $users = [];
     foreach ($response as $user) {
         $users[] = new User($user["id"], $user["first_name"], $user["last_name"], $user["profile_picture"], $user["is_admin"], "", "");
     }
+
     return $users;
   }
 
