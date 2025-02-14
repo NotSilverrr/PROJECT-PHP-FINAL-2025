@@ -4,7 +4,7 @@
 @layer component {
 	.error {
 		--error-text-color: var(--danger-600);
-		--error-border-color: var(--danger-400);
+		--error-border-color: var(--danger-200);
 		--error-background-color: var(--danger-100);
 		@include m.absolute($right: auto, $bottom: auto);
 		@include m.flexbox($align: center, $gap: 1rem);
@@ -31,12 +31,12 @@
 
 		&--warning {
 			--error-text-color: var(--warning-600);
-			--error-border-color: var(--warning-400);
+			--error-border-color: var(--warning-200);
 			--error-background-color: var(--warning-100);
 		}
 		&--info {
 			--error-text-color: var(--primary-600);
-			--error-border-color: var(--primary-400);
+			--error-border-color: var(--primary-200);
 			--error-background-color: var(--primary-100);
 		}
 
