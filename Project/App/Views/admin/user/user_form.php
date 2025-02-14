@@ -29,7 +29,10 @@
             </div>
             <div class="input-group">
                 <label>Profile Picture</label>
-                <input type="text" name="profile_picture" placeholder="Photo de profil" class="input-field" value="<?= isset($user) ? $user['profile_picture'] : '' ?>" required />
+                <?php if(isset($user) && $user['profile_picture']): ?>
+                    <img src="<?= $user['profile_picture'] ?>" alt="Current profile picture" style="max-width: 100px; margin-bottom: 10px;">
+                <?php endif; ?>
+                <input type="file" name="profile_picture" accept="image/*" class="input-field" <?= !isset($user) ? 'required' : '' ?> />
             </div>
             <button type="submit" class="form-button"><?= isset($user) ? 'Update User' : 'Add User' ?></button>
             <a href="/admin/user" class="create-account">Back to Users List</a>

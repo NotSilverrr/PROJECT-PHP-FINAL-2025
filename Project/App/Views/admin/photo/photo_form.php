@@ -6,11 +6,11 @@
             <input type="hidden" name="id" value="<?= $photo['id'] ?>" />
             <?php endif; ?>
             <div class="input-group">
-                <label class="form-label">File</label>
-                <input type="text" name="file" class="input-field" <?= !isset($photo) ? 'required' : '' ?> />
-                <?php if (isset($photo)): ?>
-                <p class="current-file">Current file: <?= $photo['file'] ?></p>
+                <label class="form-label">Photo</label>
+                <?php if(isset($photo) && $photo['file']): ?>
+                    <img src="<?= $photo['file'] ?>" alt="Current photo" style="max-width: 200px; margin-bottom: 10px;">
                 <?php endif; ?>
+                <input type="file" name="photo" accept="image/*" class="input-field" <?= !isset($photo) ? 'required' : '' ?> />
             </div>
             <div class="input-group">
                 <label class="form-label">Group</label>

@@ -85,7 +85,7 @@ class Group {
         ->into('groups', $columns)
         ->values($data)
         ->execute();
-
+        
       $this->id = $queryBuilder->lastInsertId();
       self::addMember($this->id, $this->ownerId);
 
