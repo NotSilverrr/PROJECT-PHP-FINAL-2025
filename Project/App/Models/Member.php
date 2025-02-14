@@ -7,7 +7,8 @@ class Member {
   public function __construct(
     public ?int $id = null,
     public int $userId,
-    public int $groupId
+    public int $groupId,
+    public ?bool $read_only = false,
   ) {}
 
   public function addMember()

@@ -52,7 +52,17 @@ class Group {
         $query = new QueryBuilder;
         $response = $query->select()->from("groups")->where("groups.id", "=", $id)->fetch();
 
-        $group = new Group($response["id"], $response["name"], $response["profile_picture"], $response["owner"], $response["created_at"], $response["updated_at"]);
+        if (!$response) {
+            return null;
+        }
+
+        $group = new Group(
+          id: $response["id"],
+          name: $response["name"], 
+          profile_picture: $response["profile_picture"], 
+          ownerId: $response["owner"], 
+          created_at: $response["created_at"], 
+          updated_at :$response["updated_at"]);
         
         return $group;
 

@@ -15,6 +15,7 @@ class CreateUserGroupTable
             CREATE TABLE user_group (
                 user_id INTEGER NOT NULL,
                 group_id INTEGER,
+                read_only BOOLEAN DEFAULT FALSE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (user_id, group_id),
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
