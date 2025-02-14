@@ -6,7 +6,7 @@
 		--error-text-color: var(--danger-600);
 		--error-border-color: var(--danger-200);
 		--error-background-color: var(--danger-100);
-		@include m.absolute($right: auto, $bottom: auto);
+		@include m.absolute($left: auto, $bottom: auto, $right: 1rem);
 		@include m.flexbox($align: center, $gap: 1rem);
 		width: fit-content;
 		background-color: var(--error-background-color);
@@ -16,7 +16,7 @@
 		padding: f.rem(10) f.rem(16);
 		opacity: 0.8;
 		transition: opacity 0.5s ease, transform 0.5s ease;
-		z-index: 5;
+		z-index: 50;
 		&__icon {
 			fill: var(--error-text-color);
 		}
