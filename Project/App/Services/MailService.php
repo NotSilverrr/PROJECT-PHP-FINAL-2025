@@ -9,7 +9,7 @@ class MailService {
         $htmlContent = "<p>Pour réinitialiser votre mot de passe, cliquez sur le lien suivant :</p><p><a href='$resetLink'>$resetLink</a></p>";
 
         $data = [
-            'from' => 'onboarding@resend.dev',
+            'from' => $_ENV["RESEND_SENDER_MAIL"],
             'to' => $email,
             'subject' => $subject,
             'html' => $htmlContent
