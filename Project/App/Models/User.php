@@ -50,17 +50,22 @@ class User
   {
     $query = new QueryBuilder;
     $user = $query->select()->from("users")->where("id", "=", $id)->fetch();
+    
+    if (!$user) {
+      return null;
+    }
+    
     return new User(
-      id: $user["id"],
-      first_name: $user["first_name"],
-      last_name: $user["last_name"],
-      profile_picture: $user["profile_picture"] ?? null,
-      isadmin: (bool)$user["is_admin"],
-      email: $user["email"],
-      password: $user["password"],
-      created_at: $user["created_at"],
-      updated_at: $user["updated_at"]
-  );
+      $user["id"],
+      $user["first_name"],
+      $user["last_name"],
+      $user["profile_picture"] ?? null,
+      (bool)$user["is_admin"],
+      $user["email"],
+      $user["password"],
+      $user["created_at"],
+      $user["updated_at"]
+    );
   }
 
   public static function getAllUsers(string $search = "")

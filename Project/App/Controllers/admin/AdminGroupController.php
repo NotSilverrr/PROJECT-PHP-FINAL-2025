@@ -2,7 +2,10 @@
 namespace App\Controllers\admin;
 
 use App\Models\Group;
+use App\Models\User;
 use Core\QueryBuilder;
+use Core\Error;
+use App\Controllers\ImageController;
 
 class AdminGroupController
 {
@@ -38,55 +41,63 @@ class AdminGroupController
       return redirect('/admin/group');
     }
 
-    return view('admin.group.group_form', ['group' => $group,'user_list'=> $users])->layout('admin');
-  }
-
-  private static function handleProfilePicture($file, $groupId) {
-    if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
-      return null;
-    }
-
-    $uploadDir = dirname(dirname(dirname(__DIR__))) . '/uploads/groups/';
-    $uploadDir = $uploadDir . (string)$groupId . '/';
-
-    if (!file_exists($uploadDir)) {
-      mkdir($uploadDir, 0777, true);
-    }
-
-    $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $allowedExtensions = ['jpg', 'jpeg', 'png'];
-    
-    if (!in_array($fileExtension, $allowedExtensions)) {
-      return null;
-    }
-
-    $filename = sprintf('profile_picture.%s', $fileExtension);
-    $targetPath = $uploadDir . $filename;
-
-    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-      return null;
-    }
-
-    return $targetPath;
+    return view('admin.group.group_form', ['group' => $group,'user_list'=> $users,'update'=> true])->layout('admin');
   }
 
   public static function update()
   {
-    $id = $_POST['id'];
-    $name = $_POST['name'];
-    $owner_id = $_POST['owner'];
+    $error = new Error;
+    $id = (int)($_POST['id'] ?? 0);
+    $name = htmlspecialchars(trim($_POST['name'] ?? ''));
+    $owner_id = (int)($_POST['owner'] ?? 0);
 
-    $group = Group::getOneById($id);
+    if (empty($name)) {
+      $error->addError("Group name is required");
+    } elseif (strlen($name) > 50) {
+      $error->addError("Group name must be less than 50 characters");
+    }
+
+    try {
+      $owner = User::findOneById($owner_id);
+      if (!$owner) {
+        $error->addError("Selected owner does not exist");
+      }
+    } catch (\Exception $e) {
+      $error->addError("Invalid owner selected");
+    }
+
+    try {
+      $group = Group::getOneById($id);
+      if (!$group) {
+        $error->addError("Group not found");
+      }
+    } catch (\Exception $e) {
+      $error->addError("Invalid group ID");
+    }
+
+    if ($error->hasErrors()) {
+      $queryBuilder = new QueryBuilder();
+      $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
+      
+      $tempGroup = ['id' => $id,'name' => $name,'owner' => $owner_id,'profile_picture' => isset($group) ? $group->profile_picture : null];
+      
+      return view('admin.group.group_form', ['user_list' => $users,'errors' => $error->display(),'group' => $tempGroup,'update'=> true])->layout('admin');
+    }
+
     $group->name = $name;
     $group->ownerId = $owner_id;
 
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['size'] > 0) {
-      $filename = self::handleProfilePicture($_FILES['profile_picture'], $id);
-      if ($filename) {
+      $imageController = new ImageController();
+      $profile_picture = $imageController->save($_FILES['profile_picture'], ['subdir' => 'groups','group_id' => $id,'filename' => 'profile_picture','overwrite' => true]);
+      
+      if ($profile_picture) {
         if ($group->profile_picture && file_exists($group->profile_picture)) {
-          unlink($group->profile_picture);
+          $imageController->delete($group->profile_picture);
         }
-        $group->profile_picture = $filename;
+        $group->profile_picture = $profile_picture;
+      } else {
+        $error->addError("Failed to upload profile picture");
       }
     }
 
@@ -100,21 +111,54 @@ class AdminGroupController
     $queryBuilder = new QueryBuilder();
     $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
 
-    return view('admin.group.group_form',['user_list' => $users])->layout('admin');
+    return view('admin.group.group_form', [
+      'user_list' => $users,
+    ])->layout('admin');
   }
+
   public static function add()
   {
-    $name = $_POST['name'];
-    $owner_id = $_POST['owner'];
+    $error = new Error;
+    $name = htmlspecialchars(trim($_POST['name'] ?? ''));
+    $owner_id = (int)($_POST['owner'] ?? 0);
+
+    if (empty($name)) {
+      $error->addError("Group name is required");
+    } elseif (strlen($name) > 50) {
+      $error->addError("Group name must be less than 50 characters");
+    }
+
+    try {
+      $owner = User::findOneById($owner_id);
+      if (!$owner) {
+        $error->addError("Selected owner does not exist");
+      }
+    } catch (\Exception $e) {
+      $error->addError("Invalid owner selected");
+    }
+
+    if ($error->hasErrors()) {
+      $queryBuilder = new QueryBuilder();
+      $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
+      
+      $tempGroup = ['name' => $name,'owner' => $owner_id,'profile_picture' => null,'id' => null];
+      
+      return view('admin.group.group_form', ['user_list' => $users,'errors' => $error->display(),'group' => $tempGroup])->layout('admin');
+    }
+
 
     $group = new Group(null, $name, null, $owner_id);
     $group->createGroup();
     
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['size'] > 0) {
-      $filename = self::handleProfilePicture($_FILES['profile_picture'], $group->id);
-      if ($filename) {
-        $group->profile_picture = $filename;
+      $imageController = new ImageController();
+      $profile_picture = $imageController->save($_FILES['profile_picture'], ['subdir' => 'groups','group_id' => $group->id,'filename' => 'profile_picture','overwrite' => true]);
+      
+      if ($profile_picture) {
+        $group->profile_picture = $profile_picture;
         $group->update();
+      } else {
+        $error->addError("Failed to upload profile picture");
       }
     }
     

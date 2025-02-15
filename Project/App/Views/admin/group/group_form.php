@@ -1,7 +1,14 @@
 <div class="form-container-admin">
     <div class="form-card-admin">
         <h1 class="form-title"><?= isset($group) ? 'Update Group' : 'Add Group' ?></h1>
-        <form method="POST" action="<?= isset($group) ? '/admin/group/update' : '/admin/group/add' ?>" class="form" enctype="multipart/form-data">
+        <div class="error">
+        <?php 
+            if (isset($errors) && !empty($errors)){
+                echo $errors;
+            }
+        ?>
+        </div>
+        <form method="POST" action="<?= isset($update) ? '/admin/group/update' : '/admin/group/add' ?>" class="form" enctype="multipart/form-data">
             <?php if (isset($group)): ?>
             <input type="hidden" name="id" value="<?= $group['id'] ?>" />
             <?php endif; ?>
