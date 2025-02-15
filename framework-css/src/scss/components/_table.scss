@@ -75,6 +75,20 @@
                 &:disabled {
                     background-color: transparent;
                     color: var(--black-transparent);
+                    &:hover {
+                        background-color: transparent;
+                        cursor: not-allowed;
+                    }
+                }
+
+                &.disabled {
+                    background-color: transparent;
+                    color: var(--black-transparent);
+
+                    &:hover {
+                        background-color: transparent;
+                        cursor: not-allowed;
+                    }
                 }
 
                 svg {
