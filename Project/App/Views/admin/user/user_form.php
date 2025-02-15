@@ -1,7 +1,14 @@
 <div class="form-container-admin">
     <div class="form-card-admin">
         <h1 class="form-title"><?= isset($user) ? 'Update User' : 'Add User' ?></h1>
-        <form method="POST" action="<?= isset($user) ? '/admin/user/update' : '/admin/user/add' ?>" class="form" enctype="multipart/form-data">
+        <div class="error">
+        <?php 
+            if (isset($errors) && !empty($errors)){
+                echo $errors;
+            }
+        ?>
+        </div>
+        <form method="POST" action="<?= isset($update) ? '/admin/user/update' : '/admin/user/add' ?>" class="form" enctype="multipart/form-data">
             <?php if (isset($user)): ?>
             <input type="hidden" name="id" value="<?= $user['id'] ?>" />
             <?php endif; ?>

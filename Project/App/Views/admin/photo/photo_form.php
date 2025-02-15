@@ -1,7 +1,14 @@
 <div class="form-container-admin">
     <div class="form-card-admin">
         <h1 class="form-title"><?= isset($photo) ? 'Update Photo' : 'Add Photo' ?></h1>
-        <form method="POST" action="<?= isset($photo) ? '/admin/photo/update' : '/admin/photo/add' ?>" class="form" enctype="multipart/form-data">
+        <div class="error">
+        <?php 
+            if (isset($errors) && !empty($errors)){
+                echo $errors;
+            }
+        ?>
+        </div>
+        <form method="POST" action="<?= isset($update) ? '/admin/photo/update' : '/admin/photo/add' ?>" class="form" enctype="multipart/form-data">
             <?php if (isset($photo)): ?>
             <input type="hidden" name="id" value="<?= $photo['id'] ?>" />
             <?php endif; ?>

@@ -47,6 +47,11 @@ class User
   {
     $query = new QueryBuilder;
     $user = $query->select()->from("users")->where("id", "=", $id)->fetch();
+    
+    if (!$user) {
+      return null;
+    }
+    
     return new User(
       $user["id"],
       $user["first_name"],
@@ -57,7 +62,7 @@ class User
       $user["password"],
       $user["created_at"],
       $user["updated_at"]
-  );
+    );
   }
 
   public static function getAllUsers(string $search = "")

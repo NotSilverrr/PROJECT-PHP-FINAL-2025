@@ -3,33 +3,11 @@ namespace App\Controllers\admin;
 
 use App\Models\User;
 use Core\QueryBuilder;
+use Core\Error;
+use App\Controllers\ImageController;
 
 class AdminUserController
 {
-  private static function handleProfilePicture($file) {
-    if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
-      return null;
-    }
-
-    $uploadDir = dirname(dirname(dirname(__DIR__))) . '/uploads/user_profile_picture/';
-
-    $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $allowedExtensions = ['jpg', 'jpeg', 'png'];
-    
-    if (!in_array($fileExtension, $allowedExtensions)) {
-      return null;
-    }
-
-    $filename = sprintf('%s.%s', uniqid(rand(), true), $fileExtension);
-    $targetPath = $uploadDir . $filename;
-
-    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
-      return null;
-    }
-
-    return $targetPath;
-  }
-
   public static function index()
   {
     $queryBuilder = new QueryBuilder();
@@ -56,43 +34,91 @@ class AdminUserController
       return redirect('/admin/user');
     }
 
-    return view('admin.user.user_form', ['user' => $user])->layout('admin');
+    return view('admin.user.user_form', ['user' => $user,'update'=> true])->layout('admin');
   }
 
   public static function update()
   {
-    $id = $_POST['id'];
-    $email = $_POST['email'];
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $password = $_POST['password'];
+    $error = new Error;
+    $id = (int)($_POST['id'] ?? 0);
+    $email = htmlspecialchars(trim($_POST['email'] ?? ''));
+    $first_name = htmlspecialchars(trim($_POST['first_name'] ?? ''));
+    $last_name = htmlspecialchars(trim($_POST['last_name'] ?? ''));
+    $password = trim($_POST['password'] ?? '');
     $is_admin = isset($_POST['is_admin']);
+
+    if (empty($email)) {
+      $error->addError("Email is required");
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $error->addError("Invalid email format");
+    } elseif (strlen($email) > 320) {
+      $error->addError("Email must be less than 320 characters");
+    }
+
+    if (empty($first_name)) {
+      $error->addError("First name is required");
+    } elseif (strlen($first_name) > 100) {
+      $error->addError("First name must be less than 100 characters");
+    }
+
+    if (empty($last_name)) {
+      $error->addError("Last name is required");
+    } elseif (strlen($last_name) > 100) {
+      $error->addError("Last name must be less than 100 characters");
+    }
+
+    try {
+      $user = User::findOneById($id);
+      if (!$user) {
+        $error->addError("User not found");
+      }
+    } catch (\Exception $e) {
+      $error->addError("Invalid user ID");
+    }
+
+    if ($email !== $user->email) {
+      try {
+        $existingUser = User::findOneByEmail($email);
+        if ($existingUser) {
+          $error->addError("Email is already in use");
+        }
+      } catch (\Exception $e) {}
+    }
+
+    if ($error->hasErrors()) {
+      $tempUser = ['id' => $id,'email' => $email,'first_name' => $first_name,'last_name' => $last_name,'is_admin' => $is_admin,'profile_picture' => isset($user) ? $user->profile_picture : null];
+      
+      return view('admin.user.user_form', ['user' => $tempUser,'update' => true,'errors' => $error->display()])->layout('admin');
+    }
     
-    $user = User::findOneById($id);
     $user->email = $email;
     $user->first_name = $first_name;
     $user->last_name = $last_name;
     $user->isadmin = $is_admin;
 
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['size'] > 0) {
-      $filename = self::handleProfilePicture($_FILES['profile_picture']);
-      if ($filename) {
+      $imageController = new ImageController();
+      $profile_picture = $imageController->save($_FILES['profile_picture'], ['subdir' => 'user_profile_picture']);
+      
+      if ($profile_picture) {
         if ($user->profile_picture) {
-          $oldFile = dirname(dirname(dirname(__DIR__))) . '/uploads/user_profile_picture/' . $user->profile_picture;
-          if (file_exists($oldFile)) {
-            unlink($oldFile);
-          }
+          $imageController->delete($user->profile_picture);
         }
-        $user->profile_picture = $filename;
+        $user->profile_picture = $profile_picture;
+      } else {
+        $error->addError("Failed to upload profile picture");
       }
     }
 
     if ($password) {
+      if (strlen($password) < 6) {
+        $error->addError("Password must be at least 6 characters long");
+        return redirect('/admin/user');
+      }
       $user->password = $password;
     }
     
     $user->update();
-    
     return redirect('/admin/user');
   }
 
@@ -103,26 +129,72 @@ class AdminUserController
 
   public static function add()
   {
-    $email = $_POST['email'];
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $password = $_POST['password'];
+    $error = new Error;
+    $email = htmlspecialchars(trim($_POST['email'] ?? ''));
+    $first_name = htmlspecialchars(trim($_POST['first_name'] ?? ''));
+    $last_name = htmlspecialchars(trim($_POST['last_name'] ?? ''));
+    $password = trim($_POST['password'] ?? '');
     $is_admin = isset($_POST['is_admin']);
-    
-    $profile_picture = null;
-    if (isset($_FILES['profile_picture'])) {
-      $profile_picture = self::handleProfilePicture($_FILES['profile_picture']);
+
+    $tempUser = ['id' => null,'email' => $email,'first_name' => $first_name,'last_name' => $last_name,'is_admin' => $is_admin,'profile_picture' => null];
+
+    if (empty($email)) {
+      $error->addError("Email is required");
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $error->addError("Invalid email format");
+    } elseif (strlen($email) > 320) {
+      $error->addError("Email must be less than 320 characters");
     }
 
-    $user = new User(
-      null,
-      $first_name,
-      $last_name,
-      $profile_picture,
-      $is_admin,
-      $email,
-      $password
-    );
+    if (empty($first_name)) {
+      $error->addError("First name is required");
+    } elseif (strlen($first_name) > 100) {
+      $error->addError("First name must be less than 100 characters");
+    }
+
+    if (empty($last_name)) {
+      $error->addError("Last name is required");
+    } elseif (strlen($last_name) > 100) {
+      $error->addError("Last name must be less than 100 characters");
+    }
+
+    if (empty($password)) {
+      $error->addError("Password is required");
+    } elseif (strlen($password) < 6) {
+      $error->addError("Password must be at least 6 characters long");
+    }
+
+    try {
+      $existingUser = User::findOneByEmail($email);
+      if ($existingUser) {
+        $error->addError("Email is already in use");
+      }
+    } catch (\Exception $e) {}
+
+    if ($error->hasErrors()) {
+      return view('admin.user.user_form', [
+        'user' => $tempUser,
+        'errors' => $error->display()
+      ])->layout('admin');
+    }
+
+    $profile_picture = null;
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['size'] > 0) {
+      $imageController = new ImageController();
+      $profile_picture = $imageController->save($_FILES['profile_picture'], [
+        'subdir' => 'user_profile_picture'
+      ]);
+      
+      if (!$profile_picture) {
+        $error->addError("Failed to upload profile picture");
+        return view('admin.user.user_form', [
+          'user' => $tempUser,
+          'errors' => $error->display()
+        ])->layout('admin');
+      }
+    }
+
+    $user = new User(null,$first_name,$last_name,$profile_picture,$is_admin,$email,$password);
     $user->createUser();
     
     return redirect('/admin/user');
