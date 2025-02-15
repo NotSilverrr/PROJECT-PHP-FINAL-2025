@@ -7,6 +7,7 @@ use App\Services\Auth;
 class ImageController
 {
     private $allowedExtensions = ['jpg', 'jpeg', 'png'];
+    private $maxFileSize = 5242880;
     private $uploadBaseDir;
 
     public function __construct() {
@@ -30,6 +31,10 @@ class ImageController
 
     public function save($file, $options = []) {
         if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+
+        if ($file['size'] > $this->maxFileSize) {
             return null;
         }
 
