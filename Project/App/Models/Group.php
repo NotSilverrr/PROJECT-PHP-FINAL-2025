@@ -22,7 +22,10 @@ class Group {
     {
         $query = new QueryBuilder;
         $response = $query->select()->from("user_group")->where("user_id", "=", $userId)->andWhere("group_id", "=", $groupId)->fetch();
-        return $response;
+        if($response) {
+            return true;
+        }
+        return false;
     }
 
     public static function isOwner(int $groupId)

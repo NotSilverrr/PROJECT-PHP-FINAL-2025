@@ -10,38 +10,15 @@ class ImageService {
         $this->query = new QueryBuilder();
     }
     
-    public function serve($imageId, $userId) {
-        // Vérifier l'accès à l'image et son groupe
-        $image = $this->query
-            ->select()
-            ->from('photos')
-            ->join('user_group', 'user_group.group_id', '=', 'photos.group_id')
-            ->where('photos.id', '=', $imageId)
-            ->andWhere('user_group.user_id', '=', $userId)
-            ->fetch();
-
-        // print_r($image);
-            
-        if (!$image) {
-            throw new \Exception("Image non trouvée ou accès non autorisé");
-        }
-        
-        $path = __DIR__ .'/../../uploads/groups/' . $image['group_id'] . '/' . $image['file'];
-
-        // print_r($path);
-        
-        if (!file_exists($path)) {
-            throw new \Exception("Fichier non trouvé");
-        }
-        
+    public static function serve($imagePath) {
+        $imagePath = __DIR__ . "/../../" . $imagePath;
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimeType = finfo_file($finfo, $path);
-
+        $mimeType = finfo_file($finfo, $imagePath);
         finfo_close($finfo);
         
         header("Content-Type: " . $mimeType);
         header("Cache-Control: private, max-age=3600");
-        readfile($path);
+        readfile($imagePath);
         exit;
     }
 
@@ -90,44 +67,23 @@ class ImageService {
         readfile($path);
         exit;
     }
-    
-    public function save($groupId, $userId, $file) {
-        // Vérifier l'appartenance au groupe
-        $member = $this->query
-            ->select()
-            ->from('group_members')
-            ->where('user_id', '=', $userId)
-            ->andWhere('group_id', '=', $groupId)
-            ->fetch();
-            
-        if (!$member) {
-            throw new \Exception("Non autorisé");
+
+    public static function uploadPhoto($file, $groupId): ?string
+    {
+        $uploadDir = __DIR__ . "/../../uploads/groups/{$groupId}/";
+        
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
         }
-        
-        // Gérer l'upload du fichier
-        $uploadDir = '/uploads/groups/' . $groupId . '/';
-        if (!file_exists($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
+
+        $filename = uniqid() . "_" . basename($file['name']);
+        $uploadPath = $uploadDir . $filename;
+
+        if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+            return "uploads/groups/{$groupId}/" . $filename; // Chemin stocké en BDD
         }
-        
-        $filename = uniqid() . '_' . basename($file['name']);
-        $targetPath = $uploadDir . $filename;
-        
-        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-            // Insérer dans la base de données
-            return $this->query
-                ->insert()
-                ->into('photos', ['group_id', 'file_path', 'uploaded_by', 'created_at'])
-                ->values([
-                    $groupId,
-                    $filename,
-                    $userId,
-                    date('Y-m-d H:i:s')
-                ])
-                ->execute();
-        }
-        
-        throw new \Exception("Erreur lors de l'upload");
+
+        return null;
     }
     
     public function delete($imageId, $userId) {

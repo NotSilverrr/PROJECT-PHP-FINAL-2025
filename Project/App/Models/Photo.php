@@ -23,7 +23,14 @@ class Photo
   {
     $query = new QueryBuilder;
     $response = $query->select()->from("photos")->where("id", "=", $id)->fetch();
-    return $response;
+    return new Photo(
+      id: $response["id"],
+      file: $response["file"],
+      group_id: $response["group_id"],
+      user_id: $response["user_id"],
+      created_at: $response["created_at"],
+      updated_at: $response["updated_at"]
+    );
 }
 
   public static function findByGroupId(int $groupId): array
@@ -58,8 +65,6 @@ class Photo
       "file" => $this->file,
       "group_id" => $this->group_id,
       "user_id" => $this->user_id,
-      "created_at" => $this->created_at,
-      "updated_at" => $this->updated_at
     ];
 
     $columns = array_keys($data);

@@ -1,6 +1,7 @@
 <?php 
 namespace App\Models;
 
+use App\Services\Auth;
 use Core\QueryBuilder;
 
 class Member {
@@ -34,6 +35,16 @@ class Member {
       throw new \Exception("Vous n'êtes pas l'owner de ce groupe");
     }
       
+  }
+
+  public static function canEdit($groupId, $userId)
+  {
+    $query = new QueryBuilder;
+    $response = $query->select(["read_only"])->from("user_group")->where("group_id", "=", $groupId)->andWhere("user_id", "=", $userId)->fetch();
+    if($response["read_only"]) {
+      return false;
+    }
+    return true;
   }
 
 }

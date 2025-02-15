@@ -56,15 +56,15 @@ class User
     }
     
     return new User(
-      $user["id"],
-      $user["first_name"],
-      $user["last_name"],
-      $user["profile_picture"] ?? null,
-      (bool)$user["is_admin"],
-      $user["email"],
-      $user["password"],
-      $user["created_at"],
-      $user["updated_at"]
+      id: $user["id"],
+      first_name: $user["first_name"],
+      last_name: $user["last_name"],
+      profile_picture: $user["profile_picture"] ?? null,
+      isadmin: (bool)$user["is_admin"],
+      email: $user["email"],
+      password: $user["password"],
+      created_at: $user["created_at"],
+      updated_at: $user["updated_at"]
     );
   }
 
