@@ -6,9 +6,6 @@
 @layer base {
 	:root {
 
-
-		
-
 		@each $name, $color in v.$colors {
 			@if ($name == "black" or $name == "white") {
 				--#{$name}: #{color.scale($color, $space: hsl)};
@@ -67,7 +64,7 @@
 		}
 	}
 
-	input {
+	input,select {
 		border-radius: f.rem(6);
 		padding: f.rem(10) f.rem(16);
 		border: solid thin var(--border-color);
