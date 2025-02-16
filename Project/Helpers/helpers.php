@@ -9,3 +9,8 @@ function redirect($path) {
     header("Location: $path");
     exit();
 }
+
+function fileName($file) {
+    $response = end(explode("/", $file));
+    return $response;
+}
