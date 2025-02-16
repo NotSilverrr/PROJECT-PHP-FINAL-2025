@@ -146,6 +146,13 @@ class Group {
         
     }
 
+    public static function delete(int $groupId)
+    {
+      $query = new QueryBuilder;
+      $query->delete()->from("groups")->where("id", "=", $groupId)->execute();
+      
+    }
+
     
 
 }

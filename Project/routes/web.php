@@ -64,6 +64,7 @@ $router->get("/group", GroupController::class, "show");
 $router->get("/group/create", GroupController::class, "create");
 $router->post("/group", GroupController::class, "store");
 $router->get("/group/{id}", GroupController::class, "show");
+$router->post("/group/{id}/delete", GroupController::class, "delete");
 $router->get("/group/{id}/profilePicture", ImageController::class, "showGroupProfilePicture");
 $router->get("/group/{id}/addMember", MemberController::class, "create");
 $router->post("/group/{id}/addMember", MemberController::class, "store");

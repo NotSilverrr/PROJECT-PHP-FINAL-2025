@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Requests\GroupRequest;
 use App\Requests\MemberRequest;
 use App\Services\Auth;
+use App\Services\ImageService;
 
 class GroupController {
     public function show(int $id = -1) {
@@ -135,6 +136,20 @@ class GroupController {
     
         $group->profile_picture = "uploads/groups/" . $group->id . "/" . "profile_picture." . $fileExt;;
         $group->update();
+    }
+
+    public function delete($id) {
+        if (!(Group::isOwner($id) || Auth::user()->isAdmin())) {
+            http_response_code(403);
+            return view('errors.403');
+        }
+        // get all photos of the group
+        $folderPath = "uploads/groups/" . $id;
+        if (!deleteFolder($folderPath)) {
+        }
+        Group::delete($id);
+        header("Location: /");
+        exit;
     }
 
 
