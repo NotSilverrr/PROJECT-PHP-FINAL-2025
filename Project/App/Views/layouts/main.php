@@ -144,7 +144,7 @@ use App\Services\Auth;
               foreach ($members as $member) {
                 ?>
                 <li>
-                  <?php if(Group::isOwner($group->id, Auth::id()) || Auth::user()->isadmin) :?>
+                  <?php if(Group::isOwner($group->id, Auth::id()) || Auth::isadmin()) :?>
                     <a href="/group/<?=$group->id?>/user/<?=$member->id?>" class="<?= $member->id == $group->ownerId ? "scrollable-list__selected" : "" ?>">
                   <?php else :?>
                     <a href="#" class="<?= $member->id == $group->ownerId ? "scrollable-list__selected" : "" ?>">

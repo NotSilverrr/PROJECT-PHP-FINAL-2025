@@ -12,7 +12,7 @@ class MemberController {
 
   public function show(int $groupId, int $userId)
   {
-    if (!Group::isOwner($groupId, Auth::id())) {
+    if (!(Group::isOwner($groupId, Auth::id()) || Auth::isadmin())) {
       return view("errors.403");
     }
     $members = Group::getMembers($groupId, $_GET['m'] ?? "");
