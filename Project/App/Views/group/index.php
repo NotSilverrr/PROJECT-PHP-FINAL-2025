@@ -7,9 +7,7 @@
 if (isset($group) && !empty($group)) : ?>
 <h1 class="mt-24 text-8 lg-mt-4"><?= $group->name ?></h1>
 
-<a href="/group/<?=$group->id?>/upload">
-    <button class="button button--primary button--admin">+</button>
-</a>
+
 <ul class="image-grid">
     <?php foreach ($photos as $photo) : ?>
         <li>

@@ -1,0 +1,15 @@
+@layer components;
+
+.floating-button {
+    position: sticky;
+    bottom: 20px; /* Fixe le bouton en bas de la section */
+    display: flex;
+    justify-content: flex-end; /* Aligne à droite */
+    width: 100%;
+    background: transparent; /* Assure qu'il ne cache pas le contenu */
+    z-index: 10;
+
+    &___button {
+        margin-left: 10px; /* Espacement entre les boutons */
+    }
+}

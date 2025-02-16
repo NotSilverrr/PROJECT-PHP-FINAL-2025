@@ -99,6 +99,17 @@
 			border-radius: 10000px;
 		}
 
+		&--icon {
+			padding: 1rem;
+		}
+
+		&--floating {
+			position: sticky;
+			bottom: 1rem;
+			right: 1rem;
+			z-index: 10;
+		}
+
 		
 	}
 }

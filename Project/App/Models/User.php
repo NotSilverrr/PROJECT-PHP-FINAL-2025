@@ -67,6 +67,11 @@ class User
     );
   }
 
+  public function isAdmin(): bool
+  {
+    return $this->isadmin;
+  }
+
   public static function getAllUsers(string $search = "")
   {
     $search = "%$search%";

@@ -1,0 +1,28 @@
+@use "../partials//mixins" as m;
+
+@layer components {
+    .center-container {
+        flex-grow: 1;
+        position: relative; /* Pour que le bouton soit ancré à cette section */
+        overflow-y: scroll;
+		@include m.scrollbar;
+        height: 100vh; /* Hauteur maximale */
+        padding: 1rem;
+
+        &__content {
+            min-height: calc(100vh - 6rem); /* Hauteur minimale */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        &__button {
+            position: sticky;
+            bottom: 2rem; /* Fixe le bouton en bas de la section */
+            display: flex;
+            justify-content: flex-end; /* Aligne à droite */
+
+
+        }
+    }
+}

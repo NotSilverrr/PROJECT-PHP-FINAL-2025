@@ -12,11 +12,11 @@ class GroupSeeder
         $pdo = Database::getConnection();
         
         $stmt = $pdo->prepare("
-            INSERT INTO groups (name, profile_picture, owner, created_at, updated_at)
+            INSERT INTO groups (name, profile_picture, owner)
             VALUES 
-                ('Developers', 'devs.jpg', 1, NOW(), NOW()),
-                ('Designers', 'designers.jpg', 2, NOW(), NOW()),
-                ('Gamers', 'gamers.jpg', 3, NOW(), NOW())
+                ('Developers', 'devs.jpg', 1),
+                ('Designers', 'designers.jpg', 2),
+                ('Gamers', 'gamers.jpg', 3)
         ");
         $stmt->execute();
 
