@@ -38,6 +38,7 @@ class MemberController {
         );
 
         $member->addMember();
+        $_SESSION['success'] = "Membre ajouté avec succès";
         header("Location:/group/".$id);
         exit;
     } catch (\Exception $e) {
@@ -61,9 +62,13 @@ class MemberController {
         );
 
         $member->deleteMember();
+        $_SESSION['success'] = "Membre supprimé avec succès";
         header("Location:/group/".$id);
+        exit;
     } catch (\Exception $e) {
-      echo $e->getMessage();
+      $_SESSION['error'] = $e->getMessage();
+      header("Location:/group/".$id);
+      exit;
     }
   }
 
@@ -85,15 +90,13 @@ class MemberController {
         );
 
         $member->updateMember();
+        $_SESSION['success'] = "Membre modifié avec succès";
         header("Location:/group/".$groupId);
         exit;
     } catch (\Exception $e) {
-      return view("group.member", [
-        "error" => $e->getMessage(),
-        "groupId" => $groupId,
-        "userId" => $userId,
-        "member" => Member::findOne($groupId, $userId)
-    ]);
+      $_SESSION['error'] = $e->getMessage();
+      header("Location:/group/".$groupId);
+      exit;
     }
   }
 }
