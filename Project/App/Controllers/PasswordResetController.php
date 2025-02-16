@@ -57,6 +57,7 @@ class PasswordResetController {
       $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
       $user->updatePassword($hashedPassword);
 
-      return view('login.index', ['success' => 'Votre mot de passe a été réinitialisé avec succès.'])->layout("guest");
+      header("Location: /login?success=".urlencode("Votre mot de passe a été réinitialisé avec succès."));
+      exit;
   }
 }

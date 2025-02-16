@@ -96,7 +96,7 @@ class GroupController {
                 $this->handleImageUpload($request->profile_picture, $group);
             }
     
-            header("Location:/group/" . $group->id);
+            header("Location:/group/" . $group->id . "?success=" . urlencode("Le groupe a été créé avec succès."));
             exit;
     
         } catch (\Exception $e) {

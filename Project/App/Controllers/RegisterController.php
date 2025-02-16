@@ -97,13 +97,12 @@ class RegisterController
 
     try {
       $user = new User(
-        null,
-        $first_name,
-        $last_name,
-        $profile_picture,
-        false,
-        $email,
-        $password
+        first_name: $first_name,
+        last_name: $last_name,
+        profile_picture: $profile_picture,
+        isadmin: false,
+        email: $email,
+        password: $password
       );
       $user->createUser();
       
@@ -111,6 +110,8 @@ class RegisterController
       exit;
     } catch (\Exception $e) {
       $error->addError($e->getMessage());
+      print_r($e->getMessage());
+      die();
       return view('register.index', [
         'user' => $tempUser,
         'errors' => $error->display()
