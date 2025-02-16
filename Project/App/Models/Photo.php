@@ -15,7 +15,8 @@ class Photo
     public int $group_id,
     public int $user_id,
     public ?string $created_at = null,
-    public ?string $updated_at = null
+    public ?string $updated_at = null,
+    public ?User $user = null
   ) {}
 
 
@@ -37,24 +38,34 @@ class Photo
   {
 
     $query = new QueryBuilder;
-    $photos = $query->select()->from("photos")->where("group_id", "=", $groupId)->fetchAll();
+    $photos = $query->select(["photos.*", "users.first_name", "users.last_name"])->from("photos")->join("users","photos.user_id", "=", "users.id")->where("group_id", "=", $groupId)->fetchAll();
 
     $photoObjects = [];
     
     foreach ($photos as $photo) {
-        $photoObj = new Photo(
-            null,
-            $photo["file"],
-            $photo["group_id"],
-            $photo["user_id"]
-        );
-        $photoObj->id = $photo["id"];
-        $photoObj->created_at = $photo["created_at"];
-        $photoObj->updated_at = $photo["updated_at"];
-        $photoObjects[] = $photoObj;
-    }
-    
-    return $photoObjects;
+      $user = new User(
+          id: $photo["user_id"],
+          first_name: $photo["first_name"],
+          last_name: $photo["last_name"],
+      );
+
+      $photoObj = new Photo(
+          null,
+          $photo["file"],
+          $photo["group_id"],
+          $photo["user_id"]
+      );
+      $photoObj->id = $photo["id"];
+      $photoObj->created_at = $photo["created_at"];
+      $photoObj->updated_at = $photo["updated_at"];
+      $photoObj->user = $user;
+      
+      $photoObjects[] = $photoObj;
+  }
+  // echo "<pre>";
+  // print_r($photoObjects);
+  
+  return $photoObjects;
   }
 
   public function createPhoto()
