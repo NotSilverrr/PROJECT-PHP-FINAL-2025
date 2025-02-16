@@ -63,6 +63,25 @@ class GroupController {
         $request = new GroupRequest;
         
         try {
+
+            if (empty($request->name)) {
+                echo "Group name is required";
+                exit;
+              } elseif (strlen($request->name) > 50) {
+                echo "Group name must be less than 50 characters";
+                exit;
+              }
+          
+              try {
+                $owner = User::findOneById(Auth::id());
+                if (!$owner) {
+                  echo "Selected owner does not exist";
+                  exit;
+                }
+              } catch (\Exception $e) {
+                echo "Invalid owner selected";
+                exit;
+              }
             // Créer un groupe sans image d'abord
             $group = new Group(
                 name: $request->name,
