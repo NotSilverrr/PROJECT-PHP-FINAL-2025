@@ -88,10 +88,10 @@ class Group {
     {
         $search = "%$search%";
         $query = new QueryBuilder;
-        $response = $query->select(["users.id", "users.first_name", "users.last_name", "users.profile_picture","users.is_admin"])->from("users")->join("user_group", "users.id", "=", "user_group.user_id")->where("user_group.group_id", "=", $groupId)->andWhere("users.first_name", "LIKE", $search)->orderBy('user_group.created_at', 'ASC')->fetchAll();
+        $response = $query->select(["users.id", "users.first_name", "users.last_name", "users.profile_picture","users.is_admin","users.email"])->from("users")->join("user_group", "users.id", "=", "user_group.user_id")->where("user_group.group_id", "=", $groupId)->andWhere("users.first_name", "LIKE", $search)->orderBy('user_group.created_at', 'ASC')->fetchAll();
         $members = [];
         foreach ($response as $member) {
-            $members[] = new User($member["id"], $member["first_name"], $member["last_name"], $member["profile_picture"], $member["is_admin"], "", "");
+            $members[] = new User($member["id"], $member["first_name"], $member["last_name"], $member["profile_picture"], $member["is_admin"], $member["email"], "");
         }
         return $members;
     }

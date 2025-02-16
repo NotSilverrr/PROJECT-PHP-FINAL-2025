@@ -11,6 +11,7 @@ class AdminGroupController
 {
   public static function index()
   {
+    session_start();
     $queryBuilder = new QueryBuilder();
     $groups = $queryBuilder
       ->select(['groups.id', 'groups.name', 'groups.profile_picture', 'users.email as owner', 'groups.created_at'])
@@ -20,8 +21,10 @@ class AdminGroupController
 
     return view('admin.group.group', ['groups' => $groups])->layout('admin');
   }
+
   public static function delete()
   {
+    session_start();
     $id = $_POST['id'];
     $queryBuilder = new QueryBuilder();
     $query = $queryBuilder->delete()->from('groups')->where('id',"=", $id)->execute();
@@ -31,21 +34,30 @@ class AdminGroupController
 
   public static function updateIndex(int $id)
   {
+    session_start();
     $queryBuilderGroup = new QueryBuilder();
     $group = $queryBuilderGroup->select(['id', 'name', 'profile_picture', 'owner'])->from('groups')->where('id', '=', $id)->fetch();
     
     $queryBuilderUser = new QueryBuilder();
     $users = $queryBuilderUser->select(['id', 'email'])->from('users')->fetchAll();
 
+    $members = Group::getMembers($id);
+
+    $memberIds = array_column($members, 'id');
+    $available_users = array_filter($users, function($user) use ($memberIds) {
+        return !in_array($user['id'], $memberIds);
+    });
+
     if (!$group) {
-      return redirect('/admin/group');
+      return redirect('/admin/group/update/'.$id);
     }
 
-    return view('admin.group.group_form', ['group' => $group,'user_list'=> $users,'update'=> true])->layout('admin');
+    return view('admin.group.group_form', ['group' => $group,'user_list' => $users,'members' => $members,'available_users' => $available_users,'update' => true])->layout('admin');
   }
 
   public static function update()
   {
+    session_start();
     $error = new Error;
     $id = (int)($_POST['id'] ?? 0);
     $name = htmlspecialchars(trim($_POST['name'] ?? ''));
@@ -81,7 +93,13 @@ class AdminGroupController
       
       $tempGroup = ['id' => $id,'name' => $name,'owner' => $owner_id,'profile_picture' => isset($group) ? $group->profile_picture : null];
       
-      return view('admin.group.group_form', ['user_list' => $users,'errors' => $error->display(),'group' => $tempGroup,'update'=> true])->layout('admin');
+      $members = Group::getMembers($id);
+      $memberIds = array_column($members, 'id');
+      $available_users = array_filter($users, function($user) use ($memberIds) {
+          return !in_array($user['id'], $memberIds);
+      });
+      
+      return view('admin.group.group_form', ['user_list' => $users,'errors' => $error->display(),'group' => $tempGroup,'members' => $members,'available_users' => $available_users,'update' => true])->layout('admin');
     }
 
     $group->name = $name;
@@ -89,7 +107,8 @@ class AdminGroupController
 
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['size'] > 0) {
       $imageController = new ImageController();
-      $profile_picture = $imageController->save($_FILES['profile_picture'], ['subdir' => 'groups','group_id' => $id,'filename' => 'profile_picture','overwrite' => true]);
+      $profile_picture = $imageController->save($_FILES['profile_picture'], ['subdir' => 'groups','group_id' => $id,'filename' => 'profile_picture','overwrite' => true
+      ]);
       
       if ($profile_picture) {
         if ($group->profile_picture && file_exists($group->profile_picture)) {
@@ -101,23 +120,25 @@ class AdminGroupController
       }
     }
 
-    $group->update();
-    
+    if ($error->hasErrors()) {
+      return view('admin.group.group_form', ['errors' => $error->display(),'group' => $group])->layout('admin');
+    }
+
     return redirect('/admin/group');
   }
 
   public static function addIndex()
   {
+    session_start();
     $queryBuilder = new QueryBuilder();
     $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
 
-    return view('admin.group.group_form', [
-      'user_list' => $users,
-    ])->layout('admin');
+    return view('admin.group.group_form', ['user_list' => $users,])->layout('admin');
   }
 
   public static function add()
   {
+    session_start();
     $error = new Error;
     $name = htmlspecialchars(trim($_POST['name'] ?? ''));
     $owner_id = (int)($_POST['owner'] ?? 0);

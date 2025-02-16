@@ -12,33 +12,41 @@ class Member {
     public ?bool $read_only = false,
   ) {}
 
-  public function addMember()
-    {
-      if(Group::isOwner($this->groupId)) {
-        if(Group::isMember($this->groupId, $this->userId)) {
-          throw new \Exception("Cet utilisateur est deja membre de ce groupe");
-        }
-        $query = new QueryBuilder;
-        $query->insert()->into("user_group", ["group_id", "user_id"])->values([$this->groupId, $this->userId])->execute();
-      } else {
-        throw new \Exception("Vous n'êtes pas le propriétaire de ce groupe");
-      }
+  private function isAdmin(): bool
+  {
+    $user = Auth::user();
+    return $user && $user->isadmin == '1';
+  }
 
+  public function addMember()
+  {
+    if($this->isAdmin() || Group::isOwner($this->groupId)) {
+      if(Group::isMember($this->groupId, $this->userId)) {
+        throw new \Exception("Cet utilisateur est deja membre de ce groupe");
+      }
+      $query = new QueryBuilder;
+      $query->insert()->into("user_group", ["group_id", "user_id"])->values([$this->groupId, $this->userId])->execute();
+    } else {
+      throw new \Exception("Vous n'êtes pas le propriétaire de ce groupe");
     }
+  }
 
   public function deleteMember()
   {
-    if(Group::isOwner($this->groupId)) {
+    if($this->isAdmin() || Group::isOwner($this->groupId)) {
       $query = new QueryBuilder;
       $query->delete()->from("user_group")->where("group_id", "=", $this->groupId)->andWhere("user_id", "=", $this->userId)->execute();
-    }else {
+    } else {
       throw new \Exception("Vous n'êtes pas l'owner de ce groupe");
     }
-      
   }
 
-  public static function canEdit($groupId, $userId)
+  public function canEdit($groupId, $userId)
   {
+    if($this->isAdmin()) {
+      return true;
+    }
+    
     $query = new QueryBuilder;
     $response = $query->select(["read_only"])->from("user_group")->where("group_id", "=", $groupId)->andWhere("user_id", "=", $userId)->fetch();
     if($response["read_only"]) {
@@ -46,5 +54,4 @@ class Member {
     }
     return true;
   }
-
 }

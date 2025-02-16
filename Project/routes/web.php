@@ -13,6 +13,7 @@ use App\Controllers\admin\AdminPhotoController;
 use App\Controllers\MemberController;
 use App\Controllers\PasswordResetController;
 use App\Controllers\PhotoController;
+use App\Controllers\admin\AdminMemberController;
 
 $router->redirect("/", "/group");
 $router->redirect("/admin/", "/admin/user");
@@ -47,12 +48,17 @@ $router->post("/admin/group/update", AdminGroupController::class, "update");
 $router->get("/admin/group/add", AdminGroupController::class, "addIndex");
 $router->post("/admin/group/add", AdminGroupController::class, "add");
 
+$router->post("/admin/member/add/{id}", AdminMemberController::class, "add");
+$router->post("/admin/member/delete/{id}", AdminMemberController::class, "delete");
+$router->post("/admin/member/toggle-readonly/{id}", AdminMemberController::class, "toggleReadonly");
+
 $router->get("/admin/photo", AdminPhotoController::class, "index");
 $router->post("/admin/photo/delete", AdminPhotoController::class, "delete");
 $router->get("/admin/photo/update/{id}", AdminPhotoController::class, "updateIndex");
 $router->post("/admin/photo/update", AdminPhotoController::class, "update");
 $router->get("/admin/photo/add", AdminPhotoController::class, "addIndex");
 $router->post("/admin/photo/add", AdminPhotoController::class, "add");
+
 
 $router->get("/group", GroupController::class, "show");
 $router->get("/group/create", GroupController::class, "create");
