@@ -68,6 +68,7 @@ class PhotoController
             print_r("You are not a member of this group");
             return view('errors.403');
         }
+        
         if (!(Photo::isOwner($photoId, Auth::id()) || Auth::user()->isAdmin())) {
             return view('errors.403');
         }

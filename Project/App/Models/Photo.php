@@ -119,6 +119,6 @@ class Photo
   {
     $query = new QueryBuilder;
     $response = $query->select()->from("photos")->where("id", "=", $photoId)->fetch();
-    return $response["user_id"] === $userId;
+    return (int)$response["user_id"] === $userId;
   }
 }
