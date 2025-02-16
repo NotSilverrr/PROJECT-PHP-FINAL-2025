@@ -46,11 +46,11 @@ class View {
 
     protected function parseViewPath($view) {
         $path = str_replace('.', '/', $view);
-        return "/../App/views/{$path}.php";
+        return "/../App/Views/{$path}.php";
     }
 
     protected function parseLayoutPath($layout) {
-        return "/../App/views/layouts/{$layout}.php";
+        return "/../App/Views/layouts/{$layout}.php";
     }
 
     public function __toString() {
