@@ -7,11 +7,22 @@ use App\Models\Group;
 use Core\QueryBuilder;
 use Core\Error;
 use App\Controllers\ImageController;
+use App\Services\Auth;
 
 class AdminPhotoController
 {
+  private static function checkAdminAuth()
+  {
+    if (!Auth::check() || !Auth::isadmin()) {
+      header('Location: /login');
+      exit;
+    }
+  }
+
   public static function index()
   {
+    self::checkAdminAuth();
+    
     $queryBuilder = new QueryBuilder();
     $photos = $queryBuilder
       ->select(['photos.id', 'photos.file', 'groups.name as group_name', 'users.email as user_email'])
@@ -25,6 +36,8 @@ class AdminPhotoController
 
   public static function delete()
   {
+    self::checkAdminAuth();
+    
     $id = $_POST['id'];
     
     $queryBuilder = new QueryBuilder();
@@ -41,6 +54,8 @@ class AdminPhotoController
 
   public static function updateIndex(int $id)
   {
+    self::checkAdminAuth();
+    
     $queryBuilderPhoto = new QueryBuilder();
     $photo = $queryBuilderPhoto->select(['id', 'file', 'group_id', 'user_id'])->from('photos')->where('id', '=', $id)->fetch();
 
@@ -59,6 +74,8 @@ class AdminPhotoController
 
   public static function update()
   {
+    self::checkAdminAuth();
+    
     $error = new Error;
     $id = (int)($_POST['id'] ?? 0);
     $group_id = (int)($_POST['group_id'] ?? 0);
@@ -127,6 +144,8 @@ class AdminPhotoController
 
   public static function addIndex()
   {
+    self::checkAdminAuth();
+    
     $queryBuilderGroup = new QueryBuilder();
     $groups = $queryBuilderGroup->select(['id', 'name'])->from('groups')->fetchAll();
     
@@ -138,6 +157,8 @@ class AdminPhotoController
 
   public static function add()
   {
+    self::checkAdminAuth();
+    
     $error = new Error;
     $group_id = (int)($_POST['group_id'] ?? 0);
     $user_id = (int)($_POST['user_id'] ?? 0);
@@ -188,5 +209,4 @@ class AdminPhotoController
     
     return redirect('/admin/photo');
   }
-
 }

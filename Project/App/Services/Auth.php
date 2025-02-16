@@ -21,6 +21,14 @@ class Auth
         return $_SESSION['user_id'] ?? null;
     }
 
+    public static function isadmin()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        return $_SESSION['isadmin'] ?? null;
+    }
+
     public static function check()
     {
         if (session_status() === PHP_SESSION_NONE) {

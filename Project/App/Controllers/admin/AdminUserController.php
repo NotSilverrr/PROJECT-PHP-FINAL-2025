@@ -5,11 +5,22 @@ use App\Models\User;
 use Core\QueryBuilder;
 use Core\Error;
 use App\Controllers\ImageController;
+use App\Services\Auth;
 
 class AdminUserController
 {
+  private static function checkAdminAuth()
+  {
+    if (!Auth::check() || !Auth::isadmin()) {
+      header('Location: /login');
+      exit;
+    }
+  }
+
   public static function index()
   {
+    self::checkAdminAuth();
+    
     $queryBuilder = new QueryBuilder();
     $users = $queryBuilder->select(['id', 'email','first_name','last_name', 'is_admin', 'profile_picture', 'created_at'])->from('users')->fetchAll();
 
@@ -18,6 +29,8 @@ class AdminUserController
 
   public static function delete()
   {
+    self::checkAdminAuth();
+    
     $id = $_POST['id'];
     $queryBuilder = new QueryBuilder();
     $query = $queryBuilder->delete()->from('users')->where('id','=', $id)->execute();
@@ -27,6 +40,8 @@ class AdminUserController
 
   public static function updateIndex(int $id)
   {
+    self::checkAdminAuth();
+    
     $queryBuilder = new QueryBuilder();
     $user = $queryBuilder->select(['id', 'email','first_name','last_name', 'is_admin', 'profile_picture'])->from('users')->where('id', '=', $id)->fetch();
     
@@ -39,6 +54,8 @@ class AdminUserController
 
   public static function update()
   {
+    self::checkAdminAuth();
+    
     $error = new Error;
     $id = (int)($_POST['id'] ?? 0);
     $email = htmlspecialchars(trim($_POST['email'] ?? ''));
@@ -124,11 +141,15 @@ class AdminUserController
 
   public static function addIndex()
   {
+    self::checkAdminAuth();
+    
     return view('admin.user.user_form')->layout('admin');
   }
 
   public static function add()
   {
+    self::checkAdminAuth();
+    
     $error = new Error;
     $email = htmlspecialchars(trim($_POST['email'] ?? ''));
     $first_name = htmlspecialchars(trim($_POST['first_name'] ?? ''));

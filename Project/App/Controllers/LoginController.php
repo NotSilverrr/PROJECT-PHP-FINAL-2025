@@ -30,6 +30,7 @@ class LoginController
     session_start();
     $_SESSION['user_id'] = $user->id;
     $_SESSION['login'] = 1;
+    $_SESSION['isadmin'] = $user->isadmin;
     header('Location: /group');
     exit;
   }
