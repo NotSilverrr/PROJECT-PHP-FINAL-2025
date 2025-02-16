@@ -3,13 +3,16 @@ namespace App\Models;
 
 use App\Services\Auth;
 use Core\QueryBuilder;
+use DateTime;
 
 class Member {
   public function __construct(
     public ?int $id = null,
     public int $userId,
     public int $groupId,
+    public ?DateTime $created_at = null,
     public ?bool $read_only = false,
+    public ?User $user = null
   ) {}
 
   private function isAdmin(): bool
@@ -17,6 +20,7 @@ class Member {
     $user = Auth::user();
     return $user && $user->isadmin == '1';
   }
+
 
   public function addMember()
   {
@@ -54,4 +58,33 @@ class Member {
     }
     return true;
   }
+
+  public static function findOne(int $groupId, int $userId): Member|null
+{
+    $query = new QueryBuilder;
+    $response = $query->select(["user_group.*", "users.first_name","users.last_name", "users.id"])  // Sélectionner toutes les colonnes de user_group et users
+                      ->from("user_group")
+                      ->join("users", "users.id", "=", "user_group.user_id")  // Jointure sur la table users
+                      ->where("user_group.group_id", "=", $groupId)
+                      ->andWhere("user_group.user_id", "=", $userId)
+                      ->fetch();
+    
+    if(!$response) {
+        return null;
+    }
+    
+    return new Member(
+        id: $response["id"],
+        userId: $response["user_id"],
+        groupId: $response["group_id"],
+        read_only: $response["read_only"],
+        created_at: new DateTime($response["created_at"]),
+        user: new User(  
+            id: $response["user_id"],
+            first_name: $response["first_name"],
+            last_name: $response["last_name"],
+        )
+    );
+}
+
 }

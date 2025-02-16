@@ -87,12 +87,12 @@ use App\Services\Auth;
       </nav>
       
       <section class="center-container">
-        <section class="center-container__content">
+        <section class="center-container__content mt-24 lg-mt-0">
           <?= $content ?>
         </section>
         <?php if (isset($group) && (Member::canEdit($group->id, Auth::id()) || Auth::user()->isAdmin())) :?>
         <div class="center-container__button">
-          <a href="/group/<?=$group->id?>/upload" class="button button--primary button--rounded button--lg button--icon">
+          <a href="/group/<?=$group->id?>/upload" class="button button--primary button--rounded button--lg button--icon button--floating">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
           </a>
         </div>
@@ -142,7 +142,7 @@ use App\Services\Auth;
               foreach ($members as $member) {
                 ?>
                 <li>
-                  <a href="#" class="<?= $member->id == $group->ownerId ? "scrollable-list__selected" : "" ?>">
+                  <a href="/group/<?=$group->id?>/user/<?=$member->id?>" class="<?= $member->id == $group->ownerId ? "scrollable-list__selected" : "" ?>">
                     <span
                       class="scrollable-list__img"
                       style="background-image: url('<?= $member->profile_picture ?>')"

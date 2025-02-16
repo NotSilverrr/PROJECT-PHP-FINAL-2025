@@ -1,4 +1,5 @@
-@use "../partials//mixins" as m;
+@use "../partials/mixins" as m;
+@use "../partials/functions" as f;
 
 @layer components {
     .center-container {
@@ -10,17 +11,21 @@
         padding: 1rem;
 
         &__content {
-            min-height: calc(100vh - 6rem); /* Hauteur minimale */
+            min-height: calc(100vh - 12rem); /* Hauteur minimale */
             position: relative;
             display: flex;
             flex-direction: column;
+
+            @media (width >= f.screen(lg)) {
+                min-height: calc(100vh - 6rem);
+            }
         }
 
         &__button {
             position: sticky;
-            bottom: 2rem; /* Fixe le bouton en bas de la section */
+            bottom: 2rem;
             display: flex;
-            justify-content: flex-end; /* Aligne à droite */
+            justify-content: flex-end;
 
 
         }

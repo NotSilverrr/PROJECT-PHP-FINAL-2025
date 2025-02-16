@@ -9,6 +9,12 @@ use App\Requests\MemberRequest;
 
 class MemberController {
 
+  public function show(int $groupId, int $userId)
+  {
+    $member = Member::findOne($groupId, $userId);
+    return view("group.member", ["member" => $member]);
+  }
+
   public function create (int $id)
   {
 
@@ -23,6 +29,7 @@ class MemberController {
     try {
         $member = new Member(
           userId: $request->userId,
+          read_only: $request->readOnly,
           groupId: $id
         );
 

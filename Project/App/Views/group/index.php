@@ -1,11 +1,11 @@
 <?php use App\Services\Auth; ?>
 
-<?php if(isset($error)) : ?>
-    <h1 class="mt-24 text-8 lg-mt-4"><?= $error ?></h1>
+<?php if(isset($message)) : ?>
+    <h1 class="text-8"><?= $message ?></h1>
 <?php else: ?>
 <?php
 if (isset($group) && !empty($group)) : ?>
-<h1 class="mt-24 text-8 lg-mt-4"><?= $group->name ?></h1>
+<h1 class="text-8"><?= $group->name ?></h1>
 
 
 <ul class="image-grid">

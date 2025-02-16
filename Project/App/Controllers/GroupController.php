@@ -13,7 +13,7 @@ class GroupController {
 
         if ($id == -1) {
             http_response_code(404);
-            return view('group.index', ['error' => 'Select a Group']);
+            return view('group.index', ['message' => 'Select a Group']);
         }
 
         if (!Group::exist($id)) {

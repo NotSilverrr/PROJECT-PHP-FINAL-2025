@@ -58,7 +58,7 @@
 	}
 
 	// spacing
-	@for $i from 1 through 30 {
+	@for $i from 0 through 30 {
 		.h-#{$i} {
 			height: $i * $increment;
 		}
@@ -110,7 +110,7 @@
 				margin-bottom: auto;
 			}
 			
-			@for $i from 1 through 30 {
+			@for $i from 0 through 30 {
 		
 				.#{$bName}-text-#{$i} {
 					font-size: $i * $increment;

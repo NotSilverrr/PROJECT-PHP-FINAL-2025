@@ -50,6 +50,7 @@ class User
   {
     $query = new QueryBuilder;
     $user = $query->select()->from("users")->where("id", "=", $id)->fetch();
+
     if (!$user) {
       return null;
     }
