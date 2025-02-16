@@ -12,9 +12,11 @@ use App\Services\ImageService;
 
 class PhotoController
 {
-  public function create()
+  public function create(int $id)
   {
-    return view('group.upload');
+    $members = Group::getMembers($id, $_GET['m'] ?? "");
+    $group = Group::getOneById($id);
+    return view('group.upload', ["members" => $members, "group" => $group]);
   }
   public function store($groupId)
     {

@@ -87,7 +87,7 @@ class Member {
   public function updateMember() {
     $readOnlyValue = $this->read_only === '' ? NULL : (int)$this->read_only;
     $query = new QueryBuilder;
-    $query->update()->from("user_group")->set(["read_only" => $readOnlyValue])->where("group_id", "=", $this->groupId)->andWhere("user_id", "=", $this->userId)->execute();
+    return $query->update()->from("user_group")->set(["read_only" => $readOnlyValue])->where("group_id", "=", $this->groupId)->andWhere("user_id", "=", $this->userId)->executeUpdate();
   }
 
 }

@@ -15,8 +15,10 @@ class MemberController {
     if (!Group::isOwner($groupId, Auth::id())) {
       return view("errors.403");
     }
-    $member = Member::findOne($groupId, $userId);
-    return view("group.member", ["member" => $member]);
+    $members = Group::getMembers($groupId, $_GET['m'] ?? "");
+    $group = Group::getOneById($groupId);
+    $user = Member::findOne($groupId, $userId);
+    return view("group.member", ["user" => $user, "members" => $members, "group" => $group]);
   }
 
   public function create (int $id)
@@ -72,12 +74,6 @@ class MemberController {
     }
   }
 
-  public function edit(int $groupId, int $userId)
-  {
-    $member = Member::findOne($groupId, $userId);
-    return view("group.editMember", ["member" => $member]);
-  }
-
   public function update(int $groupId, int $userId)
   {
     $request = new MemberRequest;
@@ -89,10 +85,13 @@ class MemberController {
           groupId: $groupId
         );
 
-        $member->updateMember();
-        $_SESSION['success'] = "Membre modifié avec succès";
-        header("Location:/group/".$groupId);
-        exit;
+        if($member->updateMember()) {
+          $_SESSION['success'] = "Membre modifié avec succès";
+          header("Location:/group/".$groupId);
+          exit;
+        } else {
+          throw new \Exception("Erreur lors de la mise à jour du membre");
+        }
     } catch (\Exception $e) {
       $_SESSION['error'] = $e->getMessage();
       header("Location:/group/".$groupId);
