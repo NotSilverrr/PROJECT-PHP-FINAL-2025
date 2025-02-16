@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Group;
 use App\Models\Member;
 use App\Models\Photo;
+use App\Models\User;
 use App\Requests\PhotoRequest;
 use App\Services\Auth;
 use App\Services\ImageService;
@@ -59,6 +60,25 @@ class PhotoController
             return view('errors.404');
         }
         ImageService::serve($path);
+    }
+
+    public function delete($groupId, $photoId)
+    {
+        if (!Group::isMember($groupId, Auth::id())) {
+            print_r("You are not a member of this group");
+            return view('errors.403');
+        }
+        if (!(Photo::isOwner($photoId, Auth::id()) || Auth::user()->isAdmin())) {
+            return view('errors.403');
+        }
+        $photo = Photo::findOneById($photoId);
+        if (!$photo) {
+            return view('errors.404');
+        }
+        ImageService::delete($photo->file);
+        $photo->deletePhoto();
+        header("Location:/group/$groupId");
+        exit;
     }
 
 }

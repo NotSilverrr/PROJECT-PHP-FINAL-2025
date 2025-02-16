@@ -86,31 +86,15 @@ class ImageService {
         return null;
     }
     
-    public function delete($imageId, $userId) {
-        // Vérifier que l'utilisateur est propriétaire de l'image
-        $image = $this->query
-            ->select()
-            ->from('photos')
-            ->where('id', '=', $imageId)
-            ->andWhere('uploaded_by', '=', $userId)
-            ->fetch();
-            
-        if (!$image) {
-            throw new \Exception("Image non trouvée ou non autorisée");
-        }
+    public static function delete($imagePath) {
         
-        // Supprimer le fichier physique
-        $path = '/uploads/groups/' . $image['group_id'] . '/' . $image['file_path'];
-        if (file_exists($path)) {
-            unlink($path);
+        $imagePath = __DIR__ . "/../../" . $imagePath;
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        } else {
+            throw new \Exception("Fichier non trouvé");
         }
-        
-        // Supprimer l'enregistrement
-        return $this->query
-            ->delete()
-            ->from('images')
-            ->where('id', '=', $imageId)
-            ->execute();
+
     }
     
     public function getGroupImages($groupId, $userId) {

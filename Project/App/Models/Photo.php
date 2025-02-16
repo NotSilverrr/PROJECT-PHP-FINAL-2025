@@ -114,4 +114,11 @@ class Photo
       "id" => $this->id
     ]);
   }
+
+  public static function isOwner(int $photoId, int $userId): bool
+  {
+    $query = new QueryBuilder;
+    $response = $query->select()->from("photos")->where("id", "=", $photoId)->fetch();
+    return $response["user_id"] === $userId;
+  }
 }
