@@ -142,7 +142,11 @@ use App\Services\Auth;
               foreach ($members as $member) {
                 ?>
                 <li>
-                  <a href="/group/<?=$group->id?>/user/<?=$member->id?>" class="<?= $member->id == $group->ownerId ? "scrollable-list__selected" : "" ?>">
+                  <?php if(Group::isOwner($group->id, Auth::id()) || Auth::user()->isadmin) :?>
+                    <a href="/group/<?=$group->id?>/user/<?=$member->id?>" class="<?= $member->id == $group->ownerId ? "scrollable-list__selected" : "" ?>">
+                  <?php else :?>
+                    <a href="#" class="<?= $member->id == $group->ownerId ? "scrollable-list__selected" : "" ?>">
+                  <?php endif; ?>
                     <span
                       class="scrollable-list__img"
                       style="background-image: url('<?= $member->profile_picture ?>')"

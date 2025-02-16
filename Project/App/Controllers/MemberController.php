@@ -6,11 +6,15 @@ use App\Models\Group;
 use App\Models\Member;
 use App\Models\User;
 use App\Requests\MemberRequest;
+use App\Services\Auth;
 
 class MemberController {
 
   public function show(int $groupId, int $userId)
   {
+    if (!Group::isOwner($groupId, Auth::id())) {
+      return view("errors.403");
+    }
     $member = Member::findOne($groupId, $userId);
     return view("group.member", ["member" => $member]);
   }
