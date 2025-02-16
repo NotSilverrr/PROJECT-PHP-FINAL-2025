@@ -39,6 +39,7 @@ class PhotoController
                 user_id: Auth::id()
                 );
             $photo->createPhoto();
+            $_SESSION['success'] = "Photo ajoutée avec succès";
             header("Location:/group/$groupId");
             exit;
         }

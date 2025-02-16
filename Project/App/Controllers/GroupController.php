@@ -95,8 +95,10 @@ class GroupController {
             if (!empty($request->profile_picture['name'])) {
                 $this->handleImageUpload($request->profile_picture, $group);
             }
-    
-            header("Location:/group/" . $group->id . "?success=" . urlencode("Le groupe a été créé avec succès."));
+
+            $_SESSION['success'] = "Votre compte a été créé avec succès.";
+            header("Location:/group/" . $group->id);
+
             exit;
     
         } catch (\Exception $e) {

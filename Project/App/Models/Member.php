@@ -28,8 +28,9 @@ class Member {
       if(Group::isMember($this->groupId, $this->userId)) {
         throw new \Exception("Cet utilisateur est deja membre de ce groupe");
       }
+      $readOnlyValue = $this->read_only === '' ? NULL : (int)$this->read_only;
       $query = new QueryBuilder;
-      $query->insert()->into("user_group", ["group_id", "user_id", "read_only"])->values([$this->groupId, $this->userId, $this->read_only])->execute();
+      $query->insert()->into("user_group", ["group_id", "user_id", "read_only"])->values([$this->groupId, $this->userId, $readOnlyValue])->execute();
     } else {
       throw new \Exception("Vous n'êtes pas le propriétaire de ce groupe");
     }
