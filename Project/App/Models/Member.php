@@ -15,7 +15,7 @@ class Member {
     public ?User $user = null
   ) {}
 
-  private function isAdmin(): bool
+  private static function isAdmin(): bool
   {
     $user = Auth::user();
     return $user && $user->isadmin == '1';
@@ -29,7 +29,7 @@ class Member {
         throw new \Exception("Cet utilisateur est deja membre de ce groupe");
       }
       $query = new QueryBuilder;
-      $query->insert()->into("user_group", ["group_id", "user_id"])->values([$this->groupId, $this->userId])->execute();
+      $query->insert()->into("user_group", ["group_id", "user_id", "read_only"])->values([$this->groupId, $this->userId, $this->read_only])->execute();
     } else {
       throw new \Exception("Vous n'êtes pas le propriétaire de ce groupe");
     }
@@ -45,12 +45,8 @@ class Member {
     }
   }
 
-  public function canEdit($groupId, $userId)
-  {
-    if($this->isAdmin()) {
-      return true;
-    }
-    
+  public static function canEdit($groupId, $userId)
+  {    
     $query = new QueryBuilder;
     $response = $query->select(["read_only"])->from("user_group")->where("group_id", "=", $groupId)->andWhere("user_id", "=", $userId)->fetch();
     if($response["read_only"]) {
