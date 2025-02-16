@@ -72,6 +72,7 @@ $router->post("/group/{groupId}/upload", PhotoController::class, "store");
 $router->get("/group/{groupId}/showImage/{photoId}", PhotoController::class, "show");
 $router->post("/group/{groupId}/deleteImage/{photoId}", PhotoController::class, "delete");
 $router->get("/group/{groupId}/user/{userid}", MemberController::class, "show");
+$router->post("/group/{groupId}/user/{userid}", MemberController::class, "update");
 
 
 $router->post("/group/{id}/deleteUser", MemberController::class, "delete");

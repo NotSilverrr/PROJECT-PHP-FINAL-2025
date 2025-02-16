@@ -66,4 +66,34 @@ class MemberController {
       echo $e->getMessage();
     }
   }
+
+  public function edit(int $groupId, int $userId)
+  {
+    $member = Member::findOne($groupId, $userId);
+    return view("group.editMember", ["member" => $member]);
+  }
+
+  public function update(int $groupId, int $userId)
+  {
+    $request = new MemberRequest;
+
+    try {
+        $member = new Member(
+          userId: $request->userId,
+          read_only: $request->readOnly,
+          groupId: $groupId
+        );
+
+        $member->updateMember();
+        header("Location:/group/".$groupId);
+        exit;
+    } catch (\Exception $e) {
+      return view("group.member", [
+        "error" => $e->getMessage(),
+        "groupId" => $groupId,
+        "userId" => $userId,
+        "member" => Member::findOne($groupId, $userId)
+    ]);
+    }
+  }
 }
