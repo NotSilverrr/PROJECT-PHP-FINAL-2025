@@ -70,8 +70,6 @@ class ImageService {
 
     public static function uploadPhoto($file, $uploadDir): ?string
     {
-        // fait moi toutes les vérification sur le fichier (c'est une image)
-        // fait moi toutes les vérification sur le fichier (c'est une image)
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         if (!in_array($fileExtension, $allowedExtensions)) {

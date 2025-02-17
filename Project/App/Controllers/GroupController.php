@@ -98,6 +98,10 @@ class GroupController {
             exit;
     
         } catch (\Exception $e) {
+            // delete the group if it was created
+            if (isset($group)) {
+                Group::delete($group->id);
+            }
             $_SESSION['error'] = $e->getMessage();
             header("Location:/group/create");
             exit;
