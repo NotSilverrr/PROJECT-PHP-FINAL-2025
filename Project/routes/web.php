@@ -14,7 +14,6 @@ use App\Controllers\admin\AdminGroupController;
 use App\Controllers\admin\AdminPhotoController;
 use App\Controllers\MemberController;
 use App\Controllers\PasswordResetController;
-use App\Controllers\PhotoController;
 use App\Controllers\admin\AdminMemberController;
 use App\Controllers\UserController;
 

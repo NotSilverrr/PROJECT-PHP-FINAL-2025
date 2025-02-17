@@ -82,8 +82,7 @@ public static function getAllPhoto()
       
       $photoObjects[] = $photoObj;
   }
-  // echo "<pre>";
-  // print_r($photoObjects);
+
   
   return $photoObjects;
   }

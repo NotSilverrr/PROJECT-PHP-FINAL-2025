@@ -11,7 +11,7 @@ class ImageService {
     }
     
     public static function serve($imagePath) {
-        $imagePath = __DIR__ . "/../../" . $imagePath;
+        $imagePath = __DIR__ . "/../.." . $imagePath;
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $imagePath);
         finfo_close($finfo);
@@ -55,7 +55,7 @@ class ImageService {
 
 
 
-        $uploadDir = __DIR__ . "/../../" . $uploadDir;
+        $uploadDir = __DIR__ . "/../../" . $uploadDir. "/";
         
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);

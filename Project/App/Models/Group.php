@@ -19,21 +19,21 @@ class Group {
     public ?string $updated_at = null
   ) {}
 
-    public static function isMember(int $groupId, int $userId)
+    public function isMember(int $userId)
     {
         $query = new QueryBuilder;
-        $response = $query->select()->from("user_group")->where("user_id", "=", $userId)->andWhere("group_id", "=", $groupId)->fetch();
+        $response = $query->select()->from("user_group")->where("user_id", "=", $userId)->andWhere("group_id", "=", $this->id)->fetch();
         if($response) {
             return true;
         }
+
         return false;
     }
 
-    public static function isOwner(int $groupId)
+    public function isOwner(int $userId)
     {
-        $userId = Auth::id();
         $query = new QueryBuilder;
-        $response = $query->select(["owner"])->from("groups")->where("id", "=", $groupId)->fetch();
+        $response = $query->select(["owner"])->from("groups")->where("id", "=", $this->id)->fetch();
         if($response["owner"] == $userId) {
             return true;
         }
@@ -133,7 +133,8 @@ class Group {
         ->execute();
 
       $this->id = $queryBuilder->lastInsertId();
-      self::addMember($this->id, $this->ownerId);
+      $member = new Member(userId: $this->ownerId, read_only: false);
+      $this->addMember($member);
     }
 
     public function update(): bool
@@ -149,11 +150,12 @@ class Group {
       return $queryBuilder->update()->from('groups')->set($data)->where('id', '=', $this->id)->executeUpdate();
     }
 
-    public static function addMember(int $groupId, int $userId)
+    public function addMember(Member $member)
     {
-      if(self::isOwner($groupId)) {
+      if($this->isOwner(Auth::id())) {
+        $readOnlyValue = $member->read_only === '' ? NULL : (int)$member->read_only;
         $query = new QueryBuilder;
-        $query->insert()->into("user_group", ["group_id", "user_id"])->values([$groupId, $userId])->execute();
+        $query->insert()->into("user_group", ["group_id", "user_id", "read_only"])->values([$this->id, $member->userId, $readOnlyValue])->execute();
       }
     }
 
@@ -166,10 +168,10 @@ class Group {
         
     }
 
-    public static function delete(int $groupId)
+    public function delete()
     {
       $query = new QueryBuilder;
-      $query->delete()->from("groups")->where("id", "=", $groupId)->execute();
+      $query->delete()->from("groups")->where("id", "=", $this->id)->execute();
       
     }
 

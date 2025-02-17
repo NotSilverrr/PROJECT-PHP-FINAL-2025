@@ -12,11 +12,11 @@ class MemberController {
 
   public function show(int $groupId, int $userId)
   {
-    if (!(Group::isOwner($groupId, Auth::id()) || Auth::isadmin())) {
+    $group = Group::getOneById($groupId);
+    if (!($group->isOwner(Auth::id()) || Auth::isadmin())) {
       return view("errors.403");
     }
     $members = Group::getMembers($groupId, $_GET['m'] ?? "");
-    $group = Group::getOneById($groupId);
     $user = Member::findOne($groupId, $userId);
     return view("group.member", ["user" => $user, "members" => $members, "group" => $group]);
   }
@@ -39,7 +39,9 @@ class MemberController {
           groupId: $id
         );
 
-        $member->addMember();
+        $group = Group::getOneById($id);
+        $group->addMember($member);
+
         $_SESSION['success'] = "Membre ajouté avec succès";
         header("Location:/group/".$id);
         exit;

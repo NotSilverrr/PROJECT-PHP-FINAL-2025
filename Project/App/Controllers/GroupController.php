@@ -27,7 +27,7 @@ class GroupController {
         $allUsers = User::getAllUsers();
 
 
-        if (Group::isMember($id, Auth::id())) {
+        if ($group->isMember(Auth::id())) {
             return view('group.index', ['id' => $id, 'group' => $group, 'photos' => $photos, 'members' => $members, 'allUsers' => $allUsers]);
         } else {
             http_response_code(403);
@@ -80,6 +80,8 @@ class GroupController {
     
             $group->createGroup();
 
+        
+
             $uploadDir = "uploads/groups/". $group->id;
             $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
 
@@ -93,7 +95,7 @@ class GroupController {
     
         } catch (\Exception $e) {
             if (isset($group)) {
-                Group::delete($group->id);
+                $group->delete();
             }
             $_SESSION['error'] = $e->getMessage();
             header("Location:/group/create");
@@ -102,14 +104,15 @@ class GroupController {
     }
 
     public function delete($id) {
-        if (!(Group::isOwner($id) || Auth::user()->isAdmin())) {
+        $group = Group::getOneById($id);
+        if (!($group->isOwner(Auth::id()) || Auth::user()->isAdmin())) {
             http_response_code(403);
             return view('errors.403');
         }
         $folderPath = "uploads/groups/" . $id;
         deleteFolder($folderPath);
 
-        Group::delete($id);
+        $group->delete();
         $_SESSION['success'] = "Groupe supprimé avec succès";
         header("Location: /");
         exit;
@@ -120,13 +123,10 @@ class GroupController {
         if (!$group) {
             return view('errors.404');
         }
-        if (!Group::isMember($id, Auth::id())) {
+        if (!$group->isMember(Auth::id())) {
             http_response_code(403);
             return view('errors.403');
-        } else {
-            http_response_code(403);
-            return view('errors.403');
-        }
+        } 
         $path = $group->profile_picture;
         ImageService::serve($path);
     }

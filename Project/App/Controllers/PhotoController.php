@@ -20,7 +20,8 @@ class PhotoController
   }
   public function store($groupId)
     {
-        if (!Group::isMember($groupId, Auth::id())) {
+        $group = Group::getOneById($groupId);
+        if (!$group->isMember(Auth::id())) {
             return view('errors.403');
         }
         if (!Member::canEdit($groupId, Auth::id())) {
@@ -58,7 +59,8 @@ class PhotoController
 
     public function show($groupId, $photoId)
     {
-        if (!Group::isMember($groupId, Auth::id())) {
+        $group = Group::getOneById($groupId);
+        if (!$group->isMember(Auth::id())) {
             return view('errors.403');
         }
         $photo = Photo::findOneById($photoId);
@@ -74,12 +76,13 @@ class PhotoController
 
     public function delete($groupId, $photoId)
     {
-        if (!Group::isMember($groupId, Auth::id())) {
+        $group = Group::getOneById($groupId);
+        if (!$group->isMember(Auth::id())) {
             print_r("You are not a member of this group");
             return view('errors.403');
         }
         
-        if (!(Photo::isOwner($photoId, Auth::id()) || Auth::user()->isAdmin() || Group::isOwner($groupId))) {
+        if (!(Photo::isOwner($photoId, Auth::id()) || Auth::isAdmin() || $group->isOwner(Auth::id()))) {
             return view('errors.403');
         }
         $photo = Photo::findOneById($photoId);

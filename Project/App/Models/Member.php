@@ -9,23 +9,18 @@ class Member {
   public function __construct(
     public ?int $id = null,
     public int $userId,
-    public int $groupId,
+    public ?int $groupId = null,
     public ?DateTime $created_at = null,
     public ?bool $read_only = false,
     public ?User $user = null
   ) {}
 
-  private static function isAdmin(): bool
-  {
-    $user = Auth::user();
-    return $user && $user->isadmin == '1';
-  }
-
 
   public function addMember()
   {
-    if($this->isAdmin() || Group::isOwner($this->groupId)) {
-      if(Group::isMember($this->groupId, $this->userId)) {
+    $group = Group::getOneById($this->groupId);
+    if(Auth::isadmin() || $group->isOwner(Auth::id())) {
+      if($group->isMember($this->userId)) {
         throw new \Exception("Cet utilisateur est deja membre de ce groupe");
       }
       $readOnlyValue = $this->read_only === '' ? NULL : (int)$this->read_only;
@@ -38,7 +33,8 @@ class Member {
 
   public function deleteMember()
   {
-    if($this->isAdmin() || Group::isOwner($this->groupId)) {
+    $group = Group::getOneById($this->groupId);
+    if(Auth::isadmin() || $group->isOwner(Auth::id())) {
       $query = new QueryBuilder;
       $query->delete()->from("user_group")->where("group_id", "=", $this->groupId)->andWhere("user_id", "=", $this->userId)->execute();
     } else {
