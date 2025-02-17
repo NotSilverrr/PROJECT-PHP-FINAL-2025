@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Models\User;
 use App\Requests\RegisterRequest;
 use App\Controllers\ImageController;
+use App\Services\ImageService;
 use Core\Error;
 
 class RegisterController
@@ -81,10 +82,12 @@ class RegisterController
 
     $profile_picture = null;
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['size'] > 0) {
-      $imageController = new ImageController();
-      $profile_picture = $imageController->save($_FILES['profile_picture'], [
-        'subdir' => 'user_profile_picture'
-      ]);
+      // $imageController = new ImageController();
+      $uploadDir = "uploads/user_profile_picture";
+      $profile_picture = ImageService::uploadPhoto($_FILES['profile_picture'], $uploadDir);
+      // $profile_picture = $imageController->save($_FILES['profile_picture'], [
+      //   'subdir' => 'user_profile_picture'
+      // ]);
       
       if (!$profile_picture) {
         $error->addError("Failed to upload profile picture");

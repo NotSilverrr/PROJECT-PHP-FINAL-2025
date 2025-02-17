@@ -168,8 +168,15 @@ class Group {
         
     }
 
+    public function deleteAllMembers()
+    {
+      $query = new QueryBuilder;
+      $query->delete()->from("user_group")->where("group_id", "=", $this->id)->execute();
+    }
+
     public function delete()
     {
+      $this->deleteAllMembers();
       $query = new QueryBuilder;
       $query->delete()->from("groups")->where("id", "=", $this->id)->execute();
       
