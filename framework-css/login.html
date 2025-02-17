@@ -8,40 +8,36 @@
     <script src="./dist/framework-esgi.js"></script>
   </head>
 
-  <body class="form-page">
-    <div class="form-container">
-      <div class="form-card">
-        <h1 class="form-title">Login</h1>
-        <form method="POST" action="/login" class="form">
-          <div class="input-group">
-            <input
-              type="email"
-              name="email"
-              placeholder="Username"
-              class="input-field"
-            />
-          </div>
-          <div class="input-group">
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              class="input-field"
-            />
-          </div>
-          <div class="options">
-            <label class="checkbox">
-              <input type="checkbox" name="remember_me" />
-              <span>Remember me</span>
-            </label>
-            <a href="/forgot-password" class="forgot-password"
-              >Forgot password</a
-            >
-          </div>
-          <button type="submit" class="form-button">Login</button>
-          <a href="/create-account" class="create-account">Create Account</a>
-        </form>
-      </div>
+  <body class="">
+    <div class="form form__page">
+      <form method="POST" action="/login" class="form form__card">
+        <h1 class="form form__title">Login</h1>
+        <div class="input-group">
+          <input
+            type="email"
+            name="email"
+            placeholder="Username"
+            class="input-field"
+          />
+        </div>
+        <div class="input-group">
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            class="input-field"
+          />
+        </div>
+        <div class="options">
+          <label class="checkbox">
+            <input type="checkbox" name="remember_me" />
+            <span>Remember me</span>
+          </label>
+          <a href="/forgot-password" class="forgot-password">Forgot password</a>
+        </div>
+        <button type="submit" class="form form__button">Login</button>
+        <a href="/create-account" class="create-account">Create Account</a>
+      </form>
     </div>
   </body>
 </html>

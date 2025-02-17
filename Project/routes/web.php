@@ -7,6 +7,8 @@ use App\Controllers\ImageController;
 use App\Controllers\LoginController;
 use App\Controllers\RegisterController;
 use App\Controllers\TestController;
+use App\Controllers\PhotoController;
+
 use App\Controllers\admin\AdminUserController;
 use App\Controllers\admin\AdminGroupController;
 use App\Controllers\admin\AdminPhotoController;
@@ -59,7 +61,6 @@ $router->get("/admin/photo/update/{id}", AdminPhotoController::class, "updateInd
 $router->post("/admin/photo/update", AdminPhotoController::class, "update");
 $router->get("/admin/photo/add", AdminPhotoController::class, "addIndex");
 $router->post("/admin/photo/add", AdminPhotoController::class, "add");
-
 
 $router->get("/group", GroupController::class, "show");
 $router->get("/group/create", GroupController::class, "create");
