@@ -115,11 +115,8 @@ class GroupController {
         }
         // get all photos of the group
         $folderPath = "uploads/groups/" . $id;
-        if (!deleteFolder($folderPath)) {
-            $_SESSION['error'] = "Erreur lors de la suppression du groupe";
-            header("Location: /group/$id");
-            exit;
-        }
+        deleteFolder($folderPath);
+
         Group::delete($id);
         $_SESSION['success'] = "Groupe supprimé avec succès";
         header("Location: /");
