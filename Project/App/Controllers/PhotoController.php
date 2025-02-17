@@ -96,4 +96,49 @@ class PhotoController
         exit;
     }
 
+    public function share(int $id)
+    {
+        $photo = Photo::findOneById($id);
+        if (!$photo) {
+            return view('errors.404');
+        }
+        $group = Group::getOneById($photo->group_id);
+        if (!$group->isMember(Auth::id())) {
+            return view('errors.403');
+        }
+        $shareToken = bin2hex(random_bytes(32));
+
+        
+        $expiration = new \DateTime('+1 hour');
+        $photo->saveShareToken($shareToken, $expiration);
+
+        $shareLink = $_ENV["HOST_NAME"]."/photos/$id?token=$shareToken";
+
+        $_SESSION['success'] = "Lien de partage copié dans le presse-papiers";
+        return json_encode(['shareLink' => $shareLink]);
+        exit;
+    }
+
+    public function showGuest(int $id)
+    {
+        $photo = Photo::findOneById($id);
+        if (!$photo) {
+            return view('errors.404')->layout('guest');
+        }
+        if (!$photo->share_token) {
+            return view('errors.403')->layout('guest');
+        }
+        if ($photo->share_token_expiration < new \DateTime()) {
+            return view('errors.403')->layout('guest');
+        }
+        if (!hash_equals($photo->share_token, $_GET['token'])) {
+            return view('errors.403')->layout('guest');
+        }
+        $path = $photo->file;
+        if (!file_exists(__DIR__ . "/../../".$path)) {
+            return view('errors.404')->layout('guest');
+        }
+        ImageService::serve($path);
+    }
+
 }

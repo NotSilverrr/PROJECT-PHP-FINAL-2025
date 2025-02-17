@@ -19,6 +19,8 @@ class CreatePhotosTable
                 user_id INTEGER NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP,
+                share_token VARCHAR(64),
+                share_token_expiration TIMESTAMP,
                 FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );

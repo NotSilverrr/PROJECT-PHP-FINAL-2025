@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Core\QueryBuilder;
+use DateTime;
+use DOTNET;
 use PDO;
 
 class Photo
@@ -16,6 +18,8 @@ class Photo
     public ?int $user_id = null,
     public ?Group $group = null,
     public ?User $user = null,
+    public ?string $share_token = null,
+    public ?DateTime $share_token_expiration = null,
     public ?string $created_at = null,
     public ?string $updated_at = null,
   ) {}
@@ -30,6 +34,8 @@ class Photo
       file: $response["file"],
       group_id: $response["group_id"],
       user_id: $response["user_id"],
+      share_token: $response["share_token"],
+      share_token_expiration: $response["share_token_expiration"] ? new DateTime($response["share_token_expiration"]) : "",
       created_at: $response["created_at"],
       updated_at: $response["updated_at"]
     );
@@ -139,5 +145,18 @@ public static function getAllPhoto()
     $query = new QueryBuilder;
     $response = $query->select()->from("photos")->where("id", "=", $photoId)->fetch();
     return (int)$response["user_id"] === $userId;
+  }
+
+  public function saveShareToken(string $token, DateTime $expiration)
+  {
+    $query = new QueryBuilder;
+    $query->update()
+        ->from("photos")
+        ->set([
+            "share_token" => $token,
+            "share_token_expiration" => $expiration->format('Y-m-d H:i:s')
+        ])
+        ->where("id", "=", $this->id)
+        ->execute();
   }
 }

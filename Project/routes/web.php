@@ -81,3 +81,6 @@ $router->post("/group/{id}/deleteUser", MemberController::class, "delete");
 $router->get("/image/{id}", ImageController::class, "show");
 
 $router->get("/user/{id}/profilePicture", UserController::class, "showProfilePicture");
+
+$router->get("/photos/{id}", PhotoController::class, "showGuest");
+

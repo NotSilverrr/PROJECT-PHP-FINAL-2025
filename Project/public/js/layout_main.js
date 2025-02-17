@@ -52,4 +52,29 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+        console.log('Hello from layout_main.js!');
+
+    const shareButtons = document.querySelectorAll(".share-button");
+
+    shareButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            console.log("Clic sur le bouton de partage !");
+            const photoId = this.getAttribute("data-photo-id");
+
+            fetch(`/api/photos/${photoId}/share`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.shareLink) {
+                        navigator.clipboard.writeText(data.shareLink)
+                            .then(() => {
+                                location.reload();
+                            })
+                            .catch(err => console.error("Erreur de copie :", err));
+                    } else {
+                        alert("Erreur lors de la génération du lien.");
+                    }
+                })
+                .catch(error => console.error("Erreur AJAX :", error));
+        });
+    });
 });
