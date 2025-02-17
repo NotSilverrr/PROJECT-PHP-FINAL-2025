@@ -15,6 +15,29 @@
             display: block;
         }
 
+        &__title {
+            @include m.flexbox($justify: space-between, $align: center);
+
+            h3 {
+                margin: 0;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            a {
+                @include m.resetA;
+                width: 2rem;
+                height: 2rem;
+
+                svg {
+                    fill: var(--white);
+                    width: 100%;
+                    height: 100%
+                }
+            }
+        }
+
         &__caption {
             @include m.absolute();
             @include m.flexbox($direction: column, $justify: space-between);
@@ -28,9 +51,7 @@
             
 
             span {
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
+                
             }
 
             @media (width > f.screen(lg)){
