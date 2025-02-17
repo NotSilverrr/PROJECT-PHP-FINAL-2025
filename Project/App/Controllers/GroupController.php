@@ -5,6 +5,7 @@ use App\Models\Group;
 use App\Models\Photo;
 use App\Models\User;
 use App\Requests\GroupRequest;
+use App\Services\GroupService;
 use App\Requests\MemberRequest;
 use App\Services\Auth;
 use App\Services\ImageService;
@@ -51,27 +52,30 @@ class GroupController {
     }
 
     public function create() {
+        session_start();
         return view('group.create');
     }
 
     public function store() {
         $request = new GroupRequest;
-        
+        $service = new GroupService($request);
         try {
 
-            if (empty($request->name)) {
-                echo "Group name is required";
-                exit;
-            } elseif (strlen($request->name) > 50) {
-            echo "Group name must be less than 50 characters";
-            exit;
+            $error = $service->validate_name();
+            if ($error !== null) {
+                throw new \Exception($error);
             }
         
-            $owner = User::findOneById(Auth::id());
-            if (!$owner) {
-                throw new \Exception("Utilisateur non trouvé");
+            $error = $service->check_owner_exist();
+            if ($error !== null) {
+                throw new \Exception($error);
             }
-            
+
+            $error = $service->validate_profile_picture();
+            if ($error !== null) {
+                throw new \Exception($error);
+            }
+
             $group = new Group(
                 name: $request->name,
                 profile_picture: null,
@@ -85,6 +89,10 @@ class GroupController {
             $uploadDir = "uploads/groups/". $group->id;
             $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
 
+            $error = $service->validate_profile_picture_save($fileName);
+            if ($error !== null) {
+                throw new \Exception($error);
+            }
             $group->profile_picture = $fileName;
             $group->update();
 

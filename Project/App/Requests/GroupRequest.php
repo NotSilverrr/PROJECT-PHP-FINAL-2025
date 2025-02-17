@@ -10,6 +10,6 @@ class GroupRequest {
   {
     $this->name = htmlspecialchars($_POST['name']);
     $this->profile_picture = $_FILES['profile_picture'];
-    $this->ownerID = $_POST['owner'];
+    $this->ownerID = (int)$_POST['owner'];
   }
 }

@@ -15,9 +15,6 @@
             <?php endif; ?>    
             <div class="input-group">
                 <label class="form-label">Photo</label>
-                <?php if(isset($photo) && $photo['file']): ?>
-                    <img src="<?= $photo['file'] ?>" alt="Current photo" style="max-width: 200px; margin-bottom: 10px;">
-                <?php endif; ?>
                 <input type="file" name="photo" accept="image/*" class="input-field" <?= !isset($photo) ? 'required' : '' ?> />
             </div>
             <div class="input-group">

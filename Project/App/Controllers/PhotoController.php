@@ -5,15 +5,16 @@ namespace App\Controllers;
 use App\Models\Group;
 use App\Models\Member;
 use App\Models\Photo;
-use App\Models\User;
 use App\Requests\PhotoRequest;
 use App\Services\Auth;
 use App\Services\ImageService;
+use App\Services\PhotoService;
 
 class PhotoController
 {
   public function create(int $id)
   {
+    session_start();
     $members = Group::getMembers($id, $_GET['m'] ?? "");
     $group = Group::getOneById($id);
     return view('group.upload', ["members" => $members, "group" => $group]);
@@ -28,10 +29,31 @@ class PhotoController
             return view('errors.403');
         }
         $request = new PhotoRequest();
-
+        $service = new PhotoService($request);
         if (!$request->validate()) {
             return "Fichier non valide.";
         }
+
+        $error = $service->check_user_exist();
+        if ($error !== null) {
+          $_SESSION['error'] = $error;
+        }
+    
+        $error = $service->check_group_exist();
+        if ($error !== null) {
+          $_SESSION['error'] = $error;
+        }
+    
+        $error = $service->validate_file();
+        if ($error !== null) {
+          $_SESSION['error'] = $error;
+        }
+
+        if (isset($_SESSION['error'])) {
+            $members = Group::getMembers($groupId, $_GET['m'] ?? "");
+            $group = Group::getOneById($groupId);
+            return view('group.upload', ["members" => $members, "group" => $group]);
+          }
 
         $uploadDir = "/uploads/groups/" . $groupId . "/";
         try {

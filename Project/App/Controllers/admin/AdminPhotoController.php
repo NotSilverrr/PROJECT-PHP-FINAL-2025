@@ -2,10 +2,7 @@
 namespace App\Controllers\admin;
 
 use App\Models\Photo;
-use App\Models\User;
-use App\Models\Group;
 use Core\QueryBuilder;
-use Core\Error;
 use App\Controllers\ImageController;
 use App\Services\Auth;
 use App\Services\PhotoService;

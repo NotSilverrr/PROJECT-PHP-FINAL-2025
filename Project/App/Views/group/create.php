@@ -1,4 +1,5 @@
 <form action="/group" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="owner" value="<?= $_SESSION['user_id'] ?>" />
   <label for="name">Name</label>
   <input type="text" name="name">
   <label for="profile_picture">Image</label>
