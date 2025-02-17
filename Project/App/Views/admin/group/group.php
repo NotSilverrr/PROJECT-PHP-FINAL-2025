@@ -5,6 +5,22 @@
     <button class="button button--primary button--admin">+</button>
   </a>
 </div>
+<form class="search-bar mb-5 " action="" method="GET">
+  <button class="">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="none"
+    >
+      <path
+        d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"
+      />
+    </svg>
+  </button>
+  <input name="g" type="text" placeholder="Search" value="<?= isset($_GET['g']) ? htmlspecialchars($_GET['g']) : '' ?>" />
+</form>
 <div class="table">
     <div class="table__wrapper">
         <table>
@@ -51,18 +67,21 @@
                 </td>
               </tr>
             <?php endforeach; ?>
+            <?php if (empty($groups)) :?>
+            <tr>
+                <td colspan="7">No groups found</td>
+            </tr>
+            <?php endif;?>
         </tbody>
         </table>
     </div>
     <div class="table__nav">
         <div class="table__nav__buttons">
-            <?php if ($currentPage > 1): ?>
-                <a href="?page=<?= $currentPage - 1 ?>" class="table__nav__button">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
-                        <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
-                    </svg>
-                </a>
-            <?php endif; ?>
+            <a href="?page=<?= $currentPage - 1 ?>" class="table__nav__button <?= ($currentPage > 1) ? "" : "disabled"?>">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
+                    <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
+                </svg>
+            </a>
             
             <?php
             $startPage = max(1, min($currentPage - 2, $totalPages - 4));
@@ -74,13 +93,11 @@
                 </a>
             <?php endfor; ?>
 
-            <?php if ($currentPage < $totalPages): ?>
-                <a href="?page=<?= $currentPage + 1 ?>" class="table__nav__button">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
-                        <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
-                    </svg>
-                </a>
-            <?php endif; ?>
+              <a href="?page=<?= $currentPage + 1 ?>" class="table__nav__button <?=  ($currentPage < $totalPages) ? "" : "disabled"?>">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
+                      <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+                  </svg>
+              </a>
         </div>
     </div>
 </div>

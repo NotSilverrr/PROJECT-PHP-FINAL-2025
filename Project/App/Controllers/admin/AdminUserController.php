@@ -22,7 +22,8 @@ class AdminUserController
   public static function index()
   {
     self::checkAdminAuth();
-    $users = User::getAllUsers();
+
+    $users = User::getAllUsers($_GET['u'] ?? "");
 
     return view('admin.user.user', ['users' => $users])->layout('admin');
   }

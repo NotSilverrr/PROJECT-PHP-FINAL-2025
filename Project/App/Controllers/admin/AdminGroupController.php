@@ -21,7 +21,7 @@ class AdminGroupController
   public static function index()
   {
     self::checkAdminAuth();
-    $groups = Group::getAllGroup();
+    $groups = Group::getAllGroup($_GET['g'] ?? "");
 
     return view('admin.group.group', ['groups' => $groups])->layout('admin');
   }

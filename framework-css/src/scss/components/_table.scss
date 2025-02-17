@@ -51,6 +51,7 @@
         &__nav {
             @include m.flexbox($justify: space-between);
             padding: 1rem;
+            border-top: thin solid var(--border-color);
 
             &__buttons {
                 @include m.flexbox($align: center);
@@ -84,6 +85,10 @@
                 &.disabled {
                     background-color: transparent;
                     color: var(--black-transparent);
+                    svg {
+                        fill: var(--border-color);
+    
+                    }
 
                     &:hover {
                         background-color: transparent;
