@@ -2,6 +2,7 @@
 
 namespace App\Requests;
 
+
 class RegisterRequest
 {
     public string $email;
@@ -18,6 +19,6 @@ class RegisterRequest
         $this->last_name = trim(htmlspecialchars($_POST["last_name"]));
         $this->profile_picture = $_FILES["profile_picture"] ?? null;
         $this->password = trim($_POST["password"]);
-        $this->password_check = $_POST["password_check"];
+        $this->password_check = $_POST["password_check"] ?? "";
     }
 }

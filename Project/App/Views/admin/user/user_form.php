@@ -3,8 +3,9 @@
         <h1 class="form-title"><?= isset($user) ? 'Update User' : 'Add User' ?></h1>
         <div class="error">
         <?php 
-            if (isset($errors) && !empty($errors)){
-                echo $errors;
+            if (isset($_SESSION['error'])) {
+                echo $_SESSION['error'];
+                unset($_SESSION['error']);
             }
         ?>
         </div>
