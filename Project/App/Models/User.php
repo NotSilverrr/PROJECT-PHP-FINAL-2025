@@ -80,7 +80,17 @@ class User
     $response = $queryBuilder->select()->from("users")->where("first_name", "LIKE", $search)->orWhere("last_name", "LIKE", $search)->fetchAll();
     $users = [];
     foreach ($response as $user) {
-        $users[] = new User($user["id"], $user["first_name"], $user["last_name"], $user["profile_picture"], $user["is_admin"], "", "");
+        $users[] = new User(
+          id: $user["id"],
+          first_name: $user["first_name"],
+          last_name: $user["last_name"],
+          profile_picture: $user["profile_picture"] ?? null,
+          isadmin: (bool)$user["is_admin"],
+          email: $user["email"],
+          password: $user["password"],
+          created_at: $user["created_at"],
+          updated_at: $user["updated_at"]
+        );
     }
 
     return $users;
