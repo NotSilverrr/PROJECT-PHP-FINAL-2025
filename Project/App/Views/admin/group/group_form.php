@@ -1,11 +1,8 @@
 <div class="form-container-admin">
     <div class="form-card-admin">
-        <h1 class="form-title"><?= isset($group) ? 'Update Group' : 'Add Group' ?></h1>
+        <h1 class="form-title"><?= isset($update) ? 'Update Group' : 'Add Group' ?></h1>
         <div class="error">
         <?php 
-            if (isset($errors) && !empty($errors)){
-                echo $errors;
-            }
             if (isset($_SESSION['error'])) {
                 echo $_SESSION['error'];
                 unset($_SESSION['error']);
@@ -22,9 +19,6 @@
             </div>
             <div class="input-group">
                 <label class="form-label">Profile Picture</label>
-                <?php if(isset($group) && $group['profile_picture']): ?>
-                    <img src="<?= $group['profile_picture'] ?>" alt="Current profile picture" class="profile-picture">
-                <?php endif; ?>
                 <input type="file" name="profile_picture" accept="image/*" class="input-field" <?= !isset($group) ? 'required' : '' ?> />
             </div>
             <div class="input-group">
@@ -42,7 +36,7 @@
             <a href="/admin/group" class="create-account">Back to Groups List</a>
         </form>
 
-        <?php if (isset($group)): ?>
+        <?php if (isset($update)): ?>
         <div class="many-to-many-table-section">
             <h2>Group Members</h2>
             <?php if (isset($members) && !empty($members)): ?>

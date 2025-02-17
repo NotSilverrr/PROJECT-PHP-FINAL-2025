@@ -10,9 +10,6 @@
         ?>
         </div>
         <form method="POST" action="<?= isset($update) ? '/admin/user/update' : '/admin/user/add' ?>" class="form" enctype="multipart/form-data">
-            <?php if (isset($user)): ?>
-            <input type="hidden" name="id" value="<?= $user['id'] ?>" />
-            <?php endif; ?>
             <div class="input-group">
                 <label class="form-label">Email</label>
                 <input type="email" name="email" placeholder="Email" class="input-field" value="<?= isset($user) ? $user['email'] : '' ?>" required />

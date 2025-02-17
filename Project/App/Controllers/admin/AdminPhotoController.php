@@ -8,6 +8,8 @@ use Core\QueryBuilder;
 use Core\Error;
 use App\Controllers\ImageController;
 use App\Services\Auth;
+use App\Services\PhotoService;
+use App\Requests\PhotoRequest;
 
 class AdminPhotoController
 {
@@ -71,7 +73,9 @@ class AdminPhotoController
   {
     self::checkAdminAuth();
     
-    $error = new Error;
+    $request = new PhotoRequest();
+    $service = new PhotoService($request);
+
     $id = (int)($_POST['id'] ?? 0);
     $group_id = (int)($_POST['group_id'] ?? 0);
     $user_id = (int)($_POST['user_id'] ?? 0);
@@ -79,31 +83,28 @@ class AdminPhotoController
     try {
       $photo = Photo::findOneById($id);
       if (!$photo) {
-        $error->addError("Photo not found");
+        $_SESSION['error'] = "Photo not found";
       }
     } catch (\Exception $e) {
-      $error->addError("Invalid photo ID");
+      $_SESSION['error'] = "Invalid photo ID";
     }
 
-    try {
-      $group = Group::getOneById($group_id);
-      if (!$group) {
-        $error->addError("Selected group does not exist");
-      }
-    } catch (\Exception $e) {
-      $error->addError("Invalid group selected");
+    $error = $service->check_user_exist();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    try {
-      $user = User::findOneById($user_id);
-      if (!$user) {
-        $error->addError("Selected user does not exist");
-      }
-    } catch (\Exception $e) {
-      $error->addError("Invalid user selected");
+    $error = $service->check_group_exist();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if ($error->hasErrors()) {
+    $error = $service->validate_file();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
+    }
+
+    if (isset($_SESSION['error'])) {
       $queryBuilderGroup = new QueryBuilder();
       $groups = $queryBuilderGroup->select(['id', 'name'])->from('groups')->fetchAll();
       
@@ -112,22 +113,17 @@ class AdminPhotoController
 
       $tempPhoto = ['id' => $id,'file' => isset($photo) ? $photo->file : null,'group_id' => $group_id,'user_id' => $user_id];
       
-      return view('admin.photo.photo_form', ['photo' => $tempPhoto,'group_list' => $groups,'user_list' => $users,'update'=> true,'errors' => $error->display()])->layout('admin');
+      return view('admin.photo.photo_form', ['photo' => $tempPhoto,'group_list' => $groups,'user_list' => $users,'update'=> true])->layout('admin');
     }
 
-    if (isset($_FILES['photo']) && $_FILES['photo']['size'] > 0) {
-      $imageController = new ImageController();
-      $photo_file = $imageController->save($_FILES['photo'], ['subdir' => 'groups','group_id' => $group_id]);
-      
-      if ($photo_file) {
-        if ($photo->file && file_exists($photo->file)) {
-          $imageController->delete($photo->file);
-        }
-        $photo->file = $photo_file;
-      } else {
-        $error->addError("Failed to upload photo");
-        return redirect('/admin/photo');
-      }
+    $imageController = new ImageController();
+    $file = $imageController->save($_FILES['photo'], [
+      'subdir' => 'user_profile_picture'
+    ]);
+    
+    $error = $service->validate_file_save($file);
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
     $photo->group_id = $group_id;
@@ -153,41 +149,38 @@ class AdminPhotoController
   public static function add()
   {
     self::checkAdminAuth();
-    
-    $error = new Error;
+    $request = new PhotoRequest();
+    $service = new PhotoService($request);
+
     $group_id = (int)($_POST['group_id'] ?? 0);
     $user_id = (int)($_POST['user_id'] ?? 0);
 
-    try {
-      $group = Group::getOneById($group_id);
-      if (!$group) {
-        $error->addError("Selected group does not exist");
-      }
-    } catch (\Exception $e) {
-      $error->addError("Invalid group selected");
+    $error = $service->check_user_exist();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    try {
-      $user = User::findOneById($user_id);
-      if (!$user) {
-        $error->addError("Selected user does not exist");
-      }
-    } catch (\Exception $e) {
-      $error->addError("Invalid user selected");
+    $error = $service->check_group_exist();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if (!isset($_FILES['photo']) || $_FILES['photo']['size'] === 0) {
-      $error->addError("Photo file is required");
-    } else {
-      $imageController = new ImageController();
-      $photo_file = $imageController->save($_FILES['photo'], ['subdir' => 'groups','group_id' => $group_id]);
-      
-      if (!$photo_file) {
-        $error->addError("Failed to upload photo");
-      }
+    $error = $service->validate_file();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if ($error->hasErrors()) {
+    $imageController = new ImageController();
+    $file = $imageController->save($_FILES['photo'], [
+      'subdir' => 'user_profile_picture'
+    ]);
+    
+    $error = $service->validate_file_save($file);
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
+    }
+
+    if (isset($_SESSION['error'])) {
       $queryBuilderGroup = new QueryBuilder();
       $groups = $queryBuilderGroup->select(['id', 'name'])->from('groups')->fetchAll();
       
@@ -196,10 +189,10 @@ class AdminPhotoController
 
       $tempPhoto = ['id' => null,'file' => null,'group_id' => $group_id,'user_id' => $user_id];
       
-      return view('admin.photo.photo_form', ['photo' => $tempPhoto,'group_list' => $groups,'user_list' => $users,'errors' => $error->display()])->layout('admin');
+      return view('admin.photo.photo_form', ['photo' => $tempPhoto,'group_list' => $groups,'user_list' => $users])->layout('admin');
     }
 
-    $photo = new Photo(null, $photo_file, $group_id, $user_id);
+    $photo = new Photo(null, $file, $group_id, $user_id);
     $photo->createPhoto();
     
     return redirect('/admin/photo');

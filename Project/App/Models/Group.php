@@ -12,7 +12,7 @@ class Group {
   public function __construct(
     public ?int $id = null,
     public string $name,
-    public ?string $profile_picture,
+    public ?string $profile_picture = null,
     public ?int $ownerId = null,
     public ?User $owner = null,
     public ?string $created_at = null,
@@ -76,18 +76,17 @@ class Group {
     {
       $search = "%$search%";
       $queryBuilder = new QueryBuilder();
-      $response = $queryBuilder->select(["groups.*","users.*"])->from("groups")->join("users","groups.owner","=", "users.id")->where("name", "LIKE", $search)->fetchAll();
+      $response = $queryBuilder->select(["groups.id as group_id","groups.profile_picture as group_profile_picture","groups.*","users.id as user_id","users.profile_picture as user_profile_picture","users.*"])->from("groups")->join("users","groups.owner","=", "users.id")->where("name", "LIKE", $search)->fetchAll();
       $groups = [];
       foreach ($response as $group) {
           $groups[] = new Group(
-            id: $group["id"],
+            id: $group["group_id"],
             name: $group["name"], 
-            profile_picture: $group["profile_picture"], 
-            owner: User::findOneById($group["owner"]), 
+            profile_picture: $group["group_profile_picture"], 
+            owner: new User(id:$group["user_id"], first_name:$group["first_name"], last_name:$group["last_name"], profile_picture:$group["user_profile_picture"], isadmin:$group["is_admin"], email:$group["email"]),
             created_at: $group["created_at"], 
             updated_at :$group["updated_at"]);
       }
-  
       return $groups;
     }
 

@@ -3,15 +3,16 @@
         <h1 class="form-title"><?= isset($photo) ? 'Update Photo' : 'Add Photo' ?></h1>
         <div class="error">
         <?php 
-            if (isset($errors) && !empty($errors)){
-                echo $errors;
+            if (isset($_SESSION['error'])) {
+                echo $_SESSION['error'];
+                unset($_SESSION['error']);
             }
         ?>
         </div>
         <form method="POST" action="<?= isset($update) ? '/admin/photo/update' : '/admin/photo/add' ?>" class="form" enctype="multipart/form-data">
-            <?php if (isset($photo)): ?>
+        <?php if (isset($photo)): ?>
             <input type="hidden" name="id" value="<?= $photo['id'] ?>" />
-            <?php endif; ?>
+            <?php endif; ?>    
             <div class="input-group">
                 <label class="form-label">Photo</label>
                 <?php if(isset($photo) && $photo['file']): ?>

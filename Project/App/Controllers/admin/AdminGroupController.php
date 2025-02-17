@@ -2,10 +2,10 @@
 namespace App\Controllers\admin;
 
 use App\Models\Group;
-use App\Models\User;
 use Core\QueryBuilder;
-use Core\Error;
 use App\Controllers\ImageController;
+use App\Services\GroupService;
+use App\Requests\GroupRequest;
 use App\Services\Auth;
 
 class AdminGroupController
@@ -64,71 +64,79 @@ class AdminGroupController
   public static function update()
   {
     self::checkAdminAuth();
-    
-    $error = new Error;
+    $request = new GroupRequest();
+    $service = new GroupService($request);
+
     $id = (int)($_POST['id'] ?? 0);
     $name = htmlspecialchars(trim($_POST['name'] ?? ''));
     $owner_id = (int)($_POST['owner'] ?? 0);
 
-    if (empty($name)) {
-      $error->addError("Group name is required");
-    } elseif (strlen($name) > 50) {
-      $error->addError("Group name must be less than 50 characters");
+    $error = $service->validate_name();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    try {
-      $owner = User::findOneById($owner_id);
-      if (!$owner) {
-        $error->addError("Selected owner does not exist");
-      }
-    } catch (\Exception $e) {
-      $error->addError("Invalid owner selected");
+    $error = $service->check_owner_exist();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
+    }
+
+    $error = $service->validate_profile_picture();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
     try {
       $group = Group::getOneById($id);
       if (!$group) {
-        $error->addError("Group not found");
+        $_SESSION['error'] = "Group not found";
       }
     } catch (\Exception $e) {
-      $error->addError("Invalid group ID");
+      $_SESSION['error'] = "Invalid group ID";
     }
 
-    if ($error->hasErrors()) {
+    if(isset($_SESSION['error'])){
       $queryBuilder = new QueryBuilder();
       $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
       
       $tempGroup = ['id' => $id,'name' => $name,'owner' => $owner_id,'profile_picture' => isset($group) ? $group->profile_picture : null];
-      
       $members = Group::getMembers($id);
       $memberIds = array_column($members, 'id');
       $available_users = array_filter($users, function($user) use ($memberIds) {
           return !in_array($user['id'], $memberIds);
       });
       
-      return view('admin.group.group_form', ['user_list' => $users,'errors' => $error->display(),'group' => $tempGroup,'members' => $members,'available_users' => $available_users,'update' => true])->layout('admin');
+      return view('admin.group.group_form', ['user_list' => $users,'group' => $tempGroup,'members' => $members,'available_users' => $available_users,'update' => true])->layout('admin');
     }
 
     $group->name = $name;
     $group->ownerId = $owner_id;
 
-    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['size'] > 0) {
-      $imageController = new ImageController();
-      $profile_picture = $imageController->save($_FILES['profile_picture'], ['subdir' => 'groups','group_id' => $id,'filename' => 'profile_picture','overwrite' => true]);
-      
-      if ($profile_picture) {
-        if ($group->profile_picture && file_exists($group->profile_picture)) {
-          $imageController->delete($group->profile_picture);
-        }
-        $group->profile_picture = $profile_picture;
-      } else {
-        $error->addError("Failed to upload profile picture");
-      }
+    $imageController = new ImageController();
+    $profile_picture = $imageController->save($_FILES['profile_picture'], [
+      'subdir' => 'user_profile_picture'
+    ]);
+    $group->profile_picture = $profile_picture;
+    $error = $service->validate_profile_picture_save($profile_picture);
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if ($error->hasErrors()) {
-      return view('admin.group.group_form', ['errors' => $error->display(),'group' => $group])->layout('admin');
+    if(isset($_SESSION['error'])){
+      $queryBuilder = new QueryBuilder();
+      $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
+      
+      $tempGroup = ['id' => $id,'name' => $name,'owner' => $owner_id,'profile_picture' => isset($group) ? $group->profile_picture : null];
+      $members = Group::getMembers($id);
+      $memberIds = array_column($members, 'id');
+      $available_users = array_filter($users, function($user) use ($memberIds) {
+          return !in_array($user['id'], $memberIds);
+      });
+      
+      return view('admin.group.group_form', ['user_list' => $users,'group' => $tempGroup,'members' => $members,'available_users' => $available_users,'update' => true])->layout('admin');
     }
+
+    $group->update();
 
     return redirect('/admin/group');
   }
@@ -146,49 +154,57 @@ class AdminGroupController
   public static function add()
   {
     self::checkAdminAuth();
-    
-    $error = new Error;
+    $request = new GroupRequest();
+    $service = new GroupService($request);
+
     $name = htmlspecialchars(trim($_POST['name'] ?? ''));
     $owner_id = (int)($_POST['owner'] ?? 0);
 
-    if (empty($name)) {
-      $error->addError("Group name is required");
-    } elseif (strlen($name) > 50) {
-      $error->addError("Group name must be less than 50 characters");
+    $error = $service->validate_name();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    try {
-      $owner = User::findOneById($owner_id);
-      if (!$owner) {
-        $error->addError("Selected owner does not exist");
-      }
-    } catch (\Exception $e) {
-      $error->addError("Invalid owner selected");
+    $error = $service->check_owner_exist();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if ($error->hasErrors()) {
+    $error = $service->validate_profile_picture();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
+    }
+
+    if(isset($_SESSION['error'])){
       $queryBuilder = new QueryBuilder();
       $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
       
       $tempGroup = ['name' => $name,'owner' => $owner_id,'profile_picture' => null,'id' => null];
       
-      return view('admin.group.group_form', ['user_list' => $users,'errors' => $error->display(),'group' => $tempGroup])->layout('admin');
+      return view('admin.group.group_form', ['user_list' => $users,'group' => $tempGroup])->layout('admin');
+    }
+
+    $imageController = new ImageController();
+    $profile_picture = $imageController->save($_FILES['profile_picture'], [
+      'subdir' => 'user_profile_picture'
+    ]);
+    
+    $error = $service->validate_profile_picture_save($profile_picture);
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
+    }
+
+    if(isset($_SESSION['error'])){
+      $queryBuilder = new QueryBuilder();
+      $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
+      
+      $tempGroup = ['name' => $name,'owner' => $owner_id,'profile_picture' => null,'id' => null];
+      
+      return view('admin.group.group_form', ['user_list' => $users,'group' => $tempGroup])->layout('admin');
     }
 
     $group = new Group(null, $name, null, $owner_id);
     $group->createGroup();
-    
-    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['size'] > 0) {
-      $imageController = new ImageController();
-      $profile_picture = $imageController->save($_FILES['profile_picture'], ['subdir' => 'groups','group_id' => $group->id,'filename' => 'profile_picture','overwrite' => true]);
-      
-      if ($profile_picture) {
-        $group->profile_picture = $profile_picture;
-        $group->update();
-      } else {
-        $error->addError("Failed to upload profile picture");
-      }
-    }
     
     return redirect('/admin/group');
   }

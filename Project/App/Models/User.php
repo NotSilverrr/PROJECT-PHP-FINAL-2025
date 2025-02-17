@@ -10,8 +10,8 @@ class User
 {
   public function __construct(
     public ?int $id = null,
-    public string $first_name,
-    public string $last_name,
+    public ?string $first_name=null,
+    public ?string $last_name=null,
     public ?string $profile_picture = null,
     public ?bool $isadmin = null,
     public ?string $email = null,
@@ -50,7 +50,6 @@ class User
   {
     $query = new QueryBuilder;
     $user = $query->select()->from("users")->where("id", "=", $id)->fetch();
-
     if (!$user) {
       return null;
     }

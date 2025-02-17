@@ -2,9 +2,6 @@
 
 namespace App\Controllers\admin;
 
-use App\Core\Controller;
-use App\Models\User;
-use App\Models\Group;
 use App\Models\Member;
 use App\Requests\MemberRequest;
 use App\Services\Auth;

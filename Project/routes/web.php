@@ -1,6 +1,5 @@
 <?php
 
-use App\Controllers\Admin\AdminController;
 use App\Controllers\GroupController;
 use App\Core\Router;
 use App\Controllers\ImageController;

@@ -29,6 +29,10 @@ class Photo
   {
     $query = new QueryBuilder;
     $response = $query->select()->from("photos")->where("id", "=", $id)->fetch();
+    if (!$response) {
+      return null;
+    }
+    
     return new Photo(
       id: $response["id"],
       file: $response["file"],
@@ -44,14 +48,14 @@ class Photo
 public static function getAllPhoto()
 {
   $queryBuilder = new QueryBuilder();
-  $response = $queryBuilder->select(["photos.*","groups.*","users.*"])->from("photos")->join("groups","photos.group_id","=", "groups.id")->join("users","photos.user_id","=", "users.id")->fetchAll();
+  $response = $queryBuilder->select(["photos.id as photo_id","photos.*","groups.*","users.*"])->from("photos")->join("groups","photos.group_id","=", "groups.id")->join("users","photos.user_id","=", "users.id")->fetchAll();
   $photos = [];
   foreach ($response as $photo) {
       $photos[] = new Photo(
-        id: $photo["id"],
+        id: $photo["photo_id"],
         file: $photo["file"],
-        group: Group::getOneById($photo["group_id"]),
-        user: User::findOneById($photo["user_id"]),
+        group: new Group(id:$photo["group_id"],name:$photo["name"]),
+        user: new User(id: $photo["user_id"],email: $photo["email"]),
         created_at: $photo["created_at"],
         updated_at: $photo["updated_at"]
       );

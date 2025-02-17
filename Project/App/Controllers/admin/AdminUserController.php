@@ -3,7 +3,6 @@ namespace App\Controllers\admin;
 
 use App\Models\User;
 use Core\QueryBuilder;
-use Core\Error;
 use App\Controllers\ImageController;
 use App\Services\Auth;
 use App\Services\RegisterService;
