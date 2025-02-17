@@ -12,6 +12,14 @@ $title = "Login"
   </head>
 
   <body class="">
+  <div class="error">
+  <?php 
+    if (isset($_SESSION['error'])) {
+        echo $_SESSION['error'];
+        unset($_SESSION['error']);
+    }
+  ?>
+  </div>
     <div class="form__page">
       <form method="POST" action="/login" class="form">
         <h1 class="form__title">Login</h1>

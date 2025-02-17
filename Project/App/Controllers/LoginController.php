@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\Requests\LoginRequest;
+use App\Services\LoginService;
 
 
 class LoginController
@@ -12,19 +13,20 @@ class LoginController
     return view('login.index')->layout('guest');
   }
 
-  public static function post(): void
+  public static function post()
   {
     $request = new LoginRequest();
+    $service = new LoginService($request);
     $user = User::findOneByEmail($request->email);
 
-    if (!$user) {
-      echo "L'adresse email ou le mot de passe sont incorrects.";
-      die();
+
+    $error = $service->check_user_login();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if (!$user->isValidPassword($request->password)) {
-      echo "L'adresse email ou le mot de passe sont incorrects.";
-      die();
+    if(isset($_SESSION['error'])){
+      return view('login.index')->layout('guest');
     }
 
     session_start();
