@@ -22,9 +22,7 @@ class AdminUserController
   public static function index()
   {
     self::checkAdminAuth();
-    
-    $queryBuilder = new QueryBuilder();
-    $users = $queryBuilder->select(['id', 'email','first_name','last_name', 'is_admin', 'profile_picture', 'created_at'])->from('users')->fetchAll();
+    $users = User::getAllUsers();
 
     return view('admin.user.user', ['users' => $users])->layout('admin');
   }
@@ -68,21 +66,25 @@ class AdminUserController
     $password = trim($_POST['password'] ?? '');
     $is_admin = isset($_POST['is_admin']);
 
-    if (!$service->validate_email()[0]) {
-      $_SESSION['error'] = $service->validate_email()[1];
+    $error = $service->validate_email();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if (!$service->validate_first_name()[0]) {
-      $_SESSION['error'] = $service->validate_first_name()[1];
+    $error = $service->validate_first_name();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if (!$service->validate_last_name()[0]) {
-      $_SESSION['error'] = $service->validate_last_name()[1];
+    $error = $service->validate_last_name();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
     if (!empty($_POST['password'])) {
-      if (!$service->validate_password()[0]) {
-        $_SESSION['error'] = $service->validate_password()[1];
+      $error = $service->validate_password();
+      if ($error !== null) {
+        $_SESSION['error'] = $error;
       }
     }
 
@@ -96,13 +98,15 @@ class AdminUserController
     }
 
     if ($email !== $user->email) {
-      if (!$service->check_user_exist()[0]) {
-        $_SESSION['error'] = $service->check_user_exist()[1];
+      $error = $service->check_user_exist();
+      if ($error !== null) {
+        $_SESSION['error'] = $error;
       }
     }
 
-    if (!$service->validate_profile_picture()[0]) {
-      $_SESSION['error'] = $service->validate_profile_picture()[1];
+    $error = $service->validate_profile_picture();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
     if(isset($_SESSION['error'])){
@@ -120,8 +124,9 @@ class AdminUserController
       'subdir' => 'user_profile_picture'
     ]);
     
-    if (!$service->validate_profile_picture_save($profile_picture)[0]) {
-      $_SESSION['error'] = $service->validate_profile_picture_save($profile_picture)[1];
+    $error = $service->validate_profile_picture_save($profile_picture);
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
     $user->profile_picture = $profile_picture;
@@ -151,28 +156,34 @@ class AdminUserController
     $request = new RegisterRequest();
     $service = new RegisterService($request);
 
-    if (!$service->validate_email()[0]) {
-      $_SESSION['error'] = $service->validate_email()[1];
+    $error = $service->validate_email();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if (!$service->validate_first_name()[0]) {
-      $_SESSION['error'] = $service->validate_first_name()[1];
+    $error = $service->validate_first_name();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if (!$service->validate_last_name()[0]) {
-      $_SESSION['error'] = $service->validate_last_name()[1];
+    $error = $service->validate_last_name();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if (!$service->validate_password()[0]) {
-      $_SESSION['error'] = $service->validate_password()[1];
+    $error = $service->validate_password();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if (!$service->check_user_exist()[0]) {
-      $_SESSION['error'] = $service->check_user_exist()[1];
+    $error = $service->check_user_exist();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
-    if (!$service->validate_profile_picture()[0]) {
-      $_SESSION['error'] = $service->validate_profile_picture()[1];
+    $error = $service->validate_profile_picture();
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
     
     $email = htmlspecialchars(trim($_POST['email'] ?? ''));
@@ -192,8 +203,9 @@ class AdminUserController
       'subdir' => 'user_profile_picture'
     ]);
     
-    if (!$service->validate_profile_picture_save($profile_picture)[0]) {
-      $_SESSION['error'] = $service->validate_profile_picture_save($profile_picture)[1];
+    $error = $service->validate_profile_picture_save($profile_picture);
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
     }
 
     if(isset($_SESSION['error'])){

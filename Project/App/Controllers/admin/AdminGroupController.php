@@ -21,13 +21,7 @@ class AdminGroupController
   public static function index()
   {
     self::checkAdminAuth();
-    
-    $queryBuilder = new QueryBuilder();
-    $groups = $queryBuilder
-      ->select(['groups.id', 'groups.name', 'groups.profile_picture', 'users.email as owner', 'groups.created_at'])
-      ->from('groups')
-      ->join('users', 'groups.owner', '=', 'users.id')
-      ->fetchAll();
+    $groups = Group::getAllGroup();
 
     return view('admin.group.group', ['groups' => $groups])->layout('admin');
   }

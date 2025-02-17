@@ -12,11 +12,12 @@ class Photo
   public function __construct(
     public ?int $id = null,
     public string $file,
-    public int $group_id,
-    public int $user_id,
+    public ?int $group_id = null,
+    public ?int $user_id = null,
+    public ?Group $group = null,
+    public ?User $user = null,
     public ?string $created_at = null,
     public ?string $updated_at = null,
-    public ?User $user = null
   ) {}
 
 
@@ -32,6 +33,25 @@ class Photo
       created_at: $response["created_at"],
       updated_at: $response["updated_at"]
     );
+}
+
+public static function getAllPhoto()
+{
+  $queryBuilder = new QueryBuilder();
+  $response = $queryBuilder->select(["photos.*","groups.*","users.*"])->from("photos")->join("groups","photos.group_id","=", "groups.id")->join("users","photos.user_id","=", "users.id")->fetchAll();
+  $photos = [];
+  foreach ($response as $photo) {
+      $photos[] = new Photo(
+        id: $photo["id"],
+        file: $photo["file"],
+        group: Group::getOneById($photo["group_id"]),
+        user: User::findOneById($photo["user_id"]),
+        created_at: $photo["created_at"],
+        updated_at: $photo["updated_at"]
+      );
+  }
+
+  return $photos;
 }
 
   public static function findByGroupId(int $groupId): array

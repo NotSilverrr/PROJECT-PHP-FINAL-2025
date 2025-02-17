@@ -13,7 +13,8 @@ class Group {
     public ?int $id = null,
     public string $name,
     public ?string $profile_picture,
-    public int $ownerId,
+    public ?int $ownerId = null,
+    public ?User $owner = null,
     public ?string $created_at = null,
     public ?string $updated_at = null
   ) {}
@@ -69,6 +70,25 @@ class Group {
         
         return $group;
 
+    }
+
+    public static function getAllGroup(string $search = "")
+    {
+      $search = "%$search%";
+      $queryBuilder = new QueryBuilder();
+      $response = $queryBuilder->select(["groups.*","users.*"])->from("groups")->join("users","groups.owner","=", "users.id")->where("name", "LIKE", $search)->fetchAll();
+      $groups = [];
+      foreach ($response as $group) {
+          $groups[] = new Group(
+            id: $group["id"],
+            name: $group["name"], 
+            profile_picture: $group["profile_picture"], 
+            owner: User::findOneById($group["owner"]), 
+            created_at: $group["created_at"], 
+            updated_at :$group["updated_at"]);
+      }
+  
+      return $groups;
     }
 
     public static function getGroupsByUser(int $userId)
