@@ -32,7 +32,14 @@ class PhotoController
             return "Fichier non valide.";
         }
 
-        $filePath = ImageService::uploadPhoto($request->file, $groupId);
+        $uploadDir = "/uploads/groups/" . $groupId . "/";
+        try {
+            $filePath = ImageService::uploadPhoto($request->file, $uploadDir);
+        } catch (\Exception $e) {
+            $_SESSION['error'] = $e->getMessage();
+            header("Location:/group/$groupId");
+            exit;
+        }
 
         if ($filePath) {
             $photo = new Photo(

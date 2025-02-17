@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\User;
 use App\Services\ImageService;
 use App\Services\Auth;
 
@@ -86,14 +87,19 @@ class ImageController
         return false;
     }
 
-    public function showGroupProfilePicture($id) {
-        $imageService = new ImageService;
-        $imageService->serveGroupProfilePicture($id, Auth::id());
-      }
+    
     
       public function showUserPicture($id) {
-        $imageService = new ImageService;
-        $imageService->serveUserPicture($id);
+
+        $user = User::findOneById($id);
+        if (!$user) {
+            return view('errors.404');
+        }
+        $path = $user->profile_picture;
+        if (!file_exists(__DIR__ . "/../../".$path)) {
+            return view('errors.404');
+        }
+        ImageService::serve($path);
       }
   }
 

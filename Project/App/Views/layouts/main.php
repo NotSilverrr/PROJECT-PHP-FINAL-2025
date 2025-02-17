@@ -151,7 +151,7 @@ use App\Services\Auth;
                   <?php endif; ?>
                     <span
                       class="scrollable-list__img"
-                      style="background-image: url('<?= $member->profile_picture ?>')"
+                      style="background-image: url('/user/<?= $member->id ?>/profilePicture')"
                     ></span>
                     <span class="scrollable-list__text"><?= $member->first_name ?></span>
                     <?php if (Group::isOwner($group->id) && ($member->id != $group->ownerId)): ?>

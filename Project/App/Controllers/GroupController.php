@@ -68,74 +68,40 @@ class GroupController {
             if (empty($request->name)) {
                 echo "Group name is required";
                 exit;
-              } elseif (strlen($request->name) > 50) {
-                echo "Group name must be less than 50 characters";
-                exit;
-              }
-          
-              try {
-                $owner = User::findOneById(Auth::id());
-                if (!$owner) {
-                  echo "Selected owner does not exist";
-                  exit;
-                }
-              } catch (\Exception $e) {
-                echo "Invalid owner selected";
-                exit;
-              }
-            // Créer un groupe sans image d'abord
+            } elseif (strlen($request->name) > 50) {
+            echo "Group name must be less than 50 characters";
+            exit;
+            }
+        
+            $owner = User::findOneById(Auth::id());
+            if (!$owner) {
+                throw new \Exception("Utilisateur non trouvé");
+            }
+            
             $group = new Group(
                 name: $request->name,
-                profile_picture: null, // Temporairement null
+                profile_picture: null,
                 ownerId: Auth::id()
             );
     
             $group->createGroup();
-    
-            // Vérifier si une image est envoyée
-            if (!empty($request->profile_picture['name'])) {
-                $this->handleImageUpload($request->profile_picture, $group);
-            }
 
-            $_SESSION['success'] = "Votre compte a été créé avec succès.";
+            $uploadDir = "uploads/groups/". $group->id;
+            $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
+
+            $group->profile_picture = $fileName;
+            $group->update();
+
+            $_SESSION['success'] = "Votre groupe a été créé avec succès.";
             header("Location:/group/" . $group->id);
 
             exit;
     
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            $_SESSION['error'] = $e->getMessage();
+            header("Location:/group/create");
             exit;
         }
-    }
-
-    private function handleImageUpload(array $file, Group $group) {
-        if ($file['error'] !== UPLOAD_ERR_OK) {
-            throw new \Exception("Erreur lors de l'upload de l'image.");
-        }
-    
-        $allowedExts = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        $fileExt = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    
-        if (!in_array($fileExt, $allowedExts)) {
-            throw new \Exception("Format non autorisé. JPG, JPEG, PNG, GIF et WEBP uniquement.");
-        }
-    
-        if ($file['size'] > 5 * 1024 * 1024) {
-            throw new \Exception("Fichier trop volumineux. Max 5 Mo.");
-        }
-    
-        $uploadDir = __DIR__ ."/../../uploads/groups/" . $group->id . "/";
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-    
-        $filePath = $uploadDir . "profile_picture." . $fileExt;
-        if (!move_uploaded_file($file['tmp_name'], $filePath)) {
-            throw new \Exception("Impossible de sauvegarder l'image.");
-        }
-    
-        $group->profile_picture = "uploads/groups/" . $group->id . "/" . "profile_picture." . $fileExt;;
-        $group->update();
     }
 
     public function delete($id) {
@@ -154,6 +120,11 @@ class GroupController {
         $_SESSION['success'] = "Groupe supprimé avec succès";
         header("Location: /");
         exit;
+    }
+
+    public function showGroupProfilePicture($id) {
+        $imageService = new ImageService;
+        $imageService->serveGroupProfilePicture($id, Auth::id());
     }
 
 

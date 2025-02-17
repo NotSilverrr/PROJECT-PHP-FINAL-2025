@@ -14,6 +14,7 @@ use App\Controllers\MemberController;
 use App\Controllers\PasswordResetController;
 use App\Controllers\PhotoController;
 use App\Controllers\admin\AdminMemberController;
+use App\Controllers\UserController;
 
 $router->redirect("/", "/group");
 $router->redirect("/admin/", "/admin/user");
@@ -65,7 +66,7 @@ $router->get("/group/create", GroupController::class, "create");
 $router->post("/group", GroupController::class, "store");
 $router->get("/group/{id}", GroupController::class, "show");
 $router->post("/group/{id}/delete", GroupController::class, "delete");
-$router->get("/group/{id}/profilePicture", ImageController::class, "showGroupProfilePicture");
+$router->get("/group/{id}/profilePicture", GroupController::class, "showGroupProfilePicture");
 $router->get("/group/{id}/addMember", MemberController::class, "create");
 $router->post("/group/{id}/addMember", MemberController::class, "store");
 $router->get("/group/{id}/upload", PhotoController::class, "create");
@@ -78,3 +79,5 @@ $router->post("/group/{groupId}/user/{userid}", MemberController::class, "update
 
 $router->post("/group/{id}/deleteUser", MemberController::class, "delete");
 $router->get("/image/{id}", ImageController::class, "show");
+
+$router->get("/user/{id}/profilePicture", UserController::class, "showProfilePicture");

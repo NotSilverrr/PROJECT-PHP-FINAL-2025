@@ -68,9 +68,23 @@ class ImageService {
         exit;
     }
 
-    public static function uploadPhoto($file, $groupId): ?string
+    public static function uploadPhoto($file, $uploadDir): ?string
     {
-        $uploadDir = __DIR__ . "/../../uploads/groups/{$groupId}/";
+        // fait moi toutes les vérification sur le fichier (c'est une image)
+        // fait moi toutes les vérification sur le fichier (c'est une image)
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if (!in_array($fileExtension, $allowedExtensions)) {
+            throw new \Exception("Format non autorisé. JPG, JPEG, PNG, GIF et WEBP uniquement.");
+        }
+
+        if ($file['size'] > 5 * 1024 * 1024) {
+            throw new \Exception("Fichier trop volumineux. Max 5 Mo.");
+        }
+
+
+
+        $uploadDir = __DIR__ . "/../../" . $uploadDir;
         
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
@@ -80,7 +94,8 @@ class ImageService {
         $uploadPath = $uploadDir . $filename;
 
         if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
-            return "uploads/groups/{$groupId}/" . $filename; // Chemin stocké en BDD
+            $relativePath = str_replace(realpath(__DIR__ . "/../../"), '', realpath($uploadPath));
+            return $relativePath;
         }
 
         return null;
