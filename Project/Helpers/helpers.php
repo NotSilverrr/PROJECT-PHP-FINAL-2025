@@ -14,3 +14,19 @@ function fileName($file) {
     $response = end(explode("/", $file));
     return $response;
 }
+
+function deleteFolder($folderPath) {
+    $folderPath = __DIR__ . "/../" . $folderPath;
+    if (!is_dir($folderPath)) return false;
+
+    $files = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($folderPath, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+
+    foreach ($files as $file) {
+        $file->isDir() ? rmdir($file) : unlink($file);
+    }
+
+    return rmdir($folderPath);
+}

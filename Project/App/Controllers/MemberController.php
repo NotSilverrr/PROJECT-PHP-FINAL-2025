@@ -12,11 +12,13 @@ class MemberController {
 
   public function show(int $groupId, int $userId)
   {
-    if (!Group::isOwner($groupId, Auth::id())) {
+    if (!(Group::isOwner($groupId, Auth::id()) || Auth::isadmin())) {
       return view("errors.403");
     }
-    $member = Member::findOne($groupId, $userId);
-    return view("group.member", ["member" => $member]);
+    $members = Group::getMembers($groupId, $_GET['m'] ?? "");
+    $group = Group::getOneById($groupId);
+    $user = Member::findOne($groupId, $userId);
+    return view("group.member", ["user" => $user, "members" => $members, "group" => $group]);
   }
 
   public function create (int $id)
@@ -38,6 +40,7 @@ class MemberController {
         );
 
         $member->addMember();
+        $_SESSION['success'] = "Membre ajouté avec succès";
         header("Location:/group/".$id);
         exit;
     } catch (\Exception $e) {
@@ -61,16 +64,14 @@ class MemberController {
         );
 
         $member->deleteMember();
+        $_SESSION['success'] = "Membre supprimé avec succès";
         header("Location:/group/".$id);
+        exit;
     } catch (\Exception $e) {
-      echo $e->getMessage();
+      $_SESSION['error'] = $e->getMessage();
+      header("Location:/group/".$id);
+      exit;
     }
-  }
-
-  public function edit(int $groupId, int $userId)
-  {
-    $member = Member::findOne($groupId, $userId);
-    return view("group.editMember", ["member" => $member]);
   }
 
   public function update(int $groupId, int $userId)
@@ -84,16 +85,17 @@ class MemberController {
           groupId: $groupId
         );
 
-        $member->updateMember();
-        header("Location:/group/".$groupId);
-        exit;
+        if($member->updateMember()) {
+          $_SESSION['success'] = "Membre modifié avec succès";
+          header("Location:/group/".$groupId);
+          exit;
+        } else {
+          throw new \Exception("Erreur lors de la mise à jour du membre");
+        }
     } catch (\Exception $e) {
-      return view("group.member", [
-        "error" => $e->getMessage(),
-        "groupId" => $groupId,
-        "userId" => $userId,
-        "member" => Member::findOne($groupId, $userId)
-    ]);
+      $_SESSION['error'] = $e->getMessage();
+      header("Location:/group/".$groupId);
+      exit;
     }
   }
 }

@@ -12,9 +12,11 @@ use App\Services\ImageService;
 
 class PhotoController
 {
-  public function create()
+  public function create(int $id)
   {
-    return view('group.upload');
+    $members = Group::getMembers($id, $_GET['m'] ?? "");
+    $group = Group::getOneById($id);
+    return view('group.upload', ["members" => $members, "group" => $group]);
   }
   public function store($groupId)
     {
@@ -70,7 +72,7 @@ class PhotoController
             return view('errors.403');
         }
         
-        if (!(Photo::isOwner($photoId, Auth::id()) || Auth::user()->isAdmin())) {
+        if (!(Photo::isOwner($photoId, Auth::id()) || Auth::user()->isAdmin() || Group::isOwner($groupId))) {
             return view('errors.403');
         }
         $photo = Photo::findOneById($photoId);
@@ -79,6 +81,7 @@ class PhotoController
         }
         ImageService::delete($photo->file);
         $photo->deletePhoto();
+        $_SESSION['success'] = "Photo supprimée avec succès";
         header("Location:/group/$groupId");
         exit;
     }
