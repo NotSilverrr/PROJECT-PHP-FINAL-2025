@@ -13,9 +13,9 @@ class UserController {
         $path = $user->profile_picture;
         
 
-        if (!file_exists($path)) {
-            return view('errors.404');
-        }
+        // if (!file_exists($path)) {
+        //     return view('errors.404');
+        // }
         ImageService::serve($path);
     }
 }

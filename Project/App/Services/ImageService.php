@@ -22,33 +22,6 @@ class ImageService {
         exit;
     }
 
-    public function serveGroupProfilePicture(int $groupId, int $userId) {
-        $query = new QueryBuilder;
-        
-        $result = $query->select()->from("user_group")->where("user_id", "=", $userId)->andWhere("group_id", "=", $groupId)->fetch();
-        
-        if (!$result) {
-            throw new \Exception("Vous ne faites pas parti de ce groupe");
-        }
-        $query = new QueryBuilder;
-        $response = $query->select()->from("groups")->where("id","=", $groupId)->fetch();
-
-        $path = __DIR__ ."/../../" . $response["profile_picture"];
-        if (!file_exists($path)) {
-            throw new \Exception("Fichier non trouvé");
-        }
-        
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimeType = finfo_file($finfo, $path);
-
-        finfo_close($finfo);
-        
-        header("Content-Type: " . $mimeType);
-        header("Cache-Control: private, max-age=3600");
-        readfile($path);
-        exit;
-    }
-
     public function serveUserPicture(int $userId) {
         $query = new QueryBuilder;
         $response = $query->select()->from("users")->where("id","=", $userId)->fetch();

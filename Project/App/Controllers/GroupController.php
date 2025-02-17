@@ -21,15 +21,10 @@ class GroupController {
             return view('errors.404');
         }
 
-
-
         $group = Group::getOneById($id);
         $photos = Photo::findByGroupId($id);
         $members = Group::getMembers($id, $_GET['m'] ?? "");
         $allUsers = User::getAllUsers();
-
-        // var_dump($_GET);
-
 
 
         if (Group::isMember($id, Auth::id())) {
@@ -43,7 +38,6 @@ class GroupController {
 
     public function getUsersGroups() {
         $userId = Auth::id();
-        // $userId = 1;
         $groups = Group::getGroupsByUser($userId);
 
         return json_encode($groups);
@@ -98,7 +92,6 @@ class GroupController {
             exit;
     
         } catch (\Exception $e) {
-            // delete the group if it was created
             if (isset($group)) {
                 Group::delete($group->id);
             }
@@ -113,7 +106,6 @@ class GroupController {
             http_response_code(403);
             return view('errors.403');
         }
-        // get all photos of the group
         $folderPath = "uploads/groups/" . $id;
         deleteFolder($folderPath);
 
@@ -124,8 +116,19 @@ class GroupController {
     }
 
     public function showGroupProfilePicture($id) {
-        $imageService = new ImageService;
-        $imageService->serveGroupProfilePicture($id, Auth::id());
+        $group = Group::getOneById($id);
+        if (!$group) {
+            return view('errors.404');
+        }
+        if (!Group::isMember($id, Auth::id())) {
+            http_response_code(403);
+            return view('errors.403');
+        } else {
+            http_response_code(403);
+            return view('errors.403');
+        }
+        $path = $group->profile_picture;
+        ImageService::serve($path);
     }
 
 
