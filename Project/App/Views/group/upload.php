@@ -1,4 +1,4 @@
-<form action="" method="post" enctype="multipart/form-data">
+<form class="form" action="" method="post" enctype="multipart/form-data">
     <input type="hidden" name="user_id" value="<?= $_SESSION['user_id'] ?>" />
     <input type="hidden" name="group_id" value="<?= $group->id ?>" />
     <label for="file">Photo</label>

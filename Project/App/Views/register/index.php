@@ -1,51 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Créer un compte</title>
-  <link rel="stylesheet" href="./dist/framework-esgi.css" />
-  <script src="./dist/framework-esgi.js"></script>
-</head>
-
-<body>
-<div class="error">
 <?php 
-  if (isset($_SESSION['error'])) {
-      echo $_SESSION['error'];
-      unset($_SESSION['error']);
-  }
+$title = "Register";
 ?>
-</div>
-<form method="POST" action="" enctype="multipart/form-data">
-  <input type="email" name="email" id="email" value="<?= $user['email'] ?? '' ?>" placeholder="Enter your email address" required>
-  <input type="text" name="first_name" id="first_name"  value="<?= $user['first_name'] ?? '' ?>" placeholder="Enter your first name" required>
-  <input type="text" name="last_name" id="last_name"  value="<?= $user['last_name'] ?? '' ?>" placeholder="Enter your last name" required>
-  <input type="file" name="profile_picture" id="profile_picture"  accept="image/jpeg,image/png" required>
-  <input type="password" name="password" id="password"  value="<?= $user['password'] ?? '' ?>" placeholder="Enter your password (min. 6 characters)" required>
-  <input type="password" name="password_check" id="password_check" value="<?= $user['password_check'] ?? '' ?>" placeholder="Confirm your password" required>
-  <button type="submit">Inscription</button>
-</form>
-
-      <label class="form form__label"for="email">Nom</label>
-      <input type="text" name="first_name" id="first_name" required>
-
-      <label class="form form__label"for="email">Prénom</label>
-      <input type="text" name="last_name" id="last_name" required>
-
-      <label class="form form__label"for="email">Photo de profil</label>
-      <input type="text" name="profile_picture" id="profile_picture" required>
-
-      <label class="form form__label"for="email">Mot de passe</label>
-      <input type="password" name="password" id="password" required>
-
-      <label class="form form__label"for="email">Vérifier le mot de passe</label>
-      <input type="password" name="password_check" id="password_check" required>
-
-      <button type="submit" class="form form__button">S'inscrire</button>
-    </form>
+<form method="POST" action="" enctype="multipart/form-data" class="form">
+  <h1 class="form__title">Register</h1>
+  
+  <div>
+    <label class="form__label" for="email">Email</label>
+    <input type="email" name="email" id="email" value="<?= $user['email'] ?? '' ?>" placeholder="exemple@ex.com" required>
   </div>
-</body>
-</html>
+  
+  <div>
+    <label class="form__label" for="first_name">Firstname</label>
+    <input type="text" name="first_name" id="first_name" value="<?= $user['first_name'] ?? '' ?>" placeholder="Enter your first name" required>
+  </div>
+  
+  <div>
+    <label class="form__label" for="last_name">Lastname</label>
+    <input type="text" name="last_name" id="last_name" value="<?= $user['last_name'] ?? '' ?>" placeholder="Enter your last name" required>
+  </div>
+  
+  <div>
+    <label class="form__label" for="password">Password</label>
+    <input type="password" name="password" id="password" placeholder="Enter your password (min. 6 characters)" required>
+  </div>
+  
+  <div>
+    <label class="form__label" for="password_check">Confirm password</label>
+    <input type="password" name="password_check" id="password_check" placeholder="Confirm your password" required>
+  </div>
+
+  <div>
+    <label class="form__label" for="profile_picture">Profile picture</label>
+    <input class="file" type="file" name="profile_picture" id="profile_picture" accept="image/jpeg,image/png" required>
+  </div>
+
+  <button type="submit" class="button button--primary">Register</button>
+  <a href="/login" class="form__a">Already have an account? Login</a>
+</form>
