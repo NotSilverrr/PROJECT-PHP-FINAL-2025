@@ -2,29 +2,6 @@
 @use "../partials/mixins" as m;
 
 @layer components {
-  // Overlay
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(8px); // Flou de l'arrière-plan
-    background: rgba(0, 0, 0, 0.3); // Couleur de l'arrière-plan
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-
-    &.active {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
-
   // Modal
   .modal {
     background: var(--white);
@@ -36,22 +13,44 @@
     max-height: 80%; // Hauteur maximale
     overflow-y: auto; // Défilement pour le contenu long
     position: relative;
-  }
 
-  // Close button
-  .close-button {
-    position: absolute;
-    top: f.rem(16);
-    right: f.rem(16);
-    background: none;
-    border: none;
-    font-size: f.rem(24);
-    color: var(--neutral-800);
-    cursor: pointer;
-    transition: color 0.2s ease;
+    &__overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(8px); // Flou de l'arrière-plan
+      background: rgba(0, 0, 0, 0.3); // Couleur de l'arrière-plan
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
 
-    &:hover {
-      color: var(--purple-700);
+      &.active {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    // Close button
+    &__close-button {
+      position: absolute;
+      top: f.rem(16);
+      right: f.rem(16);
+      background: none;
+      border: none;
+      font-size: f.rem(24);
+      color: var(--neutral-800);
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: var(--purple-700);
+      }
     }
   }
 }

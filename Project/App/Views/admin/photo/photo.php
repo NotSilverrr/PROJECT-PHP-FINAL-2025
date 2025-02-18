@@ -33,7 +33,7 @@
                     </svg>
                   </a>
                   <span>/</span>
-                  <form action="/admin/photo/delete" method="POST" style="display: inline;">
+                  <form action="/admin/photo/delete" method="POST" class="button button--danger button--sm" style="display: inline;">
                     <input type="hidden" name="id" value="<?= $photo->id ?>">
                     <button type="submit" class="button button--danger button--sm" style="border: none; padding: 0; background: none; cursor: pointer;">
                       <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
