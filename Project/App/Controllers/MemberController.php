@@ -26,13 +26,21 @@ class MemberController {
 
     $allUsers = User::getAllUsers($_GET['u'] ?? "");
     $members = Group::getMembers($id, $_GET['m'] ?? "");
+    $allMembers = Group::getMembers($id);
     $group = Group::getOneById($id);
-    return view("group.addMember", ["allUsers" => $allUsers, "groupId" => $id, "members" => $members, "group" => $group]);
+
+    $memberIds = array_column($allMembers, 'id');
+    $available_users = array_filter($allUsers, function($user) use ($memberIds) {
+        return !in_array($user->id, $memberIds);
+    });
+    return view("group.addMember", ["allUsers" => $available_users, "groupId" => $id, "members" => $members, "group" => $group]);
   }
   public function store(int $id)
   {
     $request = new MemberRequest;
     try {
+
+
         $member = new Member(
           userId: $request->userId,
           read_only: $request->readOnly,
@@ -40,19 +48,18 @@ class MemberController {
         );
 
         $group = Group::getOneById($id);
+        if ($group->isMember($request->userId)) {
+          throw new \Exception("L'utilisateur est déjà membre du groupe");
+        }
         $group->addMember($member);
 
         $_SESSION['success'] = "Membre ajouté avec succès";
         header("Location:/group/".$id);
         exit;
     } catch (\Exception $e) {
-      return view("group.addMember", [
-        "error" => $e->getMessage(),
-        "groupId" => $id,
-        "allUsers" => User::getAllUsers(),
-        "members" => Group::getMembers($id),
-        "group" => Group::getOneById($id)
-    ]);
+      $_SESSION['error'] = $e->getMessage();
+      header("Location:/group/".$id."/addMember");
+      exit;
     }
   }
 

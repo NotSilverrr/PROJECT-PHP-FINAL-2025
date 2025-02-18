@@ -19,7 +19,8 @@ if (isset($group) && !empty($group)) : ?>
 
 
 <ul class="image-grid">
-    <?php foreach ($photos as $photo) : 
+    <?php foreach ($photos as $photo) :
+
         $fileName = explode("/", $photo->file);
         $fileName = end($fileName);
         $fileName = explode(".", $fileName);
