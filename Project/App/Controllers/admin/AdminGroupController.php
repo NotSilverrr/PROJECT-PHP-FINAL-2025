@@ -2,6 +2,7 @@
 namespace App\Controllers\admin;
 
 use App\Models\Group;
+use App\Models\User;
 use Core\QueryBuilder;
 use App\Controllers\ImageController;
 use App\Services\GroupService;
@@ -31,9 +32,8 @@ class AdminGroupController
     self::checkAdminAuth();
     
     $id = $_POST['id'];
-    $queryBuilder = new QueryBuilder();
-    $query = $queryBuilder->delete()->from('groups')->where('id',"=", $id)->execute();
-    
+    $group = Group::getOneById($id);
+    $group->delete();    
     return redirect('/admin/group');
   }
 
@@ -44,8 +44,7 @@ class AdminGroupController
     $queryBuilderGroup = new QueryBuilder();
     $group = $queryBuilderGroup->select(['id', 'name', 'profile_picture', 'owner'])->from('groups')->where('id', '=', $id)->fetch();
     
-    $queryBuilderUser = new QueryBuilder();
-    $users = $queryBuilderUser->select(['id', 'email'])->from('users')->fetchAll();
+    $users = User::getAllUsers();
 
     $members = Group::getMembers($id);
 
@@ -96,8 +95,7 @@ class AdminGroupController
     }
 
     if(isset($_SESSION['error'])){
-      $queryBuilder = new QueryBuilder();
-      $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
+      $users = User::getAllUsers();
       
       $tempGroup = ['id' => $id,'name' => $name,'owner' => $owner_id,'profile_picture' => isset($group) ? $group->profile_picture : null];
       $members = Group::getMembers($id);
@@ -123,8 +121,7 @@ class AdminGroupController
     }
 
     if(isset($_SESSION['error'])){
-      $queryBuilder = new QueryBuilder();
-      $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
+      $users = User::getAllUsers();
       
       $tempGroup = ['id' => $id,'name' => $name,'owner' => $owner_id,'profile_picture' => isset($group) ? $group->profile_picture : null];
       $members = Group::getMembers($id);
@@ -145,8 +142,7 @@ class AdminGroupController
   {
     self::checkAdminAuth();
     
-    $queryBuilder = new QueryBuilder();
-    $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
+    $users = User::getAllUsers();
 
     return view('admin.group.group_form', ['user_list' => $users])->layout('admin');
   }
@@ -176,9 +172,7 @@ class AdminGroupController
     }
 
     if(isset($_SESSION['error'])){
-      $queryBuilder = new QueryBuilder();
-      $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
-      
+      $users = User::getAllUsers();
       $tempGroup = ['name' => $name,'owner' => $owner_id,'profile_picture' => null,'id' => null];
       
       return view('admin.group.group_form', ['user_list' => $users,'group' => $tempGroup])->layout('admin');
@@ -195,8 +189,7 @@ class AdminGroupController
     }
 
     if(isset($_SESSION['error'])){
-      $queryBuilder = new QueryBuilder();
-      $users = $queryBuilder->select(['id', 'email'])->from('users')->fetchAll();
+      $users = User::getAllUsers();
       
       $tempGroup = ['name' => $name,'owner' => $owner_id,'profile_picture' => null,'id' => null];
       

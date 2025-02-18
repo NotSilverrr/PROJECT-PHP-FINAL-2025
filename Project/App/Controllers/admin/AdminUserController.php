@@ -32,8 +32,8 @@ class AdminUserController
     self::checkAdminAuth();
     
     $id = $_POST['id'];
-    $queryBuilder = new QueryBuilder();
-    $query = $queryBuilder->delete()->from('users')->where('id','=', $id)->execute();
+    $user = User::findOneById($id);
+    $user->delete();    
     
     return redirect('/admin/user');
   }

@@ -1,6 +1,8 @@
 <?php
 namespace App\Controllers\admin;
 
+use App\Models\Group;
+use App\Models\User;
 use App\Models\Photo;
 use Core\QueryBuilder;
 use App\Controllers\ImageController;
@@ -22,7 +24,6 @@ class AdminPhotoController
   {
     self::checkAdminAuth();
     
-    $queryBuilder = new QueryBuilder();
     $photos = Photo::getAllPhoto();
 
     return view('admin.photo.photo', data: ['photos' => $photos])->layout('admin');
@@ -33,15 +34,11 @@ class AdminPhotoController
     self::checkAdminAuth();
     
     $id = $_POST['id'];
-    
-    $queryBuilder = new QueryBuilder();
-    $photo = $queryBuilder->select(['file'])->from('photos')->where('id', '=', $id)->fetch();
-    
-    if ($photo && file_exists($photo['file'])) {
-      unlink($photo['file']);
+    $photo = Photo::findOneById($id);
+    if ($photo && file_exists($photo->file)) {
+      unlink($photo->file);
     }
-    
-    $queryBuilder->delete()->from('photos')->where('id','=', $id)->execute();
+    $photo->deletePhoto();    
     
     return redirect('/admin/photo');
   }
@@ -53,17 +50,14 @@ class AdminPhotoController
     $queryBuilderPhoto = new QueryBuilder();
     $photo = $queryBuilderPhoto->select(['id', 'file', 'group_id', 'user_id'])->from('photos')->where('id', '=', $id)->fetch();
 
-    $queryBuilderGroup = new QueryBuilder();
-    $group = $queryBuilderGroup->select(['id', 'name'])->from('groups')->fetchAll();
-    
-    $queryBuilderUser = new QueryBuilder();
-    $users = $queryBuilderUser->select(['id', 'email'])->from('users')->fetchAll();
+    $groups = Group::getAllGroup();
+    $users = User::getAllUsers();
 
     if (!$photo) {
       return redirect('/admin/photo');
     }
 
-    return view('admin.photo.photo_form', ['photo' => $photo,'group_list' => $group,'user_list'=> $users,'update'=> true])->layout('admin');
+    return view('admin.photo.photo_form', ['photo' => $photo,'group_list' => $groups,'user_list'=> $users,'update'=> true])->layout('admin');
   }
 
   public static function update()
@@ -102,11 +96,8 @@ class AdminPhotoController
     }
 
     if (isset($_SESSION['error'])) {
-      $queryBuilderGroup = new QueryBuilder();
-      $groups = $queryBuilderGroup->select(['id', 'name'])->from('groups')->fetchAll();
-      
-      $queryBuilderUser = new QueryBuilder();
-      $users = $queryBuilderUser->select(['id', 'email'])->from('users')->fetchAll();
+      $groups = Group::getAllGroup();
+      $users = User::getAllUsers();
 
       $tempPhoto = ['id' => $id,'file' => isset($photo) ? $photo->file : null,'group_id' => $group_id,'user_id' => $user_id];
       
@@ -134,11 +125,8 @@ class AdminPhotoController
   {
     self::checkAdminAuth();
     
-    $queryBuilderGroup = new QueryBuilder();
-    $groups = $queryBuilderGroup->select(['id', 'name'])->from('groups')->fetchAll();
-    
-    $queryBuilderUser = new QueryBuilder();
-    $users = $queryBuilderUser->select(['id', 'email'])->from('users')->fetchAll();
+    $groups = Group::getAllGroup();
+    $users = User::getAllUsers();
 
     return view('admin.photo.photo_form', ['group_list' => $groups,'user_list' => $users])->layout('admin');
   }
@@ -178,11 +166,8 @@ class AdminPhotoController
     }
 
     if (isset($_SESSION['error'])) {
-      $queryBuilderGroup = new QueryBuilder();
-      $groups = $queryBuilderGroup->select(['id', 'name'])->from('groups')->fetchAll();
-      
-      $queryBuilderUser = new QueryBuilder();
-      $users = $queryBuilderUser->select(['id', 'email'])->from('users')->fetchAll();
+      $groups = Group::getAllGroup();
+      $users = User::getAllUsers();
 
       $tempPhoto = ['id' => null,'file' => null,'group_id' => $group_id,'user_id' => $user_id];
       

@@ -22,8 +22,8 @@
                 <select name="group_id" class="input-field" required>
                     <option value="">Select a group</option>
                     <?php foreach ($group_list as $group): ?>
-                        <option value="<?= $group['id'] ?>" <?= isset($photo) && $photo['group_id'] == $group['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($group['name']) ?>
+                        <option value="<?= $group->id ?>" <?= isset($photo) && $photo['group_id'] == $group->id ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($group->name) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -33,8 +33,8 @@
                 <select name="user_id" class="input-field" required>
                     <option value="">Select a user</option>
                     <?php foreach ($user_list as $user): ?>
-                        <option value="<?= $user['id'] ?>" <?= isset($photo) && $photo['user_id'] == $user['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($user['email']) ?>
+                        <option value="<?= $user->id ?>" <?= isset($photo) && $photo['user_id'] == $user->id ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($user->email) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>

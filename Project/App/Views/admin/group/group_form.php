@@ -26,8 +26,8 @@
                 <select name="owner" class="input-field" required>
                     <option value="">Select an owner</option>
                     <?php foreach ($user_list as $user): ?>
-                        <option value="<?= $user['id'] ?>" <?= isset($group) && $group['owner'] == $user['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($user['email']) ?>
+                        <option value="<?= $user->id ?>" <?= isset($group) && $group['owner'] == $user->id ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($user->email) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
