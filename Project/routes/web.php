@@ -17,7 +17,7 @@ use App\Controllers\admin\AdminMemberController;
 use App\Controllers\UserController;
 
 $router->redirect("/", "/group");
-$router->redirect("/admin/", "/admin/user");
+$router->redirect("/admin", "/admin/user");
 
 $router->get("/login", LoginController::class, "index");
 $router->post("/login", LoginController::class, "post");
