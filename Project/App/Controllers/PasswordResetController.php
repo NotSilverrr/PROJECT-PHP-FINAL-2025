@@ -6,7 +6,7 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\Requests\ResetPasswordRequest;
-use App\Services\MailService; // Assure-toi que ta méthode d'envoi d'e-mails est prête.
+use App\Services\MailService;
 use App\Services\RegisterService;
 use App\Services\ResetPasswordService;
 
@@ -20,24 +20,18 @@ class PasswordResetController {
         startSession();
         $email = $_POST['email'];
 
-        // Vérifier si l'utilisateur existe
         $user = User::findOneByEmail($email);
         if (!$user) {
-            // L'email n'est pas dans la base de données
             return view('password-reset.request', ['error' => 'Aucun utilisateur trouvé avec cet e-mail.'])->layout("guest");
         }
 
-        // Créer un jeton unique pour cette réinitialisation
-        $resetToken = bin2hex(random_bytes(32)); // Créer un jeton unique
+        $resetToken = bin2hex(random_bytes(32));
 
-        // Sauvegarder le jeton et la date d'expiration dans la base de données
-        $expiration = new \DateTime('+1 hour'); // Le jeton expire après 1 heure
+        $expiration = new \DateTime('+1 hour');
         $user->saveResetToken($resetToken, $expiration);
 
-        // Créer le lien de réinitialisation
         $resetLink = $_ENV["HOST_NAME"]."/reset-password?token=$resetToken";
 
-        // Envoyer un e-mail à l'utilisateur avec le lien
         $mailService = new MailService();
         $mailService->sendResetPasswordEmail($email, $resetLink);
 
