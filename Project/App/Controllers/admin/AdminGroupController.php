@@ -113,7 +113,7 @@ class AdminGroupController
       $_SESSION['error'] = $error;
     }
 
-    $pathToDelete = __DIR__ . '/../../../uploads' . $group->profile_picture;
+    $pathToDelete = __DIR__ . '/../../..' . $group->profile_picture;
     if (file_exists($pathToDelete)) {
       ImageService::delete($group->profile_picture);
 
