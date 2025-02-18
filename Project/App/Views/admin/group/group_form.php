@@ -1,14 +1,6 @@
 <div class="form-container-admin">
     <div class="form-card-admin">
         <h1 class="form-title"><?= isset($update) ? 'Update Group' : 'Add Group' ?></h1>
-        <div class="error">
-        <?php 
-            if (isset($_SESSION['error'])) {
-                echo $_SESSION['error'];
-                unset($_SESSION['error']);
-            }
-        ?>
-        </div>
         <form method="POST" action="<?= isset($update) ? '/admin/group/update' : '/admin/group/add' ?>" class="form" enctype="multipart/form-data">
             <?php if (isset($_SESSION['group_update'])): ?>
             <input type="hidden" name="id" value="<?= $_SESSION['group_update']->id ?>" />

@@ -1,14 +1,7 @@
 
     <div class="">
         <h1 class="form__title"><?= isset($photo) ? 'Update Photo' : 'Add Photo' ?></h1>
-        <div class="error">
-        <?php 
-            if (isset($_SESSION['error'])) {
-                echo $_SESSION['error'];
-                unset($_SESSION['error']);
-            }
-        ?>
-        </div>
+        
         <form method="POST" action="<?= isset($update) ? '/admin/photo/update' : '/admin/photo/add' ?>" class="form form--full" enctype="multipart/form-data">
         <?php if (isset($photo)): ?>
             <input type="hidden" name="id" value="<?= $photo['id'] ?>" />

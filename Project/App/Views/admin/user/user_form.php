@@ -1,14 +1,7 @@
 <div class="form-container-admin">
     <div class="form-card-admin">
         <h1 class="form-title"><?= isset($update) ? 'Update User' : 'Add User' ?></h1>
-        <div class="error">
-        <?php 
-            if (isset($_SESSION['error'])) {
-                echo $_SESSION['error'];
-                unset($_SESSION['error']);
-            }
-        ?>
-        </div>
+        
         <form method="POST" action="<?= isset($update) ? '/admin/user/update' : '/admin/user/add' ?>" class="form" enctype="multipart/form-data">
             <?php if (isset($_SESSION['user_update'])): ?>
                 <input type="hidden" name="id" value="<?= $_SESSION['user_update']->id ?>" />
