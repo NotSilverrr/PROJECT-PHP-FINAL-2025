@@ -7,6 +7,7 @@ use App\Services\ImageService;
 class UserController {
     public function showProfilePicture($id) {
         $user = User::findOneById($id);
+
         if (!$user) {
             return view('errors.404');
         }

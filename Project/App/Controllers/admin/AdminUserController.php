@@ -121,17 +121,25 @@ class AdminUserController
     $user->last_name = $last_name;
     $user->isadmin = $is_admin;
 
-    $imageController = new ImageController();
-    $profile_picture = $imageController->save($_FILES['profile_picture'], [
-      'subdir' => 'user_profile_picture'
-    ]);
-    
-    $error = $service->validate_profile_picture_save($profile_picture);
+    $uploadDir = "uploads/user_profile_picture/";
+    $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
+
+    $error = $service->validate_profile_picture_save($fileName);
     if ($error !== null) {
       $_SESSION['error'] = $error;
     }
 
-    $user->profile_picture = $profile_picture;
+    $pathToDelete = __DIR__ . '/../../..' . $user->profile_picture;
+    
+    if (file_exists($pathToDelete)) {
+      
+      ImageService::delete($user->profile_picture);
+
+    }
+
+    
+
+    $user->profile_picture = $fileName;
 
 
     if(isset($_SESSION['error'])){
