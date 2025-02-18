@@ -6,6 +6,7 @@ use App\Controllers\ImageController;
 use App\Services\Auth;
 use App\Services\RegisterService;
 use App\Requests\RegisterRequest;
+use App\Services\ImageService;
 
 class AdminUserController
 {
@@ -194,28 +195,26 @@ class AdminUserController
     $password = trim($_POST['password'] ?? '');
     $is_admin = isset($_POST['is_admin']);
 
-    $user = new User(null,$first_name,$last_name,null,$is_admin,$email,$password);
+    $user = new User(id: null,first_name: $first_name,last_name: $last_name,profile_picture: null,isadmin: $is_admin,email: $email,password: $password);
 
     if(isset($_SESSION['error'])){
       $_SESSION['user_update'] = $user;
       header("Location:/admin/user/add");
     }
 
-    $imageController = new ImageController();
-    $profile_picture = $imageController->save($_FILES['profile_picture'], [
-      'subdir' => 'user_profile_picture'
-    ]);
-    
-    $error = $service->validate_profile_picture_save($profile_picture);
+    $uploadDir = "uploads/user_profile_picture/";
+    $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
+
+    $error = $service->validate_profile_picture_save($fileName);
     if ($error !== null) {
       $_SESSION['error'] = $error;
     }
+    $user->profile_picture = $fileName;
 
     if(isset($_SESSION['error'])){
       $_SESSION['user_update'] = $user;
       header("Location:/admin/user/add");
     }
-    $user->profile_picture = $profile_picture;
     $user->createUser();
     
     return redirect('/admin/user');

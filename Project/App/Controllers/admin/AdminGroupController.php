@@ -108,6 +108,10 @@ class AdminGroupController
     
     $uploadDir = "uploads/groups/". $group->id;
     $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
+    $error = $service->validate_profile_picture_save($fileName);
+    if ($error !== null) {
+      $_SESSION['error'] = $error;
+    }
 
     $pathToDelete = __DIR__ . '/../../../uploads' . $group->profile_picture;
     if (file_exists($pathToDelete)) {
