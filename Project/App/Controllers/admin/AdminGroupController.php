@@ -106,15 +106,16 @@ class AdminGroupController
     $group->name = $name;
     $group->ownerId = $owner_id;
     
-    $imageController = new ImageController();
-    $profile_picture = $imageController->save($_FILES['profile_picture'], [
-      'subdir' => 'user_profile_picture'
-    ]);
-    $group->profile_picture = $profile_picture;
-    $error = $service->validate_profile_picture_save($profile_picture);
-    if ($error !== null) {
-      $_SESSION['error'] = $error;
+    $uploadDir = "uploads/groups/". $group->id;
+    $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
+
+    $pathToDelete = __DIR__ . '/../../../uploads' . $group->profile_picture;
+    if (file_exists($pathToDelete)) {
+      ImageService::delete($group->profile_picture);
+
     }
+    
+    $group->profile_picture = $fileName;
 
     if(isset($_SESSION['error'])){
       $tempgroup = Group::getOneById($id);

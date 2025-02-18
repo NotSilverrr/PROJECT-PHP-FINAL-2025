@@ -74,7 +74,7 @@ class ImageService {
     
     public static function delete($imagePath) {
         
-        $imagePath = __DIR__ . "/../../" . $imagePath;
+        $imagePath = __DIR__ . "/../.." . $imagePath;
         if (file_exists($imagePath)) {
             unlink($imagePath);
         } else {
