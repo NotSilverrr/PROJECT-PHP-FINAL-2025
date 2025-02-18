@@ -28,6 +28,8 @@ class LoginController
     }
 
     if(isset($_SESSION['error'])){
+      $tempemail = $request->email ?? '';
+      $_SESSION['login_email'] = $tempemail;
       return view('login.index')->layout('guest');
     }
 
