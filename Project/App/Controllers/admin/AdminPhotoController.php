@@ -47,8 +47,8 @@ class AdminPhotoController
   {
     self::checkAdminAuth();
     
-    $queryBuilderPhoto = new QueryBuilder();
-    $photo = $queryBuilderPhoto->select(['id', 'file', 'group_id', 'user_id'])->from('photos')->where('id', '=', $id)->fetch();
+    $photo = Photo::findOneById($id);
+    $_SESSION['photo_update'] = $photo;
 
     $groups = Group::getAllGroup();
     $users = User::getAllUsers();
@@ -57,7 +57,7 @@ class AdminPhotoController
       return redirect('/admin/photo');
     }
 
-    return view('admin.photo.photo_form', ['photo' => $photo,'group_list' => $groups,'user_list'=> $users,'update'=> true])->layout('admin');
+    return view('admin.photo.photo_form', ['group_list' => $groups,'user_list'=> $users,'update'=> true])->layout('admin');
   }
 
   public static function update()
@@ -96,12 +96,9 @@ class AdminPhotoController
     }
 
     if (isset($_SESSION['error'])) {
-      $groups = Group::getAllGroup();
-      $users = User::getAllUsers();
-
-      $tempPhoto = ['id' => $id,'file' => isset($photo) ? $photo->file : null,'group_id' => $group_id,'user_id' => $user_id];
-      
-      return view('admin.photo.photo_form', ['photo' => $tempPhoto,'group_list' => $groups,'user_list' => $users,'update'=> true])->layout('admin');
+      $tempPhoto = Photo::findOneById($id);
+      $_SESSION['photo_update'] = $tempPhoto;
+      header("Location:/admin/photo/update/".$id);
     }
 
     $imageController = new ImageController();
@@ -164,17 +161,14 @@ class AdminPhotoController
     if ($error !== null) {
       $_SESSION['error'] = $error;
     }
+    $photo = new Photo(null, $file, $group_id, $user_id);
 
     if (isset($_SESSION['error'])) {
-      $groups = Group::getAllGroup();
-      $users = User::getAllUsers();
-
-      $tempPhoto = ['id' => null,'file' => null,'group_id' => $group_id,'user_id' => $user_id];
+      $_SESSION['photo_update'] = $photo;
       
-      return view('admin.photo.photo_form', ['photo' => $tempPhoto,'group_list' => $groups,'user_list' => $users])->layout('admin');
+      header("Location:/admin/photo/add");
     }
 
-    $photo = new Photo(null, $file, $group_id, $user_id);
     $photo->createPhoto();
     
     return redirect('/admin/photo');

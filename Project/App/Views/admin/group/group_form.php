@@ -10,29 +10,29 @@
         ?>
         </div>
         <form method="POST" action="<?= isset($update) ? '/admin/group/update' : '/admin/group/add' ?>" class="form" enctype="multipart/form-data">
-            <?php if (isset($group)): ?>
-            <input type="hidden" name="id" value="<?= $group['id'] ?>" />
+            <?php if (isset($_SESSION['group_update'])): ?>
+            <input type="hidden" name="id" value="<?= $_SESSION['group_update']->id ?>" />
             <?php endif; ?>
             <div class="input-group">
                 <label class="form-label">Name</label>
-                <input type="text" name="name" placeholder="Group Name" class="input-field" value="<?= isset($group) ? $group['name'] : '' ?>" required />
+                <input type="text" name="name" placeholder="Group Name" class="input-field" value="<?= isset($_SESSION['group_update']) ? $_SESSION['group_update']->name : '' ?>" required />
             </div>
             <div class="input-group">
                 <label class="form-label">Profile Picture</label>
-                <input type="file" name="profile_picture" accept="image/*" class="input-field" <?= !isset($group) ? 'required' : '' ?> />
+                <input type="file" name="profile_picture" accept="image/*" class="input-field" <?= !isset($_SESSION['group_update']) ? 'required' : '' ?> />
             </div>
             <div class="input-group">
                 <label class="form-label">Owner</label>
                 <select name="owner" class="input-field" required>
                     <option value="">Select an owner</option>
                     <?php foreach ($user_list as $user): ?>
-                        <option value="<?= $user->id ?>" <?= isset($group) && $group['owner'] == $user->id ? 'selected' : '' ?>>
+                        <option value="<?= $user->id ?>" <?= isset($_SESSION['group_update']) && $_SESSION['group_update']->ownerId == $user->id ? 'selected' : '' ?>>
                             <?= htmlspecialchars($user->email) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
-            <button type="submit" class="form-button"><?= isset($group) ? 'Update Group' : 'Add Group' ?></button>
+            <button type="submit" class="form-button"><?= isset($_SESSION['group_update']) ? 'Update Group' : 'Add Group' ?></button>
             <a href="/admin/group" class="create-account">Back to Groups List</a>
         </form>
 
@@ -40,14 +40,14 @@
         <div class="many-to-many-table-section">
             <h2>Group Members</h2>
             <?php if (isset($members) && !empty($members)): ?>
-                <form method="POST" action="/admin/member/add/<?= $group['id'] ?>" class="many-to-many-table-form">
+                <form method="POST" action="/admin/member/add/<?= $_SESSION['group_update']->id ?>" class="many-to-many-table-form">
                 <h3>Add New Members</h3>
                 <div class="many-to-many-table-selection">
                     <select name="user_id" class="input-field" required>
                         <option value="">Select a user to add</option>
                         <?php foreach ($available_users as $user): ?>
-                            <option value="<?= $user['id'] ?>">
-                                <?= htmlspecialchars($user['email']) ?>
+                            <option value="<?= $user->id ?>">
+                                <?= htmlspecialchars($user->email) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -66,7 +66,7 @@
                     <tr>
                         <td><?= htmlspecialchars($member->email) ?></td>
                         <td>
-                            <form method="POST" action="/admin/member/delete/<?= $group['id'] ?>">
+                            <form method="POST" action="/admin/member/delete/<?= $_SESSION['group_update']->id ?>">
                                 <input type="hidden" name="user_id" value="<?= $member->id ?>" />
                                 <button type="submit" class="many-to-many-table-delete">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
@@ -74,7 +74,7 @@
                                 </svg>
                                 </button>
                             </form>
-                            <form method="POST" action="/admin/member/toggle-readonly/<?= $group['id'] ?>">
+                            <form method="POST" action="/admin/member/toggle-readonly/<?= $_SESSION['group_update']->id ?>">
                                 <input type="hidden" name="user_id" value="<?= $member->id ?>" />
                                 <button type="submit" class="many-to-many-table-toggle" title="Toggle Read-only Status">
                                 </button>
@@ -91,3 +91,6 @@
         <?php endif; ?>
     </div>
 </div>
+<?php
+unset($_SESSION['group_update']);
+?>

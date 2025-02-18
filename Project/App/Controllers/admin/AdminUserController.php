@@ -2,7 +2,6 @@
 namespace App\Controllers\admin;
 
 use App\Models\User;
-use Core\QueryBuilder;
 use App\Controllers\ImageController;
 use App\Services\Auth;
 use App\Services\RegisterService;
@@ -41,15 +40,14 @@ class AdminUserController
   public static function updateIndex(int $id)
   {
     self::checkAdminAuth();
-    
-    $queryBuilder = new QueryBuilder();
-    $user = $queryBuilder->select(['id', 'email','first_name','last_name', 'is_admin', 'profile_picture'])->from('users')->where('id', '=', $id)->fetch();
+    $user = User::findOneById($id);
+    $_SESSION['user_update'] = $user;
     
     if (!$user) {
       return redirect('/admin/user');
     }
 
-    return view('admin.user.user_form', ['user' => $user,'update'=> true])->layout('admin');
+    return view('admin.user.user_form', ['update'=> true])->layout('admin');
   }
 
   public static function update()
@@ -97,6 +95,12 @@ class AdminUserController
       $_SESSION['error'] = "Invalid user ID";
     }
 
+    if(isset($_SESSION['error'])){
+      $user_temp = User::findOneById($id);
+      $_SESSION['user_update'] = $user_temp;
+      header("Location:/admin/user/update/".$id);
+    }
+    
     if ($email !== $user->email) {
       $error = $service->check_user_exist();
       if ($error !== null) {
@@ -109,10 +113,7 @@ class AdminUserController
       $_SESSION['error'] = $error;
     }
 
-    if(isset($_SESSION['error'])){
-      $tempUser = ['id' => $id,'email' => $email,'first_name' => $first_name,'last_name' => $last_name,'is_admin' => $is_admin,'profile_picture' => isset($user) ? $user->profile_picture : null];
-      return view('admin.user.user_form', ['user' => $tempUser,'update' => true])->layout('admin');
-    }
+
     
     $user->email = $email;
     $user->first_name = $first_name;
@@ -133,8 +134,9 @@ class AdminUserController
 
 
     if(isset($_SESSION['error'])){
-      $tempUser = ['id' => $id,'email' => $email,'first_name' => $first_name,'last_name' => $last_name,'is_admin' => $is_admin,'profile_picture' => isset($user) ? $user->profile_picture : null];
-      return view('admin.user.user_form', ['user' => $tempUser,'update' => true])->layout('admin');
+      $user_temp = User::findOneById($id);
+      $_SESSION['user_update'] = $user_temp;
+      header("Location:/admin/user/update/".$id);
     }
 
     
@@ -192,10 +194,11 @@ class AdminUserController
     $password = trim($_POST['password'] ?? '');
     $is_admin = isset($_POST['is_admin']);
 
+    $user = new User(null,$first_name,$last_name,null,$is_admin,$email,$password);
 
     if(isset($_SESSION['error'])){
-      $tempUser = ['id' => null,'email' => $email,'first_name' => $first_name,'last_name' => $last_name,'is_admin' => $is_admin,'profile_picture' => null];
-      return view('admin.user.user_form', ['user' => $tempUser])->layout('admin');
+      $_SESSION['user_update'] = $user;
+      header("Location:/admin/user/add");
     }
 
     $imageController = new ImageController();
@@ -209,11 +212,10 @@ class AdminUserController
     }
 
     if(isset($_SESSION['error'])){
-      $tempUser = ['id' => null,'email' => $email,'first_name' => $first_name,'last_name' => $last_name,'is_admin' => $is_admin,'profile_picture' => null];
-      return view('admin.user.user_form', ['user' => $tempUser])->layout('admin');
+      $_SESSION['user_update'] = $user;
+      header("Location:/admin/user/add");
     }
-
-    $user = new User(null,$first_name,$last_name,$profile_picture,$is_admin,$email,$password);
+    $user->profile_picture = $profile_picture;
     $user->createUser();
     
     return redirect('/admin/user');
