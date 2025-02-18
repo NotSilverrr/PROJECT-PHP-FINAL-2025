@@ -4,10 +4,9 @@
 @layer components {
   .form {
     @include m.flexbox($direction: column, $gap: f.rem(24), $justify: center);
-    font-family: "Arial", sans-serif;
     background: var(--background-color);
     border-radius: 1rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    @include m.boxShadow;
     padding: f.rem(30);
     max-width: f.rem(600);
     color: var(--text-color);

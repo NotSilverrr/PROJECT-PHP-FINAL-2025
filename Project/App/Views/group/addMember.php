@@ -1,6 +1,10 @@
 <?php
 
 use App\Services\Auth; ?>
+<a class="mt-6" href="/group/<?=$group->id?>">Back</a>
+
+<h1 class="text-8">Add a Member</h1>
+
 
 <form class="search-bar mb-5 " action="" method="GET">
   <button class="">
@@ -71,3 +75,4 @@ use App\Services\Auth; ?>
         </div>
         
       </div>
+

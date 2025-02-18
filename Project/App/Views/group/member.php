@@ -1,3 +1,4 @@
+<a class="mt-6" href="/group/<?=$group->id?>">Retour</a>
 
 <?php if (isset($user)) :?>
     <h1 class="text-8">Mettre a jour les permissions de <?= $user->user->first_name ?> <?= $user->user->last_name ?></h1>
