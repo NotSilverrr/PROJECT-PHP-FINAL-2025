@@ -60,6 +60,13 @@ class GroupController {
         $request = new GroupRequest;
         $service = new GroupService($request);
         try {
+            $group = new Group(
+                name: $request->name,
+                profile_picture: null,
+                ownerId: Auth::id()
+            );
+
+            $_SESSION['group_create'] = $group;
 
             $error = $service->validate_name();
             if ($error !== null) {
@@ -76,15 +83,7 @@ class GroupController {
                 throw new \Exception($error);
             }
 
-            $group = new Group(
-                name: $request->name,
-                profile_picture: null,
-                ownerId: Auth::id()
-            );
-    
             $group->createGroup();
-
-        
 
             $uploadDir = "uploads/groups/". $group->id;
             $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
