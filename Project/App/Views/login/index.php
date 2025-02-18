@@ -12,7 +12,7 @@ $title = "Login"
   </head>
 
   <body class="">
-  <div class="error">
+  <div>
   <?php 
     if (isset($_SESSION['error'])) {
         echo $_SESSION['error'];
@@ -20,11 +20,10 @@ $title = "Login"
     }
   ?>
   </div>
-    <div class="form__page">
       <form method="POST" action="/login" class="form">
         <h1 class="form__title">Login</h1>
         <div>
-          <label class="form__label"for="email">Email</label>
+          <label class="form__label" for="email">Email</label>
           <input
             type="email"
             name="email"
@@ -32,25 +31,19 @@ $title = "Login"
           />
         </div>
         <div>
-        <label class="form__label"for="password">Mot de passe</label>
+        <label class="form__label" for="password">Password</label>
           <input
             type="password"
             name="password"
             placeholder="1234"
           />
         </div>
-        <div class="options">
-          <label class="checkbox">
-            <input type="checkbox" name="remember_me">
-            <span>Remember me</span>
-          </label>
-          <a href="/password-reset" class="forgot-password">Forgot password</a>
+        <div>
+          <a href="/password-reset" class="form__a">I have forgot my password</a>
         </div>
-        <button type="submit" class="login-button">Login</button>
-        <a href="/register" class="create-account">Create Account</a>
+        <button type="submit" class="button button--primary">Login</button>
+        <a href="/register" class="form__a">Not register yet ? Click here</a>
       </form>
-    </div>
-  </div>
 
 </body>
 

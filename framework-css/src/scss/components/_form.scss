@@ -3,21 +3,18 @@
 
 @layer components {
   .form {
-    @include m.flexbox($direction: column, $gap: f.rem(24));
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include m.flexbox($direction: column, $gap: f.rem(24), $justify: center);
     font-family: "Arial", sans-serif;
-    border-radius: f.rem(10);
+    background: var(--background-color);
+    border-radius: 1rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     padding: f.rem(30);
     max-width: f.rem(600);
-    text-align: center;
-    &-admin {
-      padding: f.rem(70);
-    }
-    &--admin {
+    color: var(--text-color);
+    &--full {
       width: 100%;
+      padding: f.rem(70);
+      max-width: none;
     }
     &__page {
       background: linear-gradient(
@@ -26,6 +23,9 @@
         var(--purple-800)
       );
       height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     &__title {
@@ -35,8 +35,8 @@
     }
 
     &__button {
-      background: var(--purple-500);
-      color: var(--white);
+      background: var(--primary-color-500);
+      color: var(--text-color);
       border: none;
       border-radius: f.rem(8);
       padding: f.rem(12);
@@ -45,7 +45,7 @@
       transition: background-color 200ms;
 
       &:hover {
-        background: var(--purple-700);
+        background: var(--primary-color-700);
       }
     }
 
@@ -55,6 +55,19 @@
       &:hover {
         text-decoration: underline;
       }
+    }
+    &__label {
+      display: inline-block;
+      width: f.rem(100);
+      text-align: left;
+    }
+    select {
+      display: inline-block;
+      width: f.rem(100);
+      text-align: left;
+    }
+    input {
+      width: 100%;
     }
   }
 }

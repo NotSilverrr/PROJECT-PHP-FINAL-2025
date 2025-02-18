@@ -4,71 +4,81 @@
 @use "sass:map";
 @use "functions" as f;
 @layer base {
-	:root {
+  :root {
+    @each $name, $color in v.$colors {
+      @if ($name == "black" or $name == "white") {
+        --#{$name}: #{color.scale($color, $space: hsl)};
+      } @else {
+        $baseLightness: color.channel($color, "lightness", $space: hsl);
+        $baseHue: color.channel($color, "hue", $space: hsl);
+        $baseSaturation: color.channel($color, "saturation", $space: hsl);
+        @each $shade, $percent in v.$shades {
+          $val: hsl($baseHue $baseSaturation $percent);
+          @if (
+            $percent <= $baseLightness and ($percent + 8%) >= $baseLightness
+          ) {
+            $val: hsl(
+              $baseHue $baseSaturation $baseLightness
+            ); // conserver la couleur d'entrée
+          }
+          --#{$name}-#{$shade}: #{color.scale($val, $space: hsl)};
+        }
+      }
+    }
 
-		@each $name, $color in v.$colors {
-			@if ($name == "black" or $name == "white") {
-				--#{$name}: #{color.scale($color, $space: hsl)};
-			} @else {
-				$baseLightness: color.channel($color, "lightness", $space: hsl);
-				$baseHue: color.channel($color, "hue", $space: hsl);
-				$baseSaturation: color.channel($color, "saturation", $space: hsl);
-				@each $shade, $percent in v.$shades {
-					$val: hsl($baseHue $baseSaturation $percent);
-					@if (
-						$percent <= $baseLightness and ($percent + 8%) >= $baseLightness
-					) {
-						$val: hsl(
-							$baseHue $baseSaturation $baseLightness
-						); // conserver la couleur d'entrée
-					}
-					--#{$name}-#{$shade}: #{color.scale($val, $space: hsl)};
-				}
-			}
-		}
+    $shadow-color: color.adjust(map.get(v.$colors, "black"), $alpha: -0.95);
 
-		$shadow-color: color.adjust(map.get(v.$colors, "black"), $alpha: -0.95);
+    --border-color: var(--neutral-50);
+    --background-color: var(--white);
+    --shadow-color: #{$shadow-color};
+    --text-color: var(--neutral-800);
+    --hover-color: var(--neutral-75);
 
-		--border-color: var(--neutral-50);
-		--background-color: var(--white);
-		--shadow-color: #{$shadow-color};
-		--text-color: var(--neutral-800);
-		--hover-color: var(--neutral-75);
+    @media (prefers-color-scheme: dark) {
+      $shadow-color: color.adjust(map.get(v.$colors, "white"), $alpha: -0.95);
+      --border-color: var(--neutral-900);
+      --background-color: var(--neutral-950);
+      --shadow-color: #{$shadow-color};
+      --text-color: var(--neutral-100);
+      --hover-color: var(--neutral-800);
+    }
+  }
 
+  body {
+    font-family: fonts.$font1;
+    background-color: var(--white);
+    color: var(--text-color);
+    height: 100vh;
 
-		
-		@media (prefers-color-scheme: dark) {
-			$shadow-color: color.adjust(map.get(v.$colors, "white"), $alpha: -0.95);
-			--border-color: var(--neutral-900);
-			--background-color: var(--neutral-950);
-			--shadow-color: #{$shadow-color};
-			--text-color: var(--neutral-100);
-			--hover-color: var(--neutral-800);
-		}
+    .container {
+      height: 100%;
+    }
 
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--background-color);
+    }
+  }
 
-	}
+  input,
+  select {
+    border-radius: f.rem(6);
+    padding: f.rem(10) f.rem(16);
+    border: solid thin var(--border-color);
+    color: inherit;
+    background-color: var(--background-color);
+  }
 
-	body {
-		font-family: fonts.$font1;
-		background-color: var(--white);
-		color: var(--text-color);
-		height: 100vh;
+  input[type="file"]::file-selector-button {
+    background-color: var(--primary-500);
+    color: var(--white);
+    border: none;
+    padding: f.rem(8) f.rem(16);
+    border-radius: f.rem(6);
+    cursor: pointer;
+    transition: background-color 0.3s;
 
-		.container {
-			height: 100%;
-		}
-
-		@media (prefers-color-scheme: dark) {
-			background-color: var(--background-color);
-		}
-	}
-
-	input,select {
-		border-radius: f.rem(6);
-		padding: f.rem(10) f.rem(16);
-		border: solid thin var(--border-color);
-		color: inherit;
-		background-color: var(--background-color);
-	}
+    &:hover {
+      background-color: var(--primary-400);
+    }
+  }
 }
