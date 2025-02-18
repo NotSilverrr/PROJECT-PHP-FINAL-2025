@@ -1,9 +1,14 @@
 <?php
 
+
 namespace App\Controllers;
 
+
 use App\Models\User;
+use App\Requests\ResetPasswordRequest;
 use App\Services\MailService; // Assure-toi que ta méthode d'envoi d'e-mails est prête.
+use App\Services\RegisterService;
+use App\Services\ResetPasswordService;
 
 class PasswordResetController {
     public function showForm() {
@@ -42,22 +47,50 @@ class PasswordResetController {
     }
 
     public function resetPassword() {
-      $token = $_POST['token'];
-      $newPassword = $_POST['password'];
-  
-      // Vérifier si le jeton est valide
-      $user = User::getByResetToken($token);
-  
-      if (!$user || new \DateTime() > $user->reset_token_expiration) {
+        startSession();
+        $request = new ResetPasswordRequest();
+        $token = $request->token;
+        $newPassword = $request->password;
+        $confirmPassword = $request->password_check;
 
-          return view('password-reset.reset', ['error' => 'Le lien de réinitialisation a expiré ou est invalide.'])->layout("guest");
-      }
-  
-      // Hacher le mot de passe et mettre à jour dans la base de données
-      $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-      $user->updatePassword($hashedPassword);
 
-      header("Location: /login?success=".urlencode("Votre mot de passe a été réinitialisé avec succès."));
-      exit;
+
+        if ($newPassword !== $confirmPassword) {
+            $_SESSION['error'] = 'The passwords do not match.';
+            header("Location: /reset-password?token=$token");
+            exit;
+        }
+
+        $service = new ResetPasswordService($request);
+
+        $error = $service->validate_password();
+        if ($error !== null) {
+            $_SESSION['error'] = $error;
+            header("Location: /reset-password?token=$token");
+            exit;
+        }
+
+
+        $error = $service->validate_password_check();
+        if ($error !== null) {
+            $_SESSION['error'] = $error;
+            header("Location: /reset-password?token=$token");
+            exit;
+        }
+    
+        $user = User::getByResetToken($token);
+    
+        if (!$user || new \DateTime() > $user->reset_token_expiration) {
+            $_SESSION['error'] = 'Le lien de réinitialisation a expiré ou est invalide.';
+            header("Location: /login");
+            exit;
+        }
+    
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $user->updatePassword($hashedPassword);
+
+        $_SESSION['success'] = 'Votre mot de passe a été réinitialisé avec succès.';
+        header("Location: /login");
+        exit;
   }
 }

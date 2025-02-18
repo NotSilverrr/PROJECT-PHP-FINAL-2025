@@ -1,4 +1,5 @@
 <?php
+startSession();
 
 use App\Models\Group;
 use App\Models\Member;
