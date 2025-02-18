@@ -7,6 +7,7 @@ use App\Controllers\ImageController;
 use App\Services\GroupService;
 use App\Requests\GroupRequest;
 use App\Services\Auth;
+use App\Services\ImageService;
 
 class AdminGroupController
 {
@@ -184,15 +185,25 @@ class AdminGroupController
       return view('admin.group.group_form', ['user_list' => $users,'group' => $tempGroup])->layout('admin');
     }
 
-    $imageController = new ImageController();
-    $profile_picture = $imageController->save($_FILES['profile_picture'], [
-      'subdir' => 'user_profile_picture'
-    ]);
-    
-    $error = $service->validate_profile_picture_save($profile_picture);
+    $group = new Group(
+      name: $request->name,
+      profile_picture: null,
+      ownerId: Auth::id()
+    );
+
+    $group->createGroup();
+
+
+
+    $uploadDir = "uploads/groups/". $group->id;
+    $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
+
+    $error = $service->validate_profile_picture_save($fileName);
     if ($error !== null) {
       $_SESSION['error'] = $error;
     }
+    $group->profile_picture = $fileName;
+    $group->update();
 
     if(isset($_SESSION['error'])){
       $queryBuilder = new QueryBuilder();
@@ -202,9 +213,6 @@ class AdminGroupController
       
       return view('admin.group.group_form', ['user_list' => $users,'group' => $tempGroup])->layout('admin');
     }
-
-    $group = new Group(null, $name, null, $owner_id);
-    $group->createGroup();
     
     return redirect('/admin/group');
   }
