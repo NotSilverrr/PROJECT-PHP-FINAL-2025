@@ -12,13 +12,13 @@ class RegisterController
 {
   public static function index()
   {
-    session_start();
+    startSession();
     return view('register.index')->layout('guest');
   }
 
   public static function post()
   {
-    session_start();
+    startSession();
     unset($_SESSION['error']);
     $request = new RegisterRequest();
     $service = new RegisterService($request);

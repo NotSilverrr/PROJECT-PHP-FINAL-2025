@@ -10,11 +10,13 @@ class LoginController
 {
   public static function index()
   {
+    startSession();
     return view('login.index')->layout('guest');
   }
 
   public static function post()
   {
+    startSession();
     $request = new LoginRequest();
     $service = new LoginService($request);
     $user = User::findOneByEmail($request->email);
