@@ -69,7 +69,7 @@ class RegisterService
             return "Password must be at least 6 characters long";
         } elseif (strlen($this->password_check) > 50) {
             return "Password must not be longer than 50 characters";
-        } elseif ($this->password_check != $this->password_check) {
+        } elseif ($this->password_check != $this->password) {
             return "Password must be identical";
         }
         return null;

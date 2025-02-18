@@ -12,6 +12,7 @@ class RegisterController
 {
   public static function index()
   {
+    session_start();
     return view('register.index')->layout('guest');
   }
 
@@ -64,6 +65,16 @@ class RegisterController
       $_SESSION['error'] = $error;
     }
 
+    $user = new User(
+      first_name: $first_name,
+      last_name: $last_name,
+      profile_picture: null,
+      isadmin: false,
+      email: $email,
+      password: $password
+    );
+    $_SESSION['create_user'] = $user;
+    
     if(isset($_SESSION['error'])){
       $tempUser = ['id' => null,'email' => $email,'first_name' => $first_name,'last_name' => $last_name,'password' => $password,'password_check' => $password_check,'profile_picture' => null];
       return view('register.index', ['user' => $tempUser])->layout('guest');
@@ -76,16 +87,8 @@ class RegisterController
   
 
     try {
-      $user = new User(
-        first_name: $first_name,
-        last_name: $last_name,
-        profile_picture: null,
-        isadmin: false,
-        email: $email,
-        password: $password
-      );
       $user->createUser();
-
+      
       $uploadDir = "uploads/user_profile_picture/";
       $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
 

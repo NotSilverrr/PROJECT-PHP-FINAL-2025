@@ -6,17 +6,17 @@ $title = "Register";
   
   <div>
     <label class="form__label" for="email">Email</label>
-    <input type="email" name="email" id="email" value="<?= $user['email'] ?? '' ?>" placeholder="exemple@ex.com" required>
+    <input type="email" name="email" id="email" value="<?= $_SESSION['create_user']->email ?? '' ?>" placeholder="exemple@ex.com" required>
   </div>
   
   <div>
     <label class="form__label" for="first_name">Firstname</label>
-    <input type="text" name="first_name" id="first_name" value="<?= $user['first_name'] ?? '' ?>" placeholder="Enter your first name" required>
+    <input type="text" name="first_name" id="first_name" value="<?= $_SESSION['create_user']->first_name ?? '' ?>" placeholder="Enter your first name" required>
   </div>
   
   <div>
     <label class="form__label" for="last_name">Lastname</label>
-    <input type="text" name="last_name" id="last_name" value="<?= $user['last_name'] ?? '' ?>" placeholder="Enter your last name" required>
+    <input type="text" name="last_name" id="last_name" value="<?= $_SESSION['create_user']->last_name ?? '' ?>" placeholder="Enter your last name" required>
   </div>
   
   <div>
@@ -37,3 +37,7 @@ $title = "Register";
   <button type="submit" class="button button--primary">Register</button>
   <a href="/login" class="form__a">Already have an account? Login</a>
 </form>
+
+<?php
+unset($_SESSION['create_user']);
+?>
