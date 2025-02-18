@@ -46,7 +46,20 @@
             </ul>
         </div>
         </nav>
-        <?= $content ?>
+        <section class="center-container">
+            <section class="center-container__content mt-24 lg-mt-0">
+            <?= $content ?>
+            </section>
+            <?php 
+            $uri = explode('/', $_SERVER['REQUEST_URI']);
+            if (end($uri) != "add") :?>
+            <div class="center-container__button">
+                <a href="<?= $_SERVER['REQUEST_URI'] ?>/add" class="button button--primary button--rounded button--lg button--icon button--floating">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/></svg>
+                </a>
+            </div>
+            <?php endif; ?>
+        </section>
     </div>
     <script src="/dist/framework-esgi.js"></script>
 </body>

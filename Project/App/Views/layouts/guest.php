@@ -26,7 +26,6 @@
     </button>
   </div>
   <?php endif; ?>
-    <header>Authentification Layout</header>
     <main><?= $content ?></main>
     <script src="/dist/framework-esgi.js"></script>
 </body>

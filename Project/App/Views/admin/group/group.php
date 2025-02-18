@@ -1,10 +1,6 @@
-<section class="grow-1 m-4 overflow-y-scroll">
-<div class="flex justify-between items-center">
-  <h1 class="mt-24 text-8 lg-mt-4">Groups</h1>
-  <a href="/admin/group/add">
-    <button class="button button--primary button--admin">+</button>
-  </a>
-</div>
+
+<h1 class="mt-24 text-8 lg-mt-4">Groups</h1>
+
 <form class="search-bar mb-5 " action="" method="GET">
   <button class="">
     <svg
@@ -101,4 +97,3 @@
         </div>
     </div>
 </div>
-</section>
