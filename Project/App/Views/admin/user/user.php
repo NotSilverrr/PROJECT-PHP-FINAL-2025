@@ -1,10 +1,7 @@
-<section class="grow-1 m-4 overflow-y-scroll">
-<div class="flex justify-between items-center">
-  <h1 class="mt-24 text-8 lg-mt-4">Users</h1>
-  <a href="/admin/user/add">
-    <button class="button button--primary button--admin">+</button>
-  </a>
-</div>
+
+
+<h1 class="mt-24 text-8 lg-mt-4">Users</h1>
+
 <form class="search-bar mb-5 " action="" method="GET">
   <button class="">
     <svg
@@ -81,13 +78,11 @@
     </div>
     <div class="table__nav">
         <div class="table__nav__buttons">
-            <?php if ($currentPage > 1): ?>
-                <a href="?page=<?= $currentPage - 1 ?>" class="table__nav__button">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
-                        <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
-                    </svg>
-                </a>
-            <?php endif; ?>
+            <a href="?page=<?= $currentPage - 1 ?>" class="table__nav__button <?= ($currentPage > 1) ? "" : "disabled"?>">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
+                    <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/>
+                </svg>
+            </a>
             
             <?php
             $startPage = max(1, min($currentPage - 2, $totalPages - 4));
@@ -99,14 +94,11 @@
                 </a>
             <?php endfor; ?>
 
-            <?php if ($currentPage < $totalPages): ?>
-                <a href="?page=<?= $currentPage + 1 ?>" class="table__nav__button">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
-                        <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
-                    </svg>
-                </a>
-            <?php endif; ?>
+            <a href="?page=<?= $currentPage + 1 ?>" class="table__nav__button <?=  ($currentPage < $totalPages) ? "" : "disabled"?>">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
+                    <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
+                </svg>
+            </a>
         </div>
     </div>
 </div>
-</section>

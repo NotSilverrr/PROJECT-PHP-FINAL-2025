@@ -69,11 +69,6 @@ class RegisterController
       return view('register.index', ['user' => $tempUser])->layout('guest');
     }
 
-    $imageController = new ImageController();
-    $profile_picture = $imageController->save($_FILES['profile_picture'], [
-      'subdir' => 'user_profile_picture'
-    ]);
-
     if(isset($_SESSION['error'])){
       $tempUser = ['id' => null,'email' => $email,'first_name' => $first_name,'last_name' => $last_name,'password' => $password,'password_check' => $password_check,'profile_picture' => null];
       return view('register.index', ['user' => $tempUser])->layout('guest');
@@ -84,20 +79,29 @@ class RegisterController
       $user = new User(
         first_name: $first_name,
         last_name: $last_name,
-        profile_picture: $profile_picture,
+        profile_picture: null,
         isadmin: false,
         email: $email,
         password: $password
       );
       $user->createUser();
+
+      $uploadDir = "uploads/user_profile_picture/";
+      $fileName = ImageService::uploadPhoto($request->profile_picture, $uploadDir);
+
+      $error = $service->validate_profile_picture_save($fileName);
+      if ($error !== null) {
+          throw new \Exception($error);
+      }
+      $user->profile_picture = $fileName;
+      $user->update();
       
       header('Location: /login');
       exit;
     } catch (\Exception $e) {
       $_SESSION['error'] = $e->getMessage();
       if(isset($_SESSION['error'])){
-        $tempUser = ['id' => null,'email' => $email,'first_name' => $first_name,'last_name' => $last_name,'password' => $password,'password_check' => $password_check,,'profile_picture' => null];
-        return view('register.index', ['user' => $tempUser])->layout('guest');
+        return view('register.index')->layout('guest');
       }
     }
   }
