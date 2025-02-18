@@ -31,7 +31,7 @@ class LoginController
       return view('login.index')->layout('guest');
     }
 
-    session_start();
+    startSession();
     $_SESSION['user_id'] = $user->id;
     $_SESSION['login'] = 1;
     $_SESSION['isadmin'] = $user->isadmin;
@@ -41,7 +41,7 @@ class LoginController
 
   public static function delete(): void
   {
-    session_start();
+    startSession();
     session_destroy();
     header('Location: /');
     exit;

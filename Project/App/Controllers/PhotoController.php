@@ -14,7 +14,7 @@ class PhotoController
 {
   public function create(int $id)
   {
-    session_start();
+    startSession();
     $members = Group::getMembers($id, $_GET['m'] ?? "");
     $group = Group::getOneById($id);
     return view('group.upload', ["members" => $members, "group" => $group]);

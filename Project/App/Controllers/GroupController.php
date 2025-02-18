@@ -52,7 +52,7 @@ class GroupController {
     }
 
     public function create() {
-        session_start();
+        startSession();
         return view('group.create');
     }
 

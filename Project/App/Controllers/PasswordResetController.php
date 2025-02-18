@@ -12,10 +12,12 @@ use App\Services\ResetPasswordService;
 
 class PasswordResetController {
     public function showForm() {
+        startSession();
         return view('password-reset.request')->layout("guest");
     }
 
     public function sendResetLink() {
+        startSession();
         $email = $_POST['email'];
 
         // Vérifier si l'utilisateur existe
@@ -43,7 +45,8 @@ class PasswordResetController {
     }
 
     public function showResetForm() {
-      return view("password-reset.reset")->layout("guest");
+        startSession();
+        return view("password-reset.reset")->layout("guest");
     }
 
     public function resetPassword() {
