@@ -43,18 +43,6 @@ class ImageService {
 
     public static function uploadPhoto($file, $uploadDir): ?string
     {
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        $fileExtension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        if (!in_array($fileExtension, $allowedExtensions)) {
-            throw new \Exception("Format non autorisé. JPG, JPEG, PNG, GIF et WEBP uniquement.");
-        }
-
-        if ($file['size'] > 5 * 1024 * 1024) {
-            throw new \Exception("Fichier trop volumineux. Max 5 Mo.");
-        }
-
-
-
         $uploadDir = __DIR__ . "/../../" . $uploadDir. "/";
         
         if (!is_dir($uploadDir)) {
@@ -69,7 +57,7 @@ class ImageService {
             return $relativePath;
         }
 
-        return null;
+        throw new \Exception("an Error occured") ;
     }
     
     public static function delete($imagePath) {

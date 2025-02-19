@@ -32,6 +32,8 @@ services:
         PHP_USER_IDENTIFIER: $PHP_USER_IDENTIFIER
         PHP_USER_SHELL: $PHP_USER_SHELL
         PHP_USER_HOME_DIRECTORY: $PHP_USER_HOME_DIRECTORY
+        PHP_UPLOAD_MAX_FILESIZE: 100M
+        PHP_POST_MAX_SIZE: 100M
     environment:
       TEST: 'coucou'
     tty: true

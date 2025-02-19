@@ -21,6 +21,7 @@ class PhotoController
   }
   public function store($groupId)
     {
+        startSession();
         $group = Group::getOneById($groupId);
         if (!$group->isMember(Auth::id())) {
             return view('errors.403');
@@ -30,9 +31,6 @@ class PhotoController
         }
         $request = new PhotoRequest();
         $service = new PhotoService($request);
-        if (!$request->validate()) {
-            return "Fichier non valide.";
-        }
 
         $error = $service->check_user_exist();
         if ($error !== null) {
@@ -50,17 +48,15 @@ class PhotoController
         }
 
         if (isset($_SESSION['error'])) {
-            $members = Group::getMembers($groupId, $_GET['m'] ?? "");
-            $group = Group::getOneById($groupId);
-            return view('group.upload', ["members" => $members, "group" => $group]);
-          }
+            header("Location:/group/$groupId/upload");
+        }
 
-        $uploadDir = "/uploads/groups/" . $groupId . "/";
+        $uploadDir = "/uploads/groups/" . $groupId;
         try {
             $filePath = ImageService::uploadPhoto($request->file, $uploadDir);
         } catch (\Exception $e) {
             $_SESSION['error'] = $e->getMessage();
-            header("Location:/group/$groupId");
+            header("Location:/group/$groupId/upload");
             exit;
         }
 
