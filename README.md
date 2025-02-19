@@ -123,3 +123,18 @@ class NomDeLaMigration {
   }
 }
 ```
+
+## Seeder
+
+Il faut se  connecter au container pour gérer les migration :
+```bash
+docker exec -it php bash
+```
+
+### Lancer le seeder
+
+Exécuter la commande :
+```bash
+php migrate.php seed [--force]
+```
+
