@@ -71,6 +71,26 @@ docker compose exec mariadb mariadb --version
 
 > *Note: replace `--version` with the MariaDB argument of your choice.*
 
+# Framework scss
+
+Se déplacer dans le dossier framework-css : 
+```bash
+cd framework-css
+```
+
+## Initiliser le projet
+
+Lancer la commande ;
+```bash
+npm install
+```
+
+## Run le projet
+
+Lancer la commande : 
+```bash
+npm run watch
+```
 
 # Framework MVC
 
