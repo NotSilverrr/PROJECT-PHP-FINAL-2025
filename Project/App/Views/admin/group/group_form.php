@@ -7,15 +7,15 @@
         <?php endif; ?>
         <div class="">
             <label class="form__label">Name</label>
-            <input type="text" name="name" placeholder="Group Name" class="input-field" value="<?= isset($_SESSION['group_update']) ? $_SESSION['group_update']->name : '' ?>" required />
+            <input type="text" name="name" placeholder="Group Name" class="" value="<?= isset($_SESSION['group_update']) ? $_SESSION['group_update']->name : '' ?>" required />
         </div>
         <div class="">
             <label class="form__label">Profile Picture</label>
-            <input type="file" name="profile_picture" accept="image/*" class="input-field" <?= !isset($_SESSION['group_update']) ? 'required' : '' ?> />
+            <input type="file" name="profile_picture" accept="image/*" class="" <?= !isset($_SESSION['group_update']) ? 'required' : '' ?> />
         </div>
         <div class="">
             <label class="form__label">Owner</label>
-            <select name="owner" class="input-field" required>
+            <select name="owner" class="" required>
                 <option value="">Select an owner</option>
                 <?php foreach ($user_list as $user): ?>
                     <option value="<?= $user->id ?>" <?= isset($_SESSION['group_update']) && $_SESSION['group_update']->ownerId == $user->id ? 'selected' : '' ?>>
