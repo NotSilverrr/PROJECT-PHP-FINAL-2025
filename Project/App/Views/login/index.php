@@ -1,6 +1,9 @@
 <?php 
 $title = "Login"
 ?>
+
+<div class="">
+<h1 class="text-primary">PhotoShare</h1>
 <form method="POST" action="/login" class="form">
   <h1 class="form__title">Login</h1>
   <div>
@@ -26,10 +29,11 @@ $title = "Login"
   <button type="submit" class="button button--primary">Login</button>
   <a href="/register" class="form__a">Not register yet ? Click here</a>
 </form>
+</div>
+
 </body>
 
 </html>
 <?php
 unset($_SESSION['login_email']);
 ?>
-

@@ -2,6 +2,10 @@
 
 <?php if(isset($message)) : ?>
     <h1 class="text-8"><?= $message ?></h1>
+    <h2>Welcome to PhotoShare !</h2>
+    <h3>Here you can share your photos with your friends ! :D</h3>
+    <h3>For that you have to create select or get added to a group first</h4>
+    <h3>Then you can click on the + button to share your photos ^^</h4>
 <?php else: ?>
 <?php
 if (isset($group) && !empty($group)) : ?>
