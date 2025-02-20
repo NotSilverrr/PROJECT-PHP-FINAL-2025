@@ -5,3 +5,4 @@ import "../scss/main.scss";
 import "./navbar.js";
 import "./side-bar.js";
 import "./error.js";
+import "./drag-drop.js";
