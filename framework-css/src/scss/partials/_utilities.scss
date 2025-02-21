@@ -2,141 +2,138 @@
 @use "functions" as f;
 @use "mixins" as m;
 @layer utilities {
-	$increment: 0.25rem;
+  $increment: 0.25rem;
 
-	$directions: (
-		t: top,
-		b: bottom,
-		l: left,
-		r: right,
-	);
+  $directions: (
+    t: top,
+    b: bottom,
+    l: left,
+    r: right,
+  );
 
-	.flex {
-		display: flex;
-	}
+  .flex {
+    display: flex;
+  }
 
-	.justify-between {
-		justify-content: space-between;
-	}
+  .justify-between {
+    justify-content: space-between;
+  }
 
-	.items-center {
-		align-items: center;
-	}
+  .items-center {
+    align-items: center;
+  }
 
-	.h-screen {
-		height: 100vh;
-	}
+  .h-screen {
+    height: 100vh;
+  }
 
-	.min-h-screen {
-		min-height: 100vh;
-	}
+  .min-h-screen {
+    min-height: 100vh;
+  }
 
-	.overflow-y-scroll {
-		overflow-y: scroll;
-		@include m.scrollbar;
-	}
+  .overflow-y-scroll {
+    overflow-y: scroll;
+    @include m.scrollbar;
+  }
 
-	.relative {
-		position: relative;
-	}
+  .relative {
+    position: relative;
+  }
 
-	.max-w-full {
-		max-width: 100%;
-	}
+  .max-w-full {
+    max-width: 100%;
+  }
 
-	.m-auto {
-		margin: auto;
-	}
+  .m-auto {
+    margin: auto;
+  }
 
-	.mx-auto {
-		margin-left: auto;
-		margin-right: auto;
-	}
-	.my-auto {
-		margin-top: auto;
-		margin-bottom: auto;
-	}
+  .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .my-auto {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
 
-	// spacing
-	@for $i from 0 through 30 {
-		.h-#{$i} {
-			height: $i * $increment;
-		}
-		.w-#{$i} {
-			width: $i * $increment;
-		}
-		.m-#{$i} {
-			margin: $i * $increment;
-		}
-		.p-#{$i} {
-			padding: $i * $increment;
-		}
-		.radius-#{$i} {
-			border-radius: $i * $increment;
-		}
-		.grow-#{$i} {
-			flex-grow: $i;
-		}
-		.text-#{$i} {
-			font-size: $i * $increment;
-		}
-		@each $name, $value in $directions {
-			.m#{$name}-#{$i} {
-				margin-#{$value}: $i * $increment;
-			}
-			.p#{$name}-#{$i} {
-				padding-#{$value}: $i * $increment;
-			}
-		}
+  // spacing
+  @for $i from 0 through 30 {
+    .h-#{$i} {
+      height: $i * $increment;
+    }
+    .w-#{$i} {
+      width: $i * $increment;
+    }
+    .m-#{$i} {
+      margin: $i * $increment;
+    }
+    .p-#{$i} {
+      padding: $i * $increment;
+    }
+    .radius-#{$i} {
+      border-radius: $i * $increment;
+    }
+    .grow-#{$i} {
+      flex-grow: $i;
+    }
+    .text-#{$i} {
+      font-size: $i * $increment;
+    }
+    @each $name, $value in $directions {
+      .m#{$name}-#{$i} {
+        margin-#{$value}: $i * $increment;
+      }
+      .p#{$name}-#{$i} {
+        padding-#{$value}: $i * $increment;
+      }
+    }
+  }
+  @each $bName, $bValue in v.$breakpoints {
+    @media (width > #{$bValue}) {
+      .#{$bName}-max-w-full {
+        max-width: 100%;
+      }
 
-		
-	}
-	@each $bName, $bValue in v.$breakpoints {
-		@media (width > #{$bValue}){
-			.#{$bName}-max-w-full {
-				max-width: 100%;
-			}
-		
-			.#{$bName}-m-auto {
-				margin: auto;
-			}
-		
-			.#{$bName}-mx-auto {
-				margin-left: auto;
-				margin-right: auto;
-			}
-			.#{$bName}-my-auto {
-				margin-top: auto;
-				margin-bottom: auto;
-			}
-			
-			@for $i from 0 through 30 {
-		
-				.#{$bName}-text-#{$i} {
-					font-size: $i * $increment;
-				}
-				@each $name, $value in $directions {
-					.#{$bName}-m#{$name}-#{$i} {
-						margin-#{$value}: $i * $increment;
-					}
-					.#{$bName}-p#{$name}-#{$i} {
-						padding-#{$value}: $i * $increment;
-					}
-					
-				}
-			}
+      .#{$bName}-m-auto {
+        margin: auto;
+      }
 
-			
-		}
-	}
+      .#{$bName}-mx-auto {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .#{$bName}-my-auto {
+        margin-top: auto;
+        margin-bottom: auto;
+      }
 
-	// colors
-	@each $name, $value in v.$colors {
-		.bg-#{$name} {
-			background-color: var(--#{$name});
-		}
-		.border-#{$name} {
-			border-color: var(--#{$name});
-		}
-	}
+      @for $i from 0 through 30 {
+        .#{$bName}-text-#{$i} {
+          font-size: $i * $increment;
+        }
+        @each $name, $value in $directions {
+          .#{$bName}-m#{$name}-#{$i} {
+            margin-#{$value}: $i * $increment;
+          }
+          .#{$bName}-p#{$name}-#{$i} {
+            padding-#{$value}: $i * $increment;
+          }
+        }
+      }
+    }
+  }
+
+  // colors
+  @each $name, $value in v.$colors {
+    .bg-#{$name} {
+      background-color: var(--#{$name});
+    }
+    .border-#{$name} {
+      border-color: var(--#{$name});
+    }
+    .text-#{$name} {
+      color: var(--#{$name}-500);
+    }
+  }
 }
