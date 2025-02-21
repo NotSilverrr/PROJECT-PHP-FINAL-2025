@@ -7,36 +7,31 @@
     <link rel="stylesheet" href="./dist/framework-esgi.css" />
     <script src="./dist/framework-esgi.js"></script>
   </head>
-
-  <body class="">
-    <div class="form form__page">
-      <form method="POST" action="/login" class="form form__card">
-        <h1 class="form form__title">Login</h1>
-        <div class="input-group">
+  <body class="form__page">
+    <div>
+      <h1 class="text-primary">PhotoShare</h1>
+      <form method="POST" action="/login" class="form">
+        <h1 class="form__title">Login</h1>
+        <div>
+          <label class="form__label" for="email">Email</label>
           <input
             type="email"
             name="email"
-            placeholder="Username"
-            class="input-field"
+            placeholder="exemple@ex.com"
+            value=""
           />
         </div>
-        <div class="input-group">
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            class="input-field"
-          />
+        <div>
+          <label class="form__label" for="password">Password</label>
+          <input type="password" name="password" placeholder="1234" />
         </div>
-        <div class="options">
-          <label class="checkbox">
-            <input type="checkbox" name="remember_me" />
-            <span>Remember me</span>
-          </label>
-          <a href="/forgot-password" class="forgot-password">Forgot password</a>
+        <div>
+          <a href="/password-reset" class="form__a"
+            >I have forgot my password</a
+          >
         </div>
-        <button type="submit" class="form form__button">Login</button>
-        <a href="/create-account" class="create-account">Create Account</a>
+        <button type="submit" class="button button--primary">Login</button>
+        <a href="/register" class="form__a">Not register yet ? Click here</a>
       </form>
     </div>
   </body>
