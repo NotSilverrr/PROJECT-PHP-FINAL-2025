@@ -124,16 +124,17 @@
     }
   }
 
-  // colors
-  @each $name, $value in v.$colors {
-    .bg-#{$name} {
-      background-color: var(--#{$name});
-    }
-    .border-#{$name} {
-      border-color: var(--#{$name});
-    }
-    .text-#{$name} {
-      color: var(--#{$name}-500);
+  @each $color_name, $color_value in v.$colors {
+    @each $shade_name, $shade_value in v.$shades {
+      .bg-#{$color_name}-#{$shade_name} {
+        background-color: var(--#{$color_name}-#{$shade_name});
+      }
+      .border-#{$color_name}-#{$shade_name} {
+        border-color: var(--#{$color_name}-#{$shade_name});
+      }
+      .text-#{$color_name}-#{$shade_name} {
+        color: var(--#{$color_name}-#{$shade_name});
+      }
     }
   }
 }

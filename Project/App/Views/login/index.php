@@ -3,7 +3,7 @@ $title = "Login"
 ?>
 
 <div class="">
-<h1 class="text-primary">PhotoShare</h1>
+<h1 class="text-primary-500">PhotoShare</h1>
 <form method="POST" action="/login" class="form">
   <h1 class="form__title">Login</h1>
   <div>
